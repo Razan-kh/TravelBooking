@@ -1,0 +1,254 @@
+# Top-most EditorConfig file
+root = true
+
+########################
+# General text settings
+########################
+[*]
+# Use UTF-8 everywhere
+charset = utf-8
+# Use spaces, not tabs
+indent_style = space
+# 4 spaces per indent (C# default)
+indent_size = 4
+tab_width = 4
+# Windows newlines (use 'lf' if your team prefers LF)
+end_of_line = crlf
+# Remove trailing whitespace on save
+trim_trailing_whitespace = true
+# Ensure each file ends with a newline
+insert_final_newline = true
+
+# Soft guide for editors (not enforced by Roslyn)
+max_line_length = 120
+
+########################################
+# C# code style & analyzer configuration
+########################################
+[*.{cs,vb}]
+############################
+# Analyzer severities (global)
+############################
+# Turn on Microsoft .NET analyzers categories as warnings
+dotnet_analyzer_diagnostic.category-Style.severity = warning
+dotnet_analyzer_diagnostic.category-Reliability.severity = warning
+dotnet_analyzer_diagnostic.category-Maintainability.severity = warning
+dotnet_analyzer_diagnostic.category-Performance.severity = warning
+dotnet_analyzer_diagnostic.category-Design.severity = warning
+dotnet_analyzer_diagnostic.category-Documentation.severity = suggestion
+dotnet_analyzer_diagnostic.category-Usage.severity = warning
+dotnet_analyzer_diagnostic.category-Security.severity = warning
+# Treat IDE formatting violations as warnings (so they show up, not fail CI)
+dotnet_diagnostic.IDE0055.severity = warning
+
+############################
+# Using directives
+############################
+# Place 'System.*' usings first
+dotnet_sort_system_directives_first = true
+# Keep groups separated by a blank line (VS sorts and groups)
+dotnet_separate_import_directive_groups = true
+############################
+# Qualification & 'this.'
+############################
+# Never qualify members with 'this.' unless required
+dotnet_style_qualification_for_field = false:suggestion
+dotnet_style_qualification_for_property = false:suggestion
+dotnet_style_qualification_for_method = false:suggestion
+dotnet_style_qualification_for_event = false:suggestion
+
+############################
+# var preferences
+############################
+# Use 'var' when the type is apparent
+csharp_style_var_when_type_is_apparent = true:suggestion
+# Use 'var' for built-in types (int, string, etc.)
+csharp_style_var_for_built_in_types = true:suggestion
+# Use 'var' elsewhere too
+csharp_style_var_elsewhere = true:suggestion
+
+############################
+# Pattern matching & nulls
+############################
+# Prefer 'is null' over '== null'
+dotnet_style_prefer_is_null_check_over_reference_equality_method = true:suggestion
+# Prefer pattern matching (e.g., 'x is int i')
+csharp_style_pattern_matching_over_as_with_null_check = true:suggestion
+csharp_style_prefer_pattern_matching = true:suggestion
+# Use null-coalescing/conditional operators when helpful
+dotnet_style_coalesce_expression = true:suggestion
+dotnet_style_null_propagation = true:suggestion
+
+############################
+# Expression-bodied members & lambdas
+############################
+# Prefer expression-bodied members where short/clear
+csharp_style_expression_bodied_methods = when_on_single_line:suggestion
+csharp_style_expression_bodied_properties = when_on_single_line:suggestion
+csharp_style_expression_bodied_accessors = when_on_single_line:suggestion
+# Prefer inferred types for anonymous lambdas
+csharp_style_lambda_parameter_parens = always_for_clarity:silent
+
+############################
+# Object/collection initialization
+############################
+# Prefer object/collection initializers
+dotnet_style_object_initializer = true:suggestion
+dotnet_style_collection_initializer = true:suggestion
+# Prefer implicit object creation (e.g., 'new()') when type is known (C# 9+)
+csharp_style_implicit_object_creation_when_type_is_apparent = true:suggestion
+
+############################
+# Unused code & 'using' cleanups
+############################
+# Remove unnecessary usings and qualifiers
+dotnet_remove_unnecessary_usings = true
+dotnet_diagnostic.IDE0005.severity = warning
+dotnet_diagnostic.IDE0003.severity = suggestion
+dotnet_diagnostic.IDE0001.severity = suggestion
+
+############################
+# Accessibility modifiers
+############################
+# Require explicit access modifiers except in interfaces
+dotnet_style_require_accessibility_modifiers = for_non_interface_members:warning
+
+############################
+# Readonly/const & immutability hints
+############################
+# Prefer 'readonly struct' when possible
+csharp_style_readonly_struct = true:suggestion
+# Prefer 'readonly' on fields where applicable
+dotnet_style_readonly_field = true:suggestion
+# Prefer 'const' for locals/fields when value is constant
+dotnet_style_prefer_const_literals = true:suggestion
+
+############################
+# Discards, tuples, deconstruction
+############################
+# Prefer deconstruction
+csharp_style_deconstructed_variable_declaration = true:suggestion
+
+############################
+# Interpolated strings & operators
+############################
+# Prefer interpolated strings
+dotnet_style_prefer_interpolated_string = true:suggestion
+# Prefer '??=' coalescing assignment
+dotnet_style_prefer_coalesce_expression_assignment = true:suggestion
+# Prefer compound assignments (+=, -=, etc.)
+dotnet_style_prefer_compound_assignment = true:suggestion
+
+############################
+# File header & copyright
+############################
+# If you want a standard header on new files, set a template (empty = none)
+file_header_template = 
+
+############################
+# Formatting: new lines & wrapping
+############################
+# New line preferences around braces
+csharp_new_line_before_open_brace = all
+# New line options for methods, properties, types, and control blocks
+csharp_new_line_between_members = true
+# Prefer keeping simple blocks on multiple lines only when needed
+csharp_style_allow_blank_lines_between_consecutive_braces = false:silent
+
+############################
+# Formatting: spacing & wrapping
+############################
+# Space within 'for', 'if', 'while' parentheses: no
+csharp_space_between_method_call_parameter_list_parentheses = false
+csharp_space_between_method_declaration_parameter_list_parentheses = false
+# Space around binary operators: yes
+csharp_space_around_binary_operators = before_and_after
+# No space before/after indexer brackets
+csharp_space_between_square_brackets = false
+
+############################
+# Nullable reference types
+############################
+# Strongly prefer enabling nullable in projects (set in .csproj)
+# Here we enforce annotations/flow checks usage patterns
+dotnet_style_nullable_enable = true:suggestion
+# Prefer 'T?' annotations over attributes
+dotnet_style_prefer_nullable_context_options = true:suggestion
+
+########################################
+# Naming rules (examples you can extend)
+########################################
+
+# 1) Constants: PascalCase with optional ALL_CAPS prefix not allowed
+dotnet_naming_rule.constants_should_be_pascal.severity = warning
+dotnet_naming_rule.constants_should_be_pascal.symbols = constant_symbols
+dotnet_naming_rule.constants_should_be_pascal.style = pascal_case
+
+dotnet_naming_symbols.constant_symbols.applicable_kinds = field
+dotnet_naming_symbols.constant_symbols.required_modifiers = const
+
+dotnet_naming_style.pascal_case.capitalization = PascalCase
+
+# 2) Private fields: _camelCase with leading underscore
+dotnet_naming_rule.private_fields_should_have_underscore.severity = warning
+dotnet_naming_rule.private_fields_should_have_underscore.symbols = private_fields
+dotnet_naming_rule.private_fields_should_have_underscore.style = underscore_camel_case
+
+dotnet_naming_symbols.private_fields.applicable_kinds = field
+dotnet_naming_symbols.private_fields.applicable_accessibilities = private
+dotnet_naming_symbols.private_fields.required_modifiers =
+
+dotnet_naming_style.underscore_camel_case.capitalization = camel_case
+dotnet_naming_style.underscore_camel_case.required_prefix = _
+
+# 3) Interfaces: start with 'I' and PascalCase
+dotnet_naming_rule.interfaces_should_start_with_I.severity = warning
+dotnet_naming_rule.interfaces_should_start_with_I.symbols = interface_symbols
+dotnet_naming_rule.interfaces_should_start_with_I.style = begins_with_I
+
+dotnet_naming_symbols.interface_symbols.applicable_kinds = interface
+
+dotnet_naming_style.begins_with_I.capitalization = PascalCase
+dotnet_naming_style.begins_with_I.required_prefix = I
+
+# 4) Type names (classes, structs, enums, delegates): PascalCase
+dotnet_naming_rule.types_should_be_pascal.severity = warning
+dotnet_naming_rule.types_should_be_pascal.symbols = type_symbols
+dotnet_naming_rule.types_should_be_pascal.style = pascal_case
+
+dotnet_naming_symbols.type_symbols.applicable_kinds = class, struct, enum, delegate
+
+# 5) Methods & properties: PascalCase
+dotnet_naming_rule.members_should_be_pascal.severity = warning
+dotnet_naming_rule.members_should_be_pascal.symbols = member_symbols
+dotnet_naming_rule.members_should_be_pascal.style = pascal_case
+
+dotnet_naming_symbols.member_symbols.applicable_kinds = property, method, event
+
+# 6) Parameters & locals: camelCase
+dotnet_naming_rule.parameters_locals_camel.severity = suggestion
+dotnet_naming_rule.parameters_locals_camel.symbols = parameters_locals
+dotnet_naming_rule.parameters_locals_camel.style = camel_case
+
+dotnet_naming_symbols.parameters_locals.applicable_kinds = parameter, local
+
+dotnet_naming_style.camel_case.capitalization = camel_case
+
+########################################
+# Files to ignore or loosen rules for
+########################################
+[*.{json,md,yml,yaml}]
+# Keep these simple; editors vary
+indent_size = 2
+end_of_line = lf
+
+# Designer/Generated code: relax style (still allow analyzers to run)
+[*Designer.cs]
+dotnet_analyzer_diagnostic.category-Style.severity = silent
+
+[*.g.cs]
+<<<<<<< HEAD
+dotnet_analyzer_diagnostic.category-Style.severity = silent
+=======
+dotnet_analyzer_diagnostic.category-Style.severity = silent
+>>>>>>> ParsingInput
