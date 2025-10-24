@@ -12,11 +12,6 @@ public class UserRepository : IUserRepository
 
     public UserRepository(AppDbContext db) => _db = db;
 
-    public async Task<User?> GetByUsernameAsync(string username)
-    {
-        return await _db.Users.SingleOrDefaultAsync(u => u.Username == username);
-    }
-
     public async Task<User?> GetByEmailAsync(string email)
     {
         return await _db.Users.SingleOrDefaultAsync(u => u.Email == email);

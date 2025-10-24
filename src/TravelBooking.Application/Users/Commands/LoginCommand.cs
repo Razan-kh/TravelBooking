@@ -5,6 +5,6 @@ namespace TravelBooking.Application.Users.Commands;
 
 public sealed class LoginCommand : IRequest<LoginResponse>
 {
-    public string UsernameOrEmail { get; init; } = default!;
+    public string Email { get; init; } = default!;
     public string Password { get; init; } = default!;
 }

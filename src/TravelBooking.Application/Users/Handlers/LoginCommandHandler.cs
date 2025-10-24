@@ -5,8 +5,8 @@ using MediatR;
 using TravelBooking.Application.Interfaces;
 using TravelBooking.Application.Users.Commands;
 using TravelBooking.Application.Users.DTOs;
+using TravelBooking.Application.Security;
 using TravelBooking.Domain.Users.Repositories;
-using TravelBooking.Domain.Security;
 
 namespace TravelBooking.Application.Users.Handlers;
 
@@ -29,8 +29,7 @@ public sealed class LoginCommandHandler : IRequestHandler<LoginCommand, LoginRes
     public async Task<LoginResponse> Handle(LoginCommand request, CancellationToken cancellationToken)
     {
         // Try by username first, then by email
-        var user = await _userRepository.GetByUsernameAsync(request.UsernameOrEmail)
-                   ?? await _userRepository.GetByEmailAsync(request.UsernameOrEmail);
+        var user = await _userRepository.GetByEmailAsync(request.Email);
 
         if (user == null)
             throw new UnauthorizedAccessException("Invalid credentials.");
@@ -44,7 +43,7 @@ public sealed class LoginCommandHandler : IRequestHandler<LoginCommand, LoginRes
             ["email"] = user.Email
         };
 
-        var token = _jwtService.CreateToken(user.Id.ToString(), user.Username, extraClaims);
+        var token = _jwtService.CreateToken(user.Id.ToString(), user.FirstName, extraClaims);
 
         // For expiry, the JwtService will determine expiration time (we also return ExpiresIn)
         return new LoginResponse

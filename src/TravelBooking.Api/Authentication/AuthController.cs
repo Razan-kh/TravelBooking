@@ -20,7 +20,7 @@ public class AuthController(IMediator mediator) : ControllerBase
         {
             var cmd = new LoginCommand
             {
-                UsernameOrEmail = request.UsernameOrEmail,
+                Email = request.Email,
                 Password = request.Password
             };
 
