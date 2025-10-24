@@ -4,18 +4,18 @@ using TravelBooking.Application.Users.Commands;
 using TravelBooking.Application.Users.DTOs;
 using TravelBooking.Application.Security;
 using TravelBooking.Domain.Users.Repositories;
+using TravelBooking.Domain.Shared.Results;
 using Microsoft.Extensions.Logging;
-using TravelBooking.Application.Users.Validators;
 
 namespace TravelBooking.Application.Users.Handlers;
 
-public sealed class LoginCommandHandler : IRequestHandler<LoginCommand, LoginResponse>
+public sealed class LoginCommandHandler : IRequestHandler<LoginCommand, Result<LoginResponse>>
 {
     private readonly IUserRepository _userRepository;
     private readonly IPasswordHasher _passwordHasher;
     private readonly IJwtService _jwtService;
     private readonly ILogger<LoginCommandHandler> _logger;
-    
+
     public LoginCommandHandler(
         IUserRepository userRepository,
         IPasswordHasher passwordHasher,
@@ -28,36 +28,59 @@ public sealed class LoginCommandHandler : IRequestHandler<LoginCommand, LoginRes
         _logger = logger;
     }
 
-    public async Task<LoginResponse> Handle(LoginCommand request, CancellationToken cancellationToken)
+    public async Task<Result<LoginResponse>> Handle(LoginCommand request, CancellationToken cancellationToken)
     {
-        // Input validation
-        var validationResult = LoginCommandValidator.Validate(request);
-        
-        if (!validationResult.IsSuccess)
+        try
         {
-            return validationResult;
+            // If execution reaches here, validation has already passed
+            var user = await _userRepository.GetByEmailAsync(request.Email);
+            if (user == null)
+            {
+                _logger.LogWarning("Login attempt with non-existent email: {Email}", request.Email);
+                return Result<LoginResponse>.Failure(
+                    "Invalid email or password", 
+                    "AUTH_INVALID_CREDENTIALS", 
+                    401);
+            }
+
+            // Verify password
+            var isPasswordValid = _passwordHasher.Verify(request.Password, user.PasswordHash);
+            if (!isPasswordValid)
+            {
+                _logger.LogWarning("Invalid password attempt for user: {UserId}", user.Id);
+                return Result<LoginResponse>.Failure(
+                    "Invalid email or password", 
+                    "AUTH_INVALID_CREDENTIALS", 
+                    401);
+            }
+
+            // Generate token
+            var extraClaims = new Dictionary<string, string>
+            {
+                ["email"] = user.Email,
+                ["firstName"] = user.FirstName,
+                ["userId"] = user.Id.ToString()
+            };
+
+            var token = _jwtService.CreateToken(user.Id.ToString(), user.FirstName, extraClaims);
+
+            _logger.LogInformation("User {UserId} logged in successfully", user.Id);
+
+            return Result<LoginResponse>.Success(new LoginResponse
+            {
+                AccessToken = token,
+                ExpiresIn = 3600,
+                TokenType = "Bearer"
+            });
         }
-
-        var user = await _userRepository.GetByEmailAsync(request.Email);
-
-        if (user == null)
+        catch (Exception ex) when (ex is not OperationCanceledException)
         {
-            throw new UnauthorizedAccessException("Invalid credentials.");
+            // This handles unexpected exceptions (database errors, etc.)
+            _logger.LogError(ex, "Unexpected error during login for email: {Email}", request.Email);
+            return Result<LoginResponse>.Failure(
+                "An error occurred during authentication", 
+                "AUTH_SYSTEM_ERROR", 
+                500);
         }
-
-        var verified = _passwordHasher.Verify(user.PasswordHash, request.Password);
-        if (!verified)
-        {
-            throw new UnauthorizedAccessException("Invalid credentials.");
-        }
-
-        var token = _jwtService.CreateToken(user.Id.ToString(), user.FirstName);
-
-        // For expiry, the JwtService will determine expiration time (we also return ExpiresIn)
-        return new LoginResponse
-        {
-            AccessToken = token,
-            ExpiresIn = 3600 // for example; ensure JwtService agrees
-        };
     }
 }
