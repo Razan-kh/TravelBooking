@@ -1,5 +1,4 @@
 using Microsoft.EntityFrameworkCore;
-
 using TravelBooking.Domain.Users.Entities;
 
 namespace TravelBooking.Infrastructure.Persistence;
