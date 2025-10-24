@@ -5,6 +5,7 @@ using TravelBooking.Application.Users.DTOs;
 using TravelBooking.Application.Security;
 using TravelBooking.Domain.Users.Repositories;
 using Microsoft.Extensions.Logging;
+using TravelBooking.Application.Users.Validators;
 
 namespace TravelBooking.Application.Users.Handlers;
 
@@ -30,7 +31,8 @@ public sealed class LoginCommandHandler : IRequestHandler<LoginCommand, LoginRes
     public async Task<LoginResponse> Handle(LoginCommand request, CancellationToken cancellationToken)
     {
         // Input validation
-        var validationResult = ValidateRequest(request);
+        var validationResult = LoginCommandValidator.Validate(request);
+        
         if (!validationResult.IsSuccess)
         {
             return validationResult;
