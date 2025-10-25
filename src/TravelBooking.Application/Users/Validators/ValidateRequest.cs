@@ -10,7 +10,7 @@ public class LoginCommandValidator : AbstractValidator<LoginCommand>
     {
         // Email validation
         RuleFor(x => x.Email)
-            .Cascade(CascadeMode.Stop) 
+            .Cascade(CascadeMode.Stop)
             .NotEmpty().WithMessage("Email is required").WithErrorCode("EMAIL_REQUIRED")
             .EmailAddress().WithMessage("A valid email address is required").WithErrorCode("EMAIL_INVALID")
             .MaximumLength(200).WithMessage("Email cannot exceed 200 characters").WithErrorCode("EMAIL_TOO_LONG")
@@ -19,15 +19,9 @@ public class LoginCommandValidator : AbstractValidator<LoginCommand>
 
         // Password validation
         RuleFor(x => x.Password)
-            .Cascade(CascadeMode.Stop)
-            .NotEmpty().WithMessage("Password is required").WithErrorCode("PASSWORD_REQUIRED")
-            .MinimumLength(8).WithMessage("Password must be at least 8 characters").WithErrorCode("PASSWORD_TOO_SHORT")
-            .MaximumLength(100).WithMessage("Password cannot exceed 100 characters").WithErrorCode("PASSWORD_TOO_LONG")
-            .Matches(@"^(?=.*[a-z])").WithMessage("Password must contain at least one lowercase letter").WithErrorCode("PASSWORD_NO_LOWERCASE")
-            .Matches(@"^(?=.*[A-Z])").WithMessage("Password must contain at least one uppercase letter").WithErrorCode("PASSWORD_NO_UPPERCASE")
-            .Matches(@"^(?=.*\d)").WithMessage("Password must contain at least one number").WithErrorCode("PASSWORD_NO_NUMBER")
-            .Matches(@"^(?=.*[^\da-zA-Z])").WithMessage("Password must contain at least one special character").WithErrorCode("PASSWORD_NO_SPECIAL")
-            .When(x => !string.IsNullOrWhiteSpace(x.Password));
+            .NotEmpty().WithMessage("Password is required")
+            .MinimumLength(8).WithMessage("Password must be at least 8 characters")
+            .MaximumLength(100).WithMessage("Password is too long");
     }
 
     private bool BeAValidDomain(string email)
@@ -39,8 +33,10 @@ public class LoginCommandValidator : AbstractValidator<LoginCommand>
 
         try
         {
+            // Move blocked domains to configuration
+            var blockedDomains = new[] { "example.com", "test.com" };
             var domain = email.Split('@').Last();
-            return !domain.Contains("example.com"); // Block example.com domains
+            return !blockedDomains.Contains(domain);
         }
         catch
         {

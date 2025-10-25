@@ -2,10 +2,11 @@ using MediatR;
 using TravelBooking.Application.Interfaces;
 using TravelBooking.Application.Users.Commands;
 using TravelBooking.Application.Users.DTOs;
-using TravelBooking.Application.Security;
+using TravelBooking.Application.Interfaces.Security;
 using TravelBooking.Domain.Users.Repositories;
 using TravelBooking.Domain.Shared.Results;
 using Microsoft.Extensions.Logging;
+using Microsoft.AspNetCore.Identity;
 
 namespace TravelBooking.Application.Users.Handlers;
 
@@ -69,7 +70,6 @@ public sealed class LoginCommandHandler : IRequestHandler<LoginCommand, Result<L
             return Result<LoginResponse>.Success(new LoginResponse
             {
                 AccessToken = token,
-                ExpiresIn = 3600,
                 TokenType = "Bearer"
             });
         }

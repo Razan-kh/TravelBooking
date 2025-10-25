@@ -25,16 +25,7 @@ public class AuthController(IMediator mediator) : ControllerBase
             };
 
             var result = await _mediator.Send(cmd);
-            return Ok(result);
-        }
-        catch (UnauthorizedAccessException)
-        {
-            return Unauthorized(new { message = "Invalid credentials" });
-        }
-        catch (Exception ex)
-        {
-            // Do NOT leak internal errors in production — this is for demo
-            return Problem(detail: ex.Message);
+            return result.ToActionResult();
         }
     }
 }

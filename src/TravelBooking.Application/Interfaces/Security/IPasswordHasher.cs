@@ -1,4 +1,4 @@
-namespace TravelBooking.Application.Security;
+namespace TravelBooking.Application.Interfaces.Security;
 
 public interface IPasswordHasher
 {
