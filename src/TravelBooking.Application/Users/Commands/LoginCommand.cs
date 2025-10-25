@@ -1,6 +1,6 @@
 using MediatR;
 using TravelBooking.Application.Users.DTOs;
-using TravelBooking.Domain.Shared.Results;
+using TravelBooking.Application.Shared.Results;
 
 namespace TravelBooking.Application.Users.Commands;
 

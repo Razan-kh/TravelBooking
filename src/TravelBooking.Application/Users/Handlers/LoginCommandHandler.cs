@@ -4,7 +4,7 @@ using TravelBooking.Application.Users.Commands;
 using TravelBooking.Application.Users.DTOs;
 using TravelBooking.Application.Interfaces.Security;
 using TravelBooking.Domain.Users.Repositories;
-using TravelBooking.Domain.Shared.Results;
+using TravelBooking.Application.Shared.Results;
 using Microsoft.Extensions.Logging;
 using Microsoft.AspNetCore.Identity;
 
@@ -39,8 +39,8 @@ public sealed class LoginCommandHandler : IRequestHandler<LoginCommand, Result<L
             {
                 _logger.LogWarning("Login attempt with non-existent email: {Email}", request.Email);
                 return Result<LoginResponse>.Failure(
-                    "Invalid email or password", 
-                    "AUTH_INVALID_CREDENTIALS", 
+                    "Invalid email or password",
+                    "AUTH_INVALID_CREDENTIALS",
                     401);
             }
 
@@ -50,8 +50,8 @@ public sealed class LoginCommandHandler : IRequestHandler<LoginCommand, Result<L
             {
                 _logger.LogWarning("Invalid password attempt for user: {UserId}", user.Id);
                 return Result<LoginResponse>.Failure(
-                    "Invalid email or password", 
-                    "AUTH_INVALID_CREDENTIALS", 
+                    "Invalid email or password",
+                    "AUTH_INVALID_CREDENTIALS",
                     401);
             }
 
@@ -78,8 +78,8 @@ public sealed class LoginCommandHandler : IRequestHandler<LoginCommand, Result<L
             // This handles unexpected exceptions (database errors, etc.)
             _logger.LogError(ex, "Unexpected error during login for email: {Email}", request.Email);
             return Result<LoginResponse>.Failure(
-                "An error occurred during authentication", 
-                "AUTH_SYSTEM_ERROR", 
+                "An error occurred during authentication",
+                "AUTH_SYSTEM_ERROR",
                 500);
         }
     }
