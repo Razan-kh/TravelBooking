@@ -18,6 +18,7 @@ public class Hotel : BaseEntity
 
     [Sieve.Attributes.Sieve(CanFilter = true, CanSort = true)]
     public string? Description { get; set; }
+    public string? Location { get; set; }
 
     public string? ThumbnailUrl { get; set; }
 
