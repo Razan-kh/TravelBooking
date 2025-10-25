@@ -1,4 +1,4 @@
-namespace TravelBooking.Domain.Shared.Results;
+namespace TravelBooking.Application.Shared.Results;
 
 public class Result
 {
