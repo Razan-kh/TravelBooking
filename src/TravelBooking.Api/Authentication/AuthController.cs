@@ -4,6 +4,7 @@ using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using TravelBooking.Application.Users.Commands;
 using TravelBooking.Application.Users.DTOs;
+using TravelBooking.Api.Extensions;
 
 namespace TravelBooking.Api.Controllers;
 
@@ -16,8 +17,6 @@ public class AuthController(IMediator mediator) : ControllerBase
     [HttpPost("login")]
     public async Task<ActionResult<LoginResponse>> Login([FromBody] LoginRequest request)
     {
-        try
-        {
             var cmd = new LoginCommand
             {
                 Email = request.Email,
@@ -26,6 +25,5 @@ public class AuthController(IMediator mediator) : ControllerBase
 
             var result = await _mediator.Send(cmd);
             return result.ToActionResult();
-        }
     }
 }
