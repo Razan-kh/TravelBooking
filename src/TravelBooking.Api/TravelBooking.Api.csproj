@@ -7,8 +7,16 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="MediatR" Version="13.1.0" />
+    <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="11.1.0" />
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="8.0.18" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.6.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\TravelBooking.Domain\TravelBooking.Domain.csproj" />
+    <ProjectReference Include="..\TravelBooking.Application\TravelBooking.Application.csproj" />
+    <ProjectReference Include="..\TravelBooking.Infrastructure\TravelBooking.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>
