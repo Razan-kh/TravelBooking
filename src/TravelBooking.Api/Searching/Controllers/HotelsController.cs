@@ -5,7 +5,7 @@ using System.Threading;
 using Sieve.Models;
 using System;
 
-namespace YourNamespace.Api.Controllers;
+namespace TravelBooking.Api.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
@@ -36,7 +36,7 @@ public class HotelsController : ControllerBase
         [FromQuery] int pageSize = 20,
         CancellationToken cancellationToken = default)
     {
-        var query = new YourNamespace.Application.Queries.SearchHotelsQuery
+        var query = new TravelBooking.Application.Queries.SearchHotelsQuery
         {
             SieveModel = sieveModel,
             Keyword = keyword,
