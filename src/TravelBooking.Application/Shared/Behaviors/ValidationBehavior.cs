@@ -1,6 +1,6 @@
 using FluentValidation;
 using MediatR;
-using TravelBooking.Domain.Shared.Results;
+using TravelBooking.Application.Shared.Results;
 
 namespace TravelBooking.Application.Shared.Behaviors;
 
@@ -13,7 +13,7 @@ public class ValidationBehavior<TRequest, TResponse> : IPipelineBehavior<TReques
     public async Task<TResponse> Handle(TRequest request, RequestHandlerDelegate<TResponse> next, CancellationToken cancellationToken)
     {
         var context = new ValidationContext<TRequest>(request);
-        
+
         var failures = _validators
             .Select(v => v.Validate(context))
             .SelectMany(result => result.Errors)
@@ -22,7 +22,7 @@ public class ValidationBehavior<TRequest, TResponse> : IPipelineBehavior<TReques
 
         if (failures.Any())
             throw new ValidationException(failures);
-        
+
         return await next();
     }
 }
