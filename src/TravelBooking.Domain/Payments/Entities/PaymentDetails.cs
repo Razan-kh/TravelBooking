@@ -1,6 +1,10 @@
-public class PaymentDetails
+using Sieve.Services;
+using TravelBooking.Domain.Shared.Entities;
+
+namespace TravelBooking.Domain.Payments.Entities;
+
+public class PaymentDetails : BaseEntity
 {
-    [Precision(10, 2)]
     public decimal Amount { get; set; }
     public int PaymentNumber { get; set; }
     public DateTime PaymentDate { get; set; }

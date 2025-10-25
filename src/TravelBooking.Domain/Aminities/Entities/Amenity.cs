@@ -1,3 +1,8 @@
+using TravelBooking.Domain.Rooms.Entities;
+using TravelBooking.Domain.Shared.Entities;
+
+namespace TravelBooking.Domain.Amenities.Entities;
+
 public class Amenity : BaseEntity
 {
     [Sieve.Attributes.Sieve(CanFilter = true, CanSort = true)]

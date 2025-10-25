@@ -1,3 +1,11 @@
+using TravelBooking.Domain.Hotels.Entities;
+using TravelBooking.Domain.Payments.Entities;
+using TravelBooking.Domain.Rooms.Entities;
+using TravelBooking.Domain.Shared.Entities;
+using TravelBooking.Domain.Users.Entities;
+
+namespace TravelBooking.Domain.Bookings.Entities;
+
 public class Booking : BaseEntity
 {
     public Guid UserId { get; set; }

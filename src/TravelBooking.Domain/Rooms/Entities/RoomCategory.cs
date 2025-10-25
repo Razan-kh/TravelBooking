@@ -1,3 +1,13 @@
+using Sieve.Services;
+using TravelBooking.Domain.Discounts.Entities;
+using TravelBooking.Domain.Hotels;
+using TravelBooking.Domain.Shared.Entities;
+using TravelBooking.Domain.Rooms.Enums;
+using TravelBooking.Domain.Hotels.Entities;
+using TravelBooking.Domain.Amenities.Entities;
+
+namespace TravelBooking.Domain.Rooms.Entities;
+
 public class RoomCategory : BaseEntity
 {
     [Sieve.Attributes.Sieve(CanFilter = true, CanSort = true)]
