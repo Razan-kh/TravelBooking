@@ -1,3 +1,10 @@
+using Sieve.Services;
+using TravelBooking.Domain.Hotels;
+using TravelBooking.Domain.Shared.Entities;
+using TravelBooking.Domain.Users.Entities;
+
+namespace TravelBooking.Domain.Entities.Discounts;
+
 public class Review : BaseEntity
 {
     [Sieve.Attributes.Sieve(CanFilter = true, CanSort = true)]

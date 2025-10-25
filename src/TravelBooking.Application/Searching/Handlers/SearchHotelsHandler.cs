@@ -5,19 +5,19 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System;
-using YourNamespace.Application.DTOs;
-using YourNamespace.Application.Utils;
-using YourNamespace.Infrastructure.Persistence;
+using TravelBooking.Application.DTOs;
+using TravelBooking.Application.Utils;
 using TravelBooking.Domain.Searching.Entities;
-
-namespace YourNamespace.Application.Queries;
+using Application.Interfaces;
+using TravelBooking.Domain;
+namespace TravelBooking.Application.Queries;
 
 public class SearchHotelsHandler : IRequestHandler<SearchHotelsQuery, PagedResult<HotelCardDto>>
 {
-    private readonly AppDbContext _db;
+    private readonly IAppDbContext _db;
     private readonly ISieveProcessor _sieveProcessor;
 
-    public SearchHotelsHandler(AppDbContext db, ISieveProcessor sieveProcessor)
+    public SearchHotelsHandler(IAppDbContext db, ISieveProcessor sieveProcessor)
     {
         _db = db;
         _sieveProcessor = sieveProcessor;
@@ -166,16 +166,20 @@ public class SearchHotelsHandler : IRequestHandler<SearchHotelsQuery, PagedResul
         }
 
         // Project pageItems to DTOs
-        var data = pageItems.Select(x => new HotelCardDto
-        {
-            Id = x.Hotel.Id,
-            Name = x.Hotel.Name,
-            ThumbnailUrl = x.Hotel.ThumbnailUrl,
-            City = x.Hotel.City != null ? x.Hotel.City.Name : string.Empty,
-            StarRating = x.Hotel.StarRating,
-            MinPrice = x.MinPrice,
-            Amenities = x.Hotel.RoomCategories.SelectMany(rc => rc.Amenities).Select(a => a.Name).Distinct()
-        }).ToList();
+var data = pageItems.Select(x => new HotelCardDto
+{
+    Id = x.Hotel.Id,
+    Name = x.Hotel.Name,
+    ThumbnailUrl = x.Hotel.ThumbnailUrl,
+    City = x.Hotel.City != null ? x.Hotel.City.Name : string.Empty,
+    StarRating = x.Hotel.StarRating,
+    MinPrice = x.MinPrice,
+    Amenities = x.Hotel.RoomCategories
+        .SelectMany(rc => rc.Amenities)
+        .Select(a => a.Name)
+        .Distinct()
+}).ToList();
+
 
         var meta = new { PageSize = pageSize, NextCursor = nextCursor };
 
@@ -205,17 +209,18 @@ public class SearchHotelsHandler : IRequestHandler<SearchHotelsQuery, PagedResul
         // OR (Hotel.StarRating == last.StarRating AND MinPrice > last.MinPrice)
         // OR (Hotel.StarRating == last.StarRating AND MinPrice == last.MinPrice AND Hotel.Id > last.LastId)
 
-        var queryable = ordered as IQueryable<dynamic>;
-        var q = queryable.Where(x => (
-            x.Hotel.StarRating < last.StarRating
-        ) || (
-            x.Hotel.StarRating == last.StarRating && x.MinPrice > last.MinPrice
-        ) || (
-            x.Hotel.StarRating == last.StarRating && x.MinPrice == last.MinPrice && x.Hotel.Id.CompareTo(last.LastId) > 0
-        ));
+        IQueryable<HotelCardDto> queryable = (IQueryable<HotelCardDto>)ordered;
+
+        queryable = queryable.Where(x =>
+            x.StarRating < last.StarRating ||
+            (x.StarRating == last.StarRating && x.MinPrice > last.MinPrice) ||
+            (x.StarRating == last.StarRating && x.MinPrice == last.MinPrice && x.Id > last.LastId)
+        );
+
+
 
         // Need to preserve ordering — reapply the ordering
-        var reordered = q.OrderByDescending(x => x.Hotel.StarRating).ThenBy(x => x.MinPrice).ThenBy(x => x.Hotel.Id) as IOrderedQueryable<dynamic>;
+        var reordered = queryable.OrderByDescending(x => x.StarRating).ThenBy(x => x.MinPrice).ThenBy(x => x.Id) as IOrderedQueryable<dynamic>;
         return reordered;
     }
 }

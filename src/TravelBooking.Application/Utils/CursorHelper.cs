@@ -2,7 +2,7 @@ using System;
 using System.Text;
 using System.Text.Json;
 
-namespace YourNamespace.Application.Utils;
+namespace TravelBooking.Application.Utils;
 
 public static class CursorHelper
 {

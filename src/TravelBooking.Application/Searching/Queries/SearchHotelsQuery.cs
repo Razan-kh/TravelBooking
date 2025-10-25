@@ -2,9 +2,9 @@ using MediatR;
 using Sieve.Models;
 using System;
 
-namespace YourNamespace.Application.Queries;
+namespace TravelBooking.Application.Queries;
 
-public class SearchHotelsQuery : IRequest<YourNamespace.Application.DTOs.PagedResult<YourNamespace.Application.DTOs.HotelCardDto>>
+public class SearchHotelsQuery : IRequest<PagedResult<TravelBooking.Application.DTOs.HotelCardDto>>
 {
     public SieveModel SieveModel { get; set; } = new SieveModel();
     public string? Keyword { get; set; }

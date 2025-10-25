@@ -1,7 +1,11 @@
 using Microsoft.EntityFrameworkCore;
-using YourNamespace.Domain.Entities;
+using TravelBooking.Domain.Bookings;
+using TravelBooking.Domain.Cities;
+using TravelBooking.Domain.Discounts;
+using TravelBooking.Domain.Entities.Discounts;
+using TravelBooking.Domain.Hotels;
 
-namespace YourNamespace.Infrastructure.Persistence;
+namespace TravelBooking.Infrastructure.Persistence;
 
 public class AppDbContext : DbContext
 {

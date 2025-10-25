@@ -1,6 +1,11 @@
+using Sieve.Services;
+using TravelBooking.Domain.Entities.Discounts;
+using TravelBooking.Domain.Shared.Entities;
+
+namespace TravelBooking.Domain.Discounts;
+
 public class Discount : BaseEntity
 {
-    [Precision(10, 2)]
     [Sieve.Attributes.Sieve(CanFilter = true, CanSort = true)]
     public decimal DiscountPercentage { get; set; }
 
