@@ -10,6 +10,9 @@ using TravelBooking.Application.Utils;
 using TravelBooking.Domain.Searching.Entities;
 using Application.Interfaces;
 using TravelBooking.Domain;
+using TravelBooking.Domain.Rooms.Entities;
+using TravelBooking.Domain.Hotels;
+
 namespace TravelBooking.Application.Queries;
 
 public class SearchHotelsHandler : IRequestHandler<SearchHotelsQuery, PagedResult<HotelCardDto>>
@@ -95,11 +98,14 @@ public class SearchHotelsHandler : IRequestHandler<SearchHotelsQuery, PagedResul
         // For simplicity and reliability, we will use a deterministic ordering: if sorts provided, use them; otherwise default to StarRating desc, MinPrice asc, Id asc
         // But we need a projection with MinPrice to use in ordering — compute MinPrice subquery.
 
-        var withMinPrice = filteredSorted.Select(h => new
-        {
-            Hotel = h,
-            MinPrice = h.RoomCategories.Min(rc => (decimal?)rc.PricePerNight) ?? (decimal?)0
-        });
+var withMinPrice = filteredSorted
+    .Cast<Hotel>()   // 👈 force it to be Hotel, not TEntity
+    .Select(h => new
+    {
+        Hotel = h,
+        MinPrice = h.RoomCategories.Min(rc => (decimal?)rc.PricePerNight) ?? 0
+    });
+
 
         // Determine the applied sorts string
         var sortsToken = request.SieveModel.Sorts; // can be null
@@ -166,7 +172,8 @@ public class SearchHotelsHandler : IRequestHandler<SearchHotelsQuery, PagedResul
         }
 
         // Project pageItems to DTOs
-var data = pageItems.Select(x => new HotelCardDto
+        // Project pageItems to DTOs
+      var data = pageItems.Select(x => new HotelCardDto
 {
     Id = x.Hotel.Id,
     Name = x.Hotel.Name,
@@ -174,14 +181,15 @@ var data = pageItems.Select(x => new HotelCardDto
     City = x.Hotel.City != null ? x.Hotel.City.Name : string.Empty,
     StarRating = x.Hotel.StarRating,
     MinPrice = x.MinPrice,
-    Amenities = x.Hotel.RoomCategories
+    Amenities = (x.Hotel.RoomCategories as IEnumerable<RoomCategory> ?? Enumerable.Empty<RoomCategory>())
         .SelectMany(rc => rc.Amenities)
         .Select(a => a.Name)
         .Distinct()
+        .ToList()
 }).ToList();
 
 
-        var meta = new { PageSize = pageSize, NextCursor = nextCursor };
+            var meta = new { PageSize = pageSize, NextCursor = nextCursor };
 
         return new PagedResult<HotelCardDto>
         {

@@ -2,8 +2,9 @@ using Sieve.Services;
 using TravelBooking.Domain.Discounts;
 using TravelBooking.Domain.Hotels;
 using TravelBooking.Domain.Shared.Entities;
+using TravelBooking.Domain.Enums;
 
-namespace TravelBooking.Domain.Entities.Discounts;
+namespace TravelBooking.Domain.Rooms.Entities;
 
 public class RoomCategory : BaseEntity
 {

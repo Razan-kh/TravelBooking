@@ -3,6 +3,7 @@ using TravelBooking.Domain.Bookings;
 using TravelBooking.Domain.Cities;
 using TravelBooking.Domain.Discounts;
 using TravelBooking.Domain.Entities.Discounts;
+using TravelBooking.Domain.Rooms.Entities;
 using TravelBooking.Domain.Shared.Entities;
 
 namespace TravelBooking.Domain.Hotels;

@@ -3,7 +3,7 @@ using Sieve.Services;
 using TravelBooking.Domain.Bookings;
 using TravelBooking.Domain.Shared.Entities;
 
-namespace TravelBooking.Domain.Entities.Discounts;
+namespace TravelBooking.Domain.Rooms.Entities;
 
 public class Room : BaseEntity
 {
