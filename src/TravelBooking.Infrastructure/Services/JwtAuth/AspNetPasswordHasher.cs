@@ -1,5 +1,5 @@
 using Microsoft.AspNetCore.Identity;
-using TravelBooking.Application.Security;
+using TravelBooking.Application.Interfaces.Security;
 
 namespace TravelBooking.Infrastructure.Services;
 

@@ -1,13 +1,15 @@
 using Microsoft.EntityFrameworkCore;
 using TravelBooking.Domain.Users.Entities;
+using TravelBooking.Application.Interfaces.Common;
 
 namespace TravelBooking.Infrastructure.Persistence;
 
-public class AppDbContext : DbContext
+public class AppDbContext : DbContext, IAppDbContext
 {
     public DbSet<User> Users => Set<User>();
 
-    public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
+    public AppDbContext(DbContextOptions<AppDbContext> options)
+        : base(options) { }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -22,4 +24,7 @@ public class AppDbContext : DbContext
             b.HasIndex(u => u.Email).IsUnique();
         });
     }
+
+    public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
+        => base.SaveChangesAsync(cancellationToken);
 }
