@@ -5,13 +5,20 @@ namespace TravelBooking.Infrastructure.Services;
 
 public class AspNetPasswordHasher : IPasswordHasher
 {
-    private readonly PasswordHasher<object> _hasher = new PasswordHasher<object>();
+    public string HashPassword(string plain) => BCrypt.Net.BCrypt.HashPassword(plain);
 
-    public string HashPassword(string plain) => _hasher.HashPassword(null!, plain);
-
-    public bool Verify(string hashed, string plain)
+    public bool Verify(string plain, string hashed)
     {
-        var res = _hasher.VerifyHashedPassword(null!, hashed, plain);
-        return res == PasswordVerificationResult.Success || res == PasswordVerificationResult.SuccessRehashNeeded;
+        if (string.IsNullOrEmpty(hashed) || string.IsNullOrEmpty(plain))
+            return false;
+
+        try
+        {
+            return BCrypt.Net.BCrypt.Verify(plain, hashed);
+        }
+        catch
+        {
+            return false; 
+        }
     }
 }

@@ -1,5 +1,8 @@
 
+using TravelBooking.Infrastructure.Persistence;
 using TravelBooking.Infrastructure;
+using TravelBooking.Application.Shared;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -13,6 +16,7 @@ builder.Services.AddSwaggerGen();
 // Add controllers, services, etc.
 builder.Services.AddControllers();
 builder.Services.AddInfrastructure(builder.Configuration);
+builder.Services.AddApplication();
 
 var app = builder.Build();
 
@@ -27,5 +31,15 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 app.UseAuthorization();
 app.MapControllers();
+
+
+using (var scope = app.Services.CreateScope())
+{
+    var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+    await DatabaseSeeder.SeedAsync(db);
+}
+
+
+
 
 app.Run();

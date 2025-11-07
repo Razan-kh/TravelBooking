@@ -1,7 +1,9 @@
 using FluentValidation;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
+using TravelBooking.Application.Shared;
 using TravelBooking.Application.Shared.Behaviors;
+using System.Reflection;
 
 namespace TravelBooking.Application.Shared;
 
@@ -14,11 +16,11 @@ public static class DependencyInjection
             cfg.RegisterServicesFromAssembly(typeof(DependencyInjection).Assembly);
         });
 
-        // Register validators
-        services.AddValidatorsFromAssembly(typeof(DependencyInjection).Assembly);
-        
-        // Register validation behavior
-        services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
+
+      services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
+
+        // Register pipeline behavior
+    services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
 
         return services;
     }

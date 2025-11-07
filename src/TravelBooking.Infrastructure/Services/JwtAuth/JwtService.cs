@@ -6,6 +6,7 @@ using System.Text;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using TravelBooking.Application.Interfaces;
+using TravelBooking.Application.Interfaces.Security;
 
 namespace TravelBooking.Infrastructure.Services;
 

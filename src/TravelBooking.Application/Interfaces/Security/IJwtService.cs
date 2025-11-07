@@ -1,4 +1,4 @@
-namespace TravelBooking.Application.Interfaces;
+namespace TravelBooking.Application.Interfaces.Security;
 
 public interface IJwtService
 {

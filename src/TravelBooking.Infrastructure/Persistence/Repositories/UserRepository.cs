@@ -4,7 +4,7 @@ using TravelBooking.Domain.Users.Entities;
 using TravelBooking.Domain.Users.Repositories;
 using TravelBooking.Infrastructure.Persistence;
 
-namespace TravelBooking.Infrastructure.Repositories;
+namespace TravelBooking.Infrastructure.Persistence.Repositories;
 
 public class UserRepository : IUserRepository
 {
