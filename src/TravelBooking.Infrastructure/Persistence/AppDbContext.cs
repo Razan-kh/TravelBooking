@@ -5,6 +5,7 @@ using TravelBooking.Domain.Discounts;
 using TravelBooking.Domain.Entities.Discounts;
 using TravelBooking.Domain.Hotels;
 using TravelBooking.Domain.Rooms.Entities;
+using Microsoft.EntityFrameworkCore.Design;
 
 namespace TravelBooking.Infrastructure.Persistence;
 
