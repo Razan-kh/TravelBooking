@@ -2,6 +2,7 @@ using Sieve.Services;
 using TravelBooking.Domain.Entities.Discounts;
 using TravelBooking.Domain.Entities.Payments;
 using TravelBooking.Domain.Hotels;
+using TravelBooking.Domain.Rooms.Entities;
 using TravelBooking.Domain.Shared.Entities;
 using TravelBooking.Domain.Users.Entities;
 

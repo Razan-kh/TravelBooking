@@ -4,6 +4,8 @@ using System.Threading.Tasks;
 using System.Threading;
 using Sieve.Models;
 using System;
+using TravelBooking.Domain.Rooms.Entities;
+using TravelBooking.Domain.Rooms.Enums;
 
 namespace TravelBooking.Api.Controllers;
 

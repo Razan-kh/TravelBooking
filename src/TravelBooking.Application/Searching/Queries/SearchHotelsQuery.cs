@@ -1,6 +1,7 @@
 using MediatR;
 using Sieve.Models;
 using System;
+using TravelBooking.Domain.Rooms.Enums;
 
 namespace TravelBooking.Application.Queries;
 
