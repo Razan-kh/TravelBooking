@@ -19,6 +19,7 @@ public class HotelsController : ControllerBase
     /// <summary>
     /// Search hotels with filters and cursor-based infinite scroll.
     /// </summary>
+
     [HttpGet]
     public async Task<IActionResult> Search(
         [FromQuery] SieveModel sieveModel,
@@ -60,4 +61,15 @@ public class HotelsController : ControllerBase
         var res = await _mediator.Send(query, cancellationToken);
         return Ok(res);
     }
+
+    [HttpGet("hi")]
+    public async Task<IActionResult> Hi()
+    {
+        return Ok();
+    }
+
+    [HttpGet("test")]
+public IActionResult Test() => Ok("Routing works!");
+
 }
+

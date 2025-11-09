@@ -1,6 +1,8 @@
+using Application.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Sieve.Services;
 using TravelBooking.Application.Interfaces;
 using TravelBooking.Infrastructure.Persistence;
 
@@ -16,6 +18,11 @@ namespace TravelBooking.Infrastructure
             // Register repositories and services
             services.AddScoped<ISeedService, SeedService>();
 
+            services.AddScoped<IAppDbContext>(provider => provider.GetRequiredService<AppDbContext>());
+
+            // ✅ Add Sieve
+            services.AddScoped<ISieveProcessor, SieveProcessor>();
+            
             return services;
         }
     }

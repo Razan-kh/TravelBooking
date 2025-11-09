@@ -1,10 +1,11 @@
 using TravelBooking.Domain.Users.Enums;
 using System;
 using TravelBooking.Domain.Bookings;
+using TravelBooking.Domain.Shared.Entities;
 
 namespace TravelBooking.Domain.Users.Entities;
 
-public class User
+public class User : BaseEntity
 {
     public string FirstName { get; set; }
     public string LastName { get; set; }

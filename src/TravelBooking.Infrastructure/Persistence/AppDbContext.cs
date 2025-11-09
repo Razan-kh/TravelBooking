@@ -6,10 +6,12 @@ using TravelBooking.Domain.Entities.Discounts;
 using TravelBooking.Domain.Hotels;
 using TravelBooking.Domain.Rooms.Entities;
 using Microsoft.EntityFrameworkCore.Design;
+using Application.Interfaces;
+using TravelBooking.Domain.Users.Entities;
 
 namespace TravelBooking.Infrastructure.Persistence;
 
-public class AppDbContext : DbContext
+public class AppDbContext : DbContext, IAppDbContext
 {
     public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
 
@@ -23,9 +25,20 @@ public class AppDbContext : DbContext
     public DbSet<Review> Reviews => Set<Review>();
     public DbSet<Discount> Discounts => Set<Discount>();
 
+    public DbSet<User> Users => throw new NotImplementedException();
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
-        // Keep your existing model configuration (relationships, conversions, indexes)
+
+    modelBuilder.Entity<Booking>()
+        .HasMany(b => b.Rooms)
+        .WithMany(r => r.Bookings)
+        .UsingEntity<Dictionary<string, object>>(
+            "BookingRoom", // table name
+            j => j.HasOne<Room>().WithMany().HasForeignKey("RoomId").OnDelete(DeleteBehavior.Restrict),
+            j => j.HasOne<Booking>().WithMany().HasForeignKey("BookingId").OnDelete(DeleteBehavior.Cascade),
+            j => j.HasKey("BookingId", "RoomId")
+        );
     }
 }

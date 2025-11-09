@@ -12,8 +12,9 @@ using Application.Interfaces;
 using TravelBooking.Domain;
 using TravelBooking.Domain.Rooms.Entities;
 using TravelBooking.Domain.Hotels;
+using TravelBooking.Application.Queries;
 
-namespace TravelBooking.Application.Queries;
+namespace TravelBooking.Application.Handlers;
 
 public class SearchHotelsHandler : IRequestHandler<SearchHotelsQuery, PagedResult<HotelCardDto>>
 {
@@ -76,14 +77,25 @@ public class SearchHotelsHandler : IRequestHandler<SearchHotelsQuery, PagedResul
         }
 
         // RoomType & capacity & availability — we need to ensure at least one RoomCategory satisfies criteria and has available rooms
-        if (request.RoomType.HasValue || totalGuests > 1 || (checkIn.HasValue && checkOut.HasValue))
-        {
-            baseQuery = baseQuery.Where(h => h.RoomCategories.Any(rc =>
-                (!request.RoomType.HasValue || rc.RoomType == request.RoomType.Value)
-                && (rc.AdultsCapacity + rc.ChildrenCapacity) >= totalGuests
-                && RoomCategoryHasAvailabilityPredicate(h.Id, rc.Id, checkIn, checkOut)
-            ));
-        }
+if (request.RoomType.HasValue || totalGuests > 1 || (checkIn.HasValue && checkOut.HasValue))
+{
+    var checkInDate = request.CheckIn ?? default(DateOnly?);
+    var checkOutDate = request.CheckOut ?? default(DateOnly?);
+
+    baseQuery = baseQuery.Where(h => h.RoomCategories.Any(rc =>
+        (!request.RoomType.HasValue || rc.RoomType == request.RoomType.Value)
+        && (rc.AdultsCapacity + rc.ChildrenCapacity) >= totalGuests
+        
+        && (checkInDate == null || checkOutDate == null
+            || !_db.Bookings.Any(b =>
+                b.Rooms.Any(r => r.RoomCategoryId == rc.Id) &&
+                b.CheckInDate < checkOutDate &&
+                b.CheckOutDate > checkInDate))
+                
+    ));
+
+}
+
 
         // Apply Sieve for filters & sorts but NOT pagination
         var filteredSorted = _sieveProcessor.Apply(request.SieveModel, baseQuery, applyPagination: false);
