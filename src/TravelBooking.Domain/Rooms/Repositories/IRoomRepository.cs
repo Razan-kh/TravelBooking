@@ -1,6 +1,6 @@
 using TravelBooking.Domain.Rooms.Entities;
 
-namespace TravelBooking.Domain.Rooms.Interfaces;
+namespace TravelBooking.Domain.Rooms.Repositories;
 
 public interface IRoomRepository
 {

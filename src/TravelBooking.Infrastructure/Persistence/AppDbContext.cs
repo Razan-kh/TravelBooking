@@ -5,11 +5,10 @@ using TravelBooking.Domain.Discounts.Entities;
 using TravelBooking.Domain.Hotels;
 using TravelBooking.Domain.Rooms.Entities;
 using Microsoft.EntityFrameworkCore.Design;
-using Application.Interfaces;
 using TravelBooking.Domain.Users.Entities;
 using TravelBooking.Domain.Hotels.Entities;
 using TravelBooking.Domain.Amenities.Entities;
-using TravelBooking.Domain.Entities.Reviews;
+using TravelBooking.Domain.Reviews.Entities;
 using TravelBooking.Domain.Owners.Entities;
 
 namespace TravelBooking.Infrastructure.Persistence;
