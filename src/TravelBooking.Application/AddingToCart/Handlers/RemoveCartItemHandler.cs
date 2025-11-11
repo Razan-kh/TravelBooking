@@ -3,7 +3,7 @@ using MediatR;
 using TravelBooking.Application.AddingToCar.Commands;
 using TravelBooking.Application.Shared.Interfaces;
 using TravelBooking.Application.Shared.Results;
-using TravelBooking.Domain.Cart.Repositories;
+using TravelBooking.Domain.Carts.Repositories;
 
 namespace TravelBooking.Application.AddingToCart.Handlers;
 

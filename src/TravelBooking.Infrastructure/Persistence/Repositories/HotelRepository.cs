@@ -1,3 +1,10 @@
+using TravelBooking.Domain.Hotels.Repositories;
+using TravelBooking.Infrastructure.Persistence;
+using TravelBooking.Domain.Hotels.Entities;
+using Microsoft.EntityFrameworkCore;
+
+namespace TravelBooking.Infrastructure.Persistence.Repositories;
+
 public class HotelRepository : IHotelRepository
 {
     private readonly AppDbContext _ctx;
@@ -7,19 +14,11 @@ public class HotelRepository : IHotelRepository
     {
         return await _ctx.Hotels
             .Include(h => h.Gallery)
-            .Include(h => h.Reviews).ThenInclude(r => r.User)
-            .Include(h => h.RoomCategories).ThenInclude(rc => rc.Amenities)
-            .FirstOrDefaultAsync(h => h.Id == id, ct);
-    }
-
-    public async Task<HotelWithMinPrice?> GetHotelWithMinPriceAsync(Guid id, CancellationToken ct = default)
-    {
-        var hotel = await _ctx.Hotels
+            .Include(h => h.Reviews)
+                .ThenInclude(r => r.User)
             .Include(h => h.RoomCategories)
+                .ThenInclude(rc => rc.Amenities)
             .FirstOrDefaultAsync(h => h.Id == id, ct);
-        if (hotel == null) return null;
-        var min = hotel.RoomCategories.Any() ? hotel.RoomCategories.Min(rc => rc.PricePerNight) : 0;
-        return new HotelWithMinPrice { Hotel = hotel, MinPrice = min };
     }
 
     public Task<IEnumerable<Hotel>> SearchAsync() => Task.FromResult(Enumerable.Empty<Hotel>()); // implement filtering

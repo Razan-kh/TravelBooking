@@ -7,6 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="DotNetEnv" Version="3.1.1" />
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="8.0.18" />
     <PackageReference Include="Sieve" Version="2.5.5" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.6.2" />
@@ -15,6 +16,7 @@
   <ItemGroup>
     <ProjectReference Include="..\TravelBooking.Application\TravelBooking.Application.csproj" />
     <ProjectReference Include="..\TravelBooking.Domain\TravelBooking.Domain.csproj" />
+    <ProjectReference Include="..\TravelBooking.Infrastructure\TravelBooking.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>

@@ -5,5 +5,5 @@ namespace TravelBooking.Application.Cheackout.Servicies;
 
 public interface IPdfService
 {
-    byte[] GenerateBookingInvoicePdf(Domain.Bookings.Entities.Booking booking, Hotel hotel, User user);
+    byte[] GenerateInvoice(Domain.Bookings.Entities.Booking booking);
 }

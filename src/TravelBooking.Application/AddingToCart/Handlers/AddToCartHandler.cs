@@ -4,7 +4,7 @@ using TravelBooking.Domain.Shared;
 using Microsoft.EntityFrameworkCore;
 using TravelBooking.Application.AddingToCar.Commands;
 using TravelBooking.Application.Shared.Results;
-using TravelBooking.Domain.Cart.Repositories;
+using TravelBooking.Domain.Carts.Repositories;
 using TravelBooking.Domain.Rooms.Repositories;
 using TravelBooking.Domain.Carts.Entities;
 using TravelBooking.Application.Shared.Interfaces;
@@ -43,10 +43,10 @@ public class AddToCartHandler : IRequestHandler<AddRoomToCartCommand, Result>
         if (cart == null)
         {
             cart = new Cart { UserId = request.UserId };
-            _cartRepository.Add(cart);
+            _cartRepository.AddOneAsync(cart);
         }
 
-        // ✅ Check if this room category is already in cart for same period
+        //  Check if this room category is already in cart for same period
         var existingItem = cart.Items.FirstOrDefault(i =>
             i.RoomCategoryId == request.RoomCategoryId &&
             i.CheckIn == request.CheckIn &&
@@ -59,7 +59,7 @@ public class AddToCartHandler : IRequestHandler<AddRoomToCartCommand, Result>
         }
         else
         {
-            // ✅ Add new item
+            // Add new item
             var cartItem = new CartItem
             {
                 RoomCategoryId = request.RoomCategoryId,
@@ -70,7 +70,7 @@ public class AddToCartHandler : IRequestHandler<AddRoomToCartCommand, Result>
             cart.Items.Add(cartItem);
         }
 
-        // ✅ Persist changes
+        // Persist changes
         await _unitOfWork.SaveChangesAsync(cancellationToken);
 
         return Result.Success();

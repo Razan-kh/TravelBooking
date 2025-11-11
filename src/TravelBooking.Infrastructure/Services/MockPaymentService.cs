@@ -1,9 +1,12 @@
 using TravelBooking.Application.Cheackout.Servicies;
 using TravelBooking.Application.Shared.Results;
+using TravelBooking.Domain.Payments.Enums;
+
+namespace TravelBooking.Infrastructure.Services;
 
 public class MockPaymentService : IPaymentService
 {
-    public Task<Result> ProcessPaymentAsync(Guid userId, string method)
+    public Task<Result> ProcessPaymentAsync(Guid userId, PaymentMethod method)
     {
         // Simulate a short delay for processing
         Thread.Sleep(500);

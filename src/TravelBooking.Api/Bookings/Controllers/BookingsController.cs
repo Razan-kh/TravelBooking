@@ -1,3 +1,4 @@
+/*
 [ApiController]
 [Route("api/[controller]")]
 public class BookingsController : ControllerBase
@@ -13,3 +14,4 @@ public class BookingsController : ControllerBase
         return Ok(res.Value);
     }
 }
+*/

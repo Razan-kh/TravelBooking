@@ -1,13 +1,16 @@
 using MediatR;
 using TravelBooking.Application.AddingToCart.Queries;
+using TravelBooking.Application.Carts.DTOs;
+using TravelBooking.Application.Carts.Mappings;
 using TravelBooking.Application.Shared.Results;
-using TravelBooking.Domain.Cart.Repositories;
+using TravelBooking.Domain.Carts.Repositories;
 
 namespace TravelBooking.Application.AddingToCart.Handlers;
 
 public class GetCartQueryHandler : IRequestHandler<GetCartQuery, Result<List<CartItemDto>>>
 {
     private readonly ICartRepository _cartRepository;
+    private readonly CartMapper _mapper = new();
 
     public GetCartQueryHandler(ICartRepository cartRepository)
     {
@@ -21,14 +24,7 @@ public class GetCartQueryHandler : IRequestHandler<GetCartQuery, Result<List<Car
         if (cart == null)
             return Result.Failure<List<CartItemDto>>("Cart not found.");
 
-        var items = cart.Items.Select(i => new CartItemDto
-        {
-            Id = i.Id,
-            RoomCategoryId = i.RoomCategoryId,
-            CheckIn = i.CheckIn,
-            CheckOut = i.CheckOut,
-            Quantity = i.Quantity
-        }).ToList();
+        var items = _mapper.ToDtoList(cart.Items);
 
         return Result.Success(items);
     }

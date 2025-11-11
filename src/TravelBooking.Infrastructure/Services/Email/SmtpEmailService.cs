@@ -2,29 +2,30 @@ using System.Net;
 using System.Net.Mail;
 using TravelBooking.Domain.Bookings.Entities;
 using TravelBooking.Application.Cheackout.Servicies;
+using Microsoft.Extensions.Options;
 
 namespace TravelBooking.Infrastructure.Services.Email;
 
-public class EmailService : IEmailService
+public class SmtpEmailService : IEmailService
 {
-    private readonly SmtpSettings _settings;
+    private readonly SmtpSettings _smtpOptions;
 
-    public EmailService(SmtpSettings settings)
+    public SmtpEmailService(IOptions<SmtpSettings> smtpOptions)
     {
-        _settings = settings;
+        _smtpOptions = smtpOptions.Value;
     }
 
-    public async Task SendBookingConfirmationAsync(string email, Booking booking, byte[] pdfInvoice)
+    public async Task SendBookingConfirmationAsync(string email, Booking booking, byte[]? pdfInvoice, CancellationToken ct = default)
     {
-        using var client = new SmtpClient(_settings.Host, _settings.Port)
+        using var client = new SmtpClient(_smtpOptions.Host, _smtpOptions.Port)
         {
-            Credentials = new NetworkCredential(_settings.Username, _settings.Password),
-            EnableSsl = _settings.EnableSsl
+            Credentials = new NetworkCredential(_smtpOptions.Username, _smtpOptions.Password),
+            EnableSsl = _smtpOptions.EnableSsl
         };
 
         using var message = new MailMessage
         {
-            From = new MailAddress(_settings.FromAddress, "TravelBooking"),
+            From = new MailAddress(_smtpOptions.FromAddress, "TravelBooking"),
             Subject = $"Booking Confirmation #{booking.Id}",
             Body = $@"
 Dear Customer,
@@ -32,9 +33,9 @@ Dear Customer,
 Your booking has been successfully confirmed!
 
 🛎️ Booking ID: {booking.Id}
-📅 Check-in: {booking.Items.First().CheckIn}
-📅 Check-out: {booking.Items.First().CheckOut}
-💰 Total: ${booking.TotalAmount}
+📅 Check-in: {booking.CheckInDate}
+📅 Check-out: {booking.CheckOutDate}
+💰 Total: ${booking.PaymentDetails.Amount}
 
 Attached is your invoice in PDF format.
 
@@ -46,7 +47,7 @@ TravelBooking Team
 
         message.To.Add(email);
 
-        // ✅ Attach invoice
+        //  Attach invoice
         using var pdfStream = new MemoryStream(pdfInvoice);
         var attachment = new Attachment(pdfStream, $"Invoice_{booking.Id}.pdf", "application/pdf");
         message.Attachments.Add(attachment);

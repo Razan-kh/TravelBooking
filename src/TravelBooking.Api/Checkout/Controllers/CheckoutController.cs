@@ -3,7 +3,7 @@ using MediatR;
 using TravelBooking.Application.Bookings.Commands;
 using TravelBooking.Application.Cheackout.Commands;
 
-namespace TravelBooking.API.Controllers;
+namespace TravelBooking.Api.Cheackout.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
