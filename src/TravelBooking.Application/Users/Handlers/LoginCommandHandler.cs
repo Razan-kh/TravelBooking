@@ -60,7 +60,8 @@ public sealed class LoginCommandHandler : IRequestHandler<LoginCommand, Result<L
             {
                 ["email"] = user.Email,
                 ["firstName"] = user.FirstName,
-                ["userId"] = user.Id.ToString()
+                ["userId"] = user.Id.ToString(),
+                ["role"] = user.Role.ToString()
             };
 
             var token = _jwtService.CreateToken(user.Id.ToString(), user.FirstName, extraClaims);

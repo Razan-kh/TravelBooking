@@ -2,6 +2,8 @@
 using TravelBooking.Infrastructure.Persistence;
 using TravelBooking.Infrastructure;
 using TravelBooking.Application.Shared;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -17,6 +19,22 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddControllers();
 builder.Services.AddInfrastructure(builder.Configuration);
 builder.Services.AddApplication();
+
+builder.Services.AddAuthentication("Bearer")
+    .AddJwtBearer("Bearer", options =>
+    {
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuerSigningKey = true,
+            ValidateIssuer = false,
+            ValidateAudience = false,
+            ValidAlgorithms = new[] { SecurityAlgorithms.HmacSha256 },
+            RoleClaimType = ClaimTypes.Role // VERY IMPORTANT
+        };
+    });
+
+builder.Services.AddAuthorization();
+
 
 var app = builder.Build();
 
