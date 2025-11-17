@@ -1,17 +1,12 @@
 using Microsoft.Extensions.DependencyInjection;
-using Sieve.Services;
-using TravelBooking.Application.Cities.Servicies;
-using TravelBooking.Application.Hotels.Servicies;
-using TravelBooking.Application.Rooms.Commands;
-using TravelBooking.Application.Rooms.Queries;
-using TravelBooking.Application.Rooms.Services;
 using TravelBooking.Domain.Hotels.Repositories;
 using TravelBooking.Domain.Rooms.Repositories;
-using TravelBooking.Domain.Cities.Interfaces.Services;
-using TravelBooking.Domain.Rooms.interfaces.Services;
 using TravelBooking.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using TravelBooking.Infrastructure.Persistence.Repositories;
+
+namespace TravelBooking.Infrastructure;
 
 public static class DependencyInjection
 {

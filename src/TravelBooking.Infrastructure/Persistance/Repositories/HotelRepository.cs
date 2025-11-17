@@ -3,6 +3,8 @@ using TravelBooking.Domain.Hotels.Entities;
 using TravelBooking.Domain.Hotels.Repositories;
 using TravelBooking.Infrastructure.Persistence;
 
+namespace TravelBooking.Infrastructure.Persistence.Repositories;
+
 public class HotelRepository : IHotelRepository
 {
     private readonly AppDbContext _context;
@@ -23,13 +25,20 @@ public class HotelRepository : IHotelRepository
 
         return await query
             .OrderBy(h => h.Name)
+            .Include(h => h.City)
+            .Include(h => h.Owner)
             .Skip((page - 1) * pageSize)
             .Take(pageSize)
             .ToListAsync(ct);
     }
 
     public async Task<Hotel?> GetByIdAsync(Guid id, CancellationToken ct)
-        => await _context.Hotels.FindAsync(new object?[] { id }, ct);
+    {
+        return await _context.Hotels
+            .Include(h => h.City)
+            .Include(h => h.Owner)
+            .FirstOrDefaultAsync(h => h.Id == id, ct);
+    }
 
     public async Task AddAsync(Hotel hotel, CancellationToken ct)
     {

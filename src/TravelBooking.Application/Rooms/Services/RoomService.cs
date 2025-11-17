@@ -34,7 +34,6 @@ public class RoomService : IRoomService
 
     public async Task<Room> CreateRoomAsync(Room room, CancellationToken ct)
     {
-        room.Id = Guid.NewGuid();
         await _roomRepo.AddAsync(room, ct);
         return room;
     }

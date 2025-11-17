@@ -18,10 +18,12 @@ public class CreateHotelCommandHandler : IRequestHandler<CreateHotelCommand, Res
         {
             Id = Guid.NewGuid(),
             Name = request.Name,
-            City = request.City,
-            Owner = request.Owner,
+            CityId = request.CityId,
+            OwnerId = request.OwnerId,
             StarRating = request.StarRate,
-            TotalRooms = request.RoomNumber
+            TotalRooms = request.RoomNumber,
+            Description = request.Description,
+            
         };
 
         await _hotelService.CreateHotelAsync(hotel, ct);

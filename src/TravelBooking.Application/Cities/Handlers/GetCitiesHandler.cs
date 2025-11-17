@@ -11,7 +11,11 @@ public class GetCitiesHandler : IRequestHandler<GetCitiesQuery, Result<PagedResu
     private readonly ICityService _service;
     private readonly ICityMapper _cityMapper;
 
-    public GetCitiesHandler(ICityService service) => _service = service;
+    public GetCitiesHandler(ICityService service, ICityMapper cityMapper)
+    {
+        _service = service;
+        _cityMapper = cityMapper;
+    }
 
     public async Task<Result<PagedResult<CityDto>>> Handle(GetCitiesQuery req, CancellationToken ct)
     {
@@ -20,6 +24,7 @@ public class GetCitiesHandler : IRequestHandler<GetCitiesQuery, Result<PagedResu
 
         // --- Call domain service (returns List<City>) ---
         List<City> cities = await _service.GetCitiesAsync(req.Filter, page, pageSize, ct);
+        Console.WriteLine(cities[0].Name);
 
         // --- Map domain entities to DTOs ---
         var cityDtos = cities.Select(c => _cityMapper.Map(c)).ToList();

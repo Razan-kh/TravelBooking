@@ -1,10 +1,8 @@
 
 using MediatR;
 using TravelBooking.Application.Shared.Results;
-using TravelBooking.Domain.Cities;
-using TravelBooking.Domain.Owners.Entities;
 
 namespace TravelBooking.Application.Hotels.Commands;
 
-public record UpdateHotelCommand(Guid Id, string Name, Guid City, Guid Owner, string Location, int StarRate, int RoomNumber)
+public record UpdateHotelCommand(Guid Id, string Name, Guid CityId, Guid OwnerId, string Location, int StarRate, int RoomNumber, string Email, string ThumbnailUrl, string Description, string PhoneNumber, int TotalRooms)
     : IRequest<Result>;

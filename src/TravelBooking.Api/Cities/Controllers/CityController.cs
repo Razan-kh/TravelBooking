@@ -3,6 +3,8 @@ using MediatR;
 using TravelBooking.Application.Cities.Commands;
 using TravelBooking.Application.Cities.Dtos;
 
+namespace TravelBooking.Api.Cities.Controllers;
+
 [ApiController]
 [Route("api/city")]
 public class CityController : ControllerBase
@@ -10,7 +12,6 @@ public class CityController : ControllerBase
     private readonly IMediator _mediator;
     public CityController(IMediator mediator) => _mediator = mediator;
 
-    // Cities
     [HttpGet("cities")]
     public async Task<IActionResult> GetCities([FromQuery] string? filter, [FromQuery] int page = 1, [FromQuery] int pageSize = 20)
     {

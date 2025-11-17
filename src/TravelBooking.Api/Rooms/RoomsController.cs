@@ -3,6 +3,8 @@ using MediatR;
 using TravelBooking.Application.Rooms.Queries;
 using TravelBooking.Application.Rooms.Commands;
 
+namespace TravelBooking.Api.Rooms.Controllers;
+
 [ApiController]
 [Route("api/[controller]")]
 public class RoomsController : ControllerBase

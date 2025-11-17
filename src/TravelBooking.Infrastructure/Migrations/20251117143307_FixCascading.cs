@@ -5,7 +5,7 @@
 namespace TravelBooking.Infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class AddData : Migration
+    public partial class FixCascading : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)

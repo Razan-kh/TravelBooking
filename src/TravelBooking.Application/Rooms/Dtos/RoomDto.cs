@@ -4,6 +4,7 @@ public class RoomDto
 {
     public Guid Id { get; set; }
     public string RoomNumber { get; set; }
+    public string CategoryName { get; set; }
     public Guid RoomCategoryId { get; set; }
     public bool IsAvailable { get; set; }
     public int AdultsCapacity { get; set; }

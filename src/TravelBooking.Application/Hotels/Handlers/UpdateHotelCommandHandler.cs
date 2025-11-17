@@ -20,9 +20,15 @@ public class UpdateHotelCommandHandler : IRequestHandler<UpdateHotelCommand, Res
             return Result.Failure($"Hotel with ID {request.Id} not found.");
 
         existing.Name = request.Name;
-        existing.CityId = request.City;
-        existing.OwnerId = request.Owner;
+        existing.CityId = request.CityId;
+        existing.OwnerId = request.OwnerId;
         existing.Location = request.Location;
+        existing.Email = request.Email;
+        existing.Description = request.Description;
+        existing.ThumbnailUrl = request.ThumbnailUrl;
+        existing.StarRating = request.StarRate;
+        existing.PhoneNumber = request.PhoneNumber;
+        existing.TotalRooms = request.TotalRooms;
 
         await _hotelService.UpdateHotelAsync(existing, ct);
         return Result.Success();

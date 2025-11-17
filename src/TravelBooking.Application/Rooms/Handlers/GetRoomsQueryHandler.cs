@@ -26,9 +26,11 @@ public class GetRoomsHandler : IRequestHandler<GetRoomsQuery, Result<PagedResult
 
         // Call domain service
         var rooms = await _service.GetRoomsAsync(req.Filter, page, pageSize, ct);
+System.Console.WriteLine(rooms[0].RoomCategory.ChildrenCapacity);
 
         // Map to DTOs
         var roomDtos = rooms.Select(r => _mapper.Map(r)).ToList();
+System.Console.WriteLine(roomDtos[0].ChildrenCapacity);
 
         // Wrap in PagedResult
         var paged = new PagedResult<RoomDto>

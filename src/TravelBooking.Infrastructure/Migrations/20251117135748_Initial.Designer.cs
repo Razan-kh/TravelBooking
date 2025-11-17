@@ -12,8 +12,8 @@ using TravelBooking.Infrastructure.Persistence;
 namespace TravelBooking.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20251114202047_AddData0")]
-    partial class AddData0
+    [Migration("20251117135748_Initial")]
+    partial class Initial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -490,7 +490,7 @@ namespace TravelBooking.Infrastructure.Migrations
                     b.HasOne("TravelBooking.Domain.Rooms.Entities.Room", null)
                         .WithMany()
                         .HasForeignKey("RoomId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 

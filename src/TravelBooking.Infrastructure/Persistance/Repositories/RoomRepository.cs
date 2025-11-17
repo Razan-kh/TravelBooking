@@ -3,6 +3,8 @@ using TravelBooking.Domain.Rooms.Entities;
 using TravelBooking.Domain.Rooms.Repositories;
 using TravelBooking.Infrastructure.Persistence;
 
+namespace TravelBooking.Infrastructure.Persistence.Repositories;
+
 public class RoomRepository : IRoomRepository
 {
     private readonly AppDbContext _context; // Your EF DbContext
@@ -20,11 +22,11 @@ public class RoomRepository : IRoomRepository
         {
             query = query.Where(r =>
                 r.RoomNumber.Contains(filter) ||
-                r.RoomCategory.Name.Contains(filter)); // adjust as needed
+                r.RoomCategory.Name.Contains(filter));
         }
 
         return await query
-            .Include(r => r.RoomCategory)  // Include related entities if needed
+            .Include(r => r.RoomCategory)  
             .Include(r => r.Gallery)
             .ToListAsync(ct);
     }

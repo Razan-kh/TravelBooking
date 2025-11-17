@@ -487,7 +487,7 @@ namespace TravelBooking.Infrastructure.Migrations
                     b.HasOne("TravelBooking.Domain.Rooms.Entities.Room", null)
                         .WithMany()
                         .HasForeignKey("RoomId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 

@@ -1,9 +1,17 @@
 using MediatR;
 using TravelBooking.Application.Shared.Results;
-using TravelBooking.Domain.Cities;
-using TravelBooking.Domain.Owners.Entities;
 
 namespace TravelBooking.Application.Hotels.Commands;
 
-public record CreateHotelCommand(string Name, City City, Owner Owner, string Location, int StarRate, int RoomNumber)
-    : IRequest<Result<Guid>>;
+public class CreateHotelCommand : IRequest<Result<Guid>>
+{
+    public string Name { get; set; }
+    public Guid CityId { get; set; }
+    public Guid OwnerId { get; set; }
+    public string Location { get; set; }
+    public int StarRate { get; set; }
+    public int RoomNumber { get; set; }
+    public string Description { get; set; }
+    public string Email { get; set; }
+    public string ThumbnailUrl { get; set; }
+}

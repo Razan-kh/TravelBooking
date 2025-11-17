@@ -1,8 +1,7 @@
-// Infrastructure/Repositories/CityRepository.cs
 using Microsoft.EntityFrameworkCore;
-using TravelBooking.Application.Common;
 using TravelBooking.Domain.Cities;
-using TravelBooking.Infrastructure.Persistence;
+
+namespace TravelBooking.Infrastructure.Persistence.Repositories;
 
 public class CityRepository : ICityRepository
 {
