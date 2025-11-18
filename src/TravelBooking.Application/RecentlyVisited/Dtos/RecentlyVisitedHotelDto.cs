@@ -7,5 +7,4 @@ public class RecentlyVisitedHotelDto
     public string City { get; set; } = string.Empty;
     public string? ThumbnailUrl { get; set; }
     public int StarRating { get; set; }
-    public decimal MinPrice { get; set; }
 }

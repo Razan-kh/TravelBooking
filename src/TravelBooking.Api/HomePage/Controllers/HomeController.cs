@@ -1,7 +1,6 @@
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using TravelBooking.Application.FeaturedDeals.Queries;
-using TravelBooking.Application.FeaturedDeals.Queries;
 using TravelBooking.Application.RecentlyVisited.Queries;
 using TravelBooking.Application.TrendingCities.Queries;
 

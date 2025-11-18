@@ -1,6 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
 using TravelBooking.Application.Shared.Results; 
-using Microsoft.AspNetCore.Http; 
 
 namespace TravelBooking.Api.Extensions;
 

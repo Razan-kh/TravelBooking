@@ -16,11 +16,12 @@ public class HomeService : IHomeService
     private readonly IFeaturedHotelMapper _featuredHotelMapper;
     private readonly IRecentlyVisitedHotelMapper _recentlyVisitedHotelMapper;
     private readonly ITrendingCityMapper _trendingCityMapper;
+    
     public HomeService(IHotelRepository repository, IFeaturedHotelMapper featuredHotelMapper, IRecentlyVisitedHotelMapper recentlyVisitedHotelMapper, ITrendingCityMapper trendingCityMapper)
     {
         _repository = repository;
         _featuredHotelMapper = featuredHotelMapper;
-        _featuredHotelMapper = featuredHotelMapper;
+        _recentlyVisitedHotelMapper = recentlyVisitedHotelMapper;
         _trendingCityMapper = trendingCityMapper;
     }
 

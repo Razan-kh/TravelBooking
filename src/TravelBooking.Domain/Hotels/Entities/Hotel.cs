@@ -1,13 +1,12 @@
 using Sieve.Services;
 using TravelBooking.Domain.Bookings.Entities;
 using TravelBooking.Domain.Cities;
-using TravelBooking.Domain.Discounts.Entities;
 using TravelBooking.Domain.Hotels.Enums;
-using TravelBooking.Domain.Images.Entities;
 using TravelBooking.Domain.Owners.Entities;
 using TravelBooking.Domain.Reviews.Entities;
 using TravelBooking.Domain.Rooms.Entities;
 using TravelBooking.Domain.Shared.Entities;
+using TravelBooking.Domain.Images.Entities;
 
 namespace TravelBooking.Domain.Hotels.Entities;
 

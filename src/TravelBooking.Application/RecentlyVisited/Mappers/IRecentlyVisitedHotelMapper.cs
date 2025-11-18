@@ -5,5 +5,5 @@ namespace TravelBooking.Application.RecentlyVisited.Mappers;
 
 public interface IRecentlyVisitedHotelMapper
 {
-    RecentlyVisitedHotelDto ToRecentlyVisitedHotelDto(HotelWithMinPrice hotel);
+    RecentlyVisitedHotelDto ToRecentlyVisitedHotelDto(Hotel hotel);
 }
