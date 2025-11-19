@@ -26,23 +26,36 @@ public class AuthService : IAuthService
 
     public async Task<Result<LoginResponseDto>> LoginAsync(string email, string password)
     {
-        var user = await _userRepository.GetByEmailAsync(email);
-
-        if (user == null)
-            return Result.Failure<LoginResponseDto>("Invalid credentials", "INVALID_CREDENTIALS", 401);
-
-        var verification = _passwordHasher.Verify(user.PasswordHash, password);
-
-        if (verification != false)
-            return Result.Failure<LoginResponseDto>("Invalid credentials", "INVALID_CREDENTIALS", 401);
-
-        var token = _jwtService.CreateToken(user);
-
-        var dto = new LoginResponseDto
+        try
         {
-            AccessToken = token,
-        };
+            var user = await _userRepository.GetByEmailAsync(email);
 
-        return Result.Success(dto);
+            if (user is null)
+            {
+                return Result.Failure<LoginResponseDto>("Invalid credentials", "INVALID_CREDENTIALS", 401);
+            }
+
+            var verification = _passwordHasher.Verify(user.PasswordHash, password);
+
+            if (!verification)
+            {
+                return Result.Failure<LoginResponseDto>("Invalid credentials", "INVALID_CREDENTIALS", 401);
+            }
+
+            var token = _jwtService.CreateToken(user);
+
+            var dto = new LoginResponseDto
+            {
+                AccessToken = token,
+            };
+
+            return Result.Success(dto);
+        }
+
+        catch (Exception ex)
+        {
+            // _logger.LogError(ex, "Error during login for email: {Email}", email);
+            return Result.Failure<LoginResponseDto>("Invalid credentials", "INVALID_CREDENTIALS", 401);
+        }
     }
 }
