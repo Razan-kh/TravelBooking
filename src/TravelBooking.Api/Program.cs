@@ -4,6 +4,8 @@ using TravelBooking.Infrastructure;
 using TravelBooking.Application.Shared;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
+using TravelBooking.Infrastructure.Settings;
+using System.Security.Claims;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -19,6 +21,11 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddControllers();
 builder.Services.AddInfrastructure(builder.Configuration);
 builder.Services.AddApplication();
+
+var jwtSettings = new JwtSettings();
+builder.Configuration.GetSection("JwtSettings").Bind(jwtSettings);
+builder.Services.AddSingleton(jwtSettings);
+
 
 builder.Services.AddAuthentication("Bearer")
     .AddJwtBearer("Bearer", options =>
@@ -56,8 +63,5 @@ using (var scope = app.Services.CreateScope())
     var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
     await DatabaseSeeder.SeedAsync(db);
 }
-
-
-
 
 app.Run();

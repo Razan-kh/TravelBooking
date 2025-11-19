@@ -1,5 +1,3 @@
-using System;
-using System.Threading.Tasks;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using TravelBooking.Application.Users.Commands;
@@ -15,7 +13,7 @@ public class AuthController(IMediator mediator) : ControllerBase
     private readonly IMediator _mediator = mediator;
 
     [HttpPost("login")]
-    public async Task<ActionResult<LoginResponse>> Login([FromBody] LoginRequest request)
+    public async Task<ActionResult<LoginResponseDto>> Login([FromBody] LoginRequestDto request)
     {
             var cmd = new LoginCommand
             {

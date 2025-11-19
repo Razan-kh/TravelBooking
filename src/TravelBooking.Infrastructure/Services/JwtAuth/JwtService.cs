@@ -1,57 +1,42 @@
-using System;
-using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
-using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
-using TravelBooking.Application.Interfaces;
 using TravelBooking.Application.Interfaces.Security;
+using TravelBooking.Domain.Users.Entities;
+using TravelBooking.Infrastructure.Settings;
 
 namespace TravelBooking.Infrastructure.Services;
 
 public class JwtService : IJwtService
 {
-    private readonly IConfiguration _config;
-    private readonly string _issuer;
-    private readonly string _audience;
-    private readonly string _secret;
-    private readonly int _expiryMinutes;
+    private readonly JwtSettings _settings;
 
-    public JwtService(IConfiguration config)
+    public JwtService(IOptions<JwtSettings> settings)
     {
-        _config = config;
-        _issuer = config["Jwt:Issuer"] ?? "TravelBooking";
-        _audience = config["Jwt:Audience"] ?? "TravelBookingAudience";
-        _secret = config["Jwt:Secret"] ?? throw new ArgumentNullException("Jwt:Secret");
-        _expiryMinutes = int.TryParse(config["Jwt:ExpiryMinutes"], out var m) ? m : 60;
+        _settings = settings.Value;
     }
 
-    public string CreateToken(string userId, string username, IDictionary<string, string>? extraClaims = null)
+    public string CreateToken(User user)
     {
-        var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_secret));
+        var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_settings.Key));
         var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
         var claims = new List<Claim>
         {
-            new Claim(JwtRegisteredClaimNames.Sub, userId),
-            new Claim(JwtRegisteredClaimNames.UniqueName, username),
-            new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-            
+            new Claim(JwtRegisteredClaimNames.Sub, user.Id.ToString()),
+            new Claim(JwtRegisteredClaimNames.Email, user.Email),
+            new Claim("firstName", user.FirstName),
+            new Claim(ClaimTypes.Role, user.Role.ToString())
         };
 
-        if (extraClaims != null)
-        {
-            foreach (var kv in extraClaims)
-                claims.Add(new Claim(kv.Key, kv.Value));
-        }
-
         var token = new JwtSecurityToken(
-            issuer: _issuer,
-            audience: _audience,
+            issuer: _settings.Issuer,
+            audience: _settings.Audience,
             claims: claims,
             notBefore: DateTime.UtcNow,
-            expires: DateTime.UtcNow.AddMinutes(_expiryMinutes),
+            expires: DateTime.UtcNow.AddMinutes(_settings.ExpiryMinutes),
             signingCredentials: creds
         );
 

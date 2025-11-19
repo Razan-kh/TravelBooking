@@ -18,7 +18,7 @@ public class AspNetPasswordHasher : IPasswordHasher
         }
         catch
         {
-            return false; 
+            return false;
         }
     }
 }
