@@ -13,9 +13,27 @@ using TravelBooking.Domain;
 using TravelBooking.Domain.Rooms.Entities;
 using TravelBooking.Domain.Hotels;
 using TravelBooking.Application.Queries;
+using TravelBooking.Application.Searching.Interfaces;
 
 namespace TravelBooking.Application.Handlers;
 
+public class SearchHotelsHandler 
+    : IRequestHandler<SearchHotelsQuery, PagedResult<HotelCardDto>>
+{
+    private readonly IHotelService _service;
+
+    public SearchHotelsHandler(IHotelService service)
+    {
+        _service = service;
+    }
+
+    public async Task<PagedResult<HotelCardDto>> Handle(
+        SearchHotelsQuery request, CancellationToken cancellationToken)
+    {
+        return await _service.SearchAsync(request, cancellationToken);
+    }
+}
+/*
 public class SearchHotelsHandler : IRequestHandler<SearchHotelsQuery, PagedResult<HotelCardDto>>
 {
     private readonly IAppDbContext _db;
@@ -244,3 +262,4 @@ var withMinPrice = filteredSorted
         return reordered;
     }
 }
+*/

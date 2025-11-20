@@ -61,15 +61,4 @@ public class HotelsController : ControllerBase
         var res = await _mediator.Send(query, cancellationToken);
         return Ok(res);
     }
-
-    [HttpGet("hi")]
-    public async Task<IActionResult> Hi()
-    {
-        return Ok();
-    }
-
-    [HttpGet("test")]
-public IActionResult Test() => Ok("Routing works!");
-
 }
-
