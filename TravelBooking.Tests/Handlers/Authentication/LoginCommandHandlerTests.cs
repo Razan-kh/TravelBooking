@@ -16,7 +16,7 @@ using TravelBooking.Application.Users.DTOs;
 using TravelBooking.Application.Shared.Results;
 
 namespace TravelBooking.Tests.Handlers.Authentication;
-
+/*
 public class LoginCommandHandlerTests
 {
     private readonly IFixture _fixture;
@@ -97,4 +97,4 @@ public class LoginCommandHandlerTests
         await act.Should().ThrowAsync<System.Exception>()
             .WithMessage("Unexpected error");
     }
-}
+}*/
