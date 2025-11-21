@@ -4,9 +4,11 @@ namespace TravelBooking.Domain.Carts.Repositories;
 
 public interface ICartRepository
 {
-    Task<Carts.Entities.Cart?> GetUserCartAsync(Guid userId);
-    Task<CartItem?> GetCartItemByIdAsync(Guid cartItemId);
-    Task AddOneAsync(Carts.Entities.Cart cart);
-    Task ClearUserCartAsync(Guid userId);
+    Task<Cart?> GetUserCartAsync(Guid userId, CancellationToken ct);
+    Task<CartItem?> GetCartItemByIdAsync(Guid cartItemId, CancellationToken ct);
+    Task AddOneAsync(Cart cart);
+    Task ClearUserCartAsync(Guid userId, CancellationToken ct);
     void RemoveItem(CartItem item);
+    Task AddOrUpdateAsync(Cart cart);
+    Task ClearCartAsync(Guid userId, CancellationToken ct);
 }

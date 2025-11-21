@@ -1,6 +1,6 @@
 using TravelBooking.Infrastructure.Services.Email;
 
-namespace TravelBooking.Infrastructure.Services;
+namespace TravelBooking.Infrastructure.Services.Email;
 
 public class SmtpSettings
 {

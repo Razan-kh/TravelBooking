@@ -1,3 +1,5 @@
+using TravelBooking.Domain.Carts.Entities;
+
 namespace TravelBooking.Application.Carts.DTOs;
 
 public class CartItemDto
@@ -7,4 +9,5 @@ public class CartItemDto
     public DateOnly CheckIn { get; set; }
     public DateOnly CheckOut { get; set; }
     public int Quantity { get; set; }
+    public List<CartItem> Items { get; set; } = new();
 }

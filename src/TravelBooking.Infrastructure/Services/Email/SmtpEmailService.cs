@@ -1,8 +1,8 @@
 using System.Net;
 using System.Net.Mail;
 using TravelBooking.Domain.Bookings.Entities;
-using TravelBooking.Application.Cheackout.Servicies;
 using Microsoft.Extensions.Options;
+using TravelBooking.Application.Cheackout.Servicies.Interfaces;
 
 namespace TravelBooking.Infrastructure.Services.Email;
 

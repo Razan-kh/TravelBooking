@@ -3,7 +3,7 @@ using TravelBooking.Application.ViewingHotels.Mappers;
 using TravelBooking.Application.ViewingHotels.Services.Interfaces;
 using TravelBooking.Domain.Hotels.Repositories;
 
-namespace TravelBooking.Application.ViewingHotels.Services;
+namespace TravelBooking.Application.ViewingHotels.Services.Implementations;
 
 public class HotelService : IHotelService
 {

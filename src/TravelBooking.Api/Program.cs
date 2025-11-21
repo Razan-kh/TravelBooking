@@ -3,6 +3,15 @@ using TravelBooking.Application.ViewingHotels.Queries;
 using TravelBooking.Infrastructure.Services;
 using TravelBooking.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
+using TravelBooking.Application.AddingToCar.Services.Interfaces;
+using TravelBooking.Application.AddingToCar.Services.Implementations;
+using TravelBooking.Application.Cheackout.Servicies.Implementations;
+using TravelBooking.Application.ViewingHotels.Services.Implementations;
+using TravelBooking.Application.Cheackout.Servicies.Interfaces;
+using TravelBooking.Infrastructure.Services.Email;
+using TravelBooking.Application.ViewingHotels.Services.Interfaces;
+using TravelBooking.Application.ViewingHotels.Mappers;
+using TravelBooking.Application.AddingToCar.Mappers;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -20,6 +29,26 @@ builder.Services.AddMediatR(cfg =>
 {
     cfg.RegisterServicesFromAssemblyContaining<GetHotelDetailsQuery>();
 });
+
+builder.Services.AddScoped<ICartService, CartService>();
+builder.Services.AddScoped<IBookingService, BookingService>();
+
+builder.Services.AddSingleton<IHotelMapper, HotelMapper>();
+builder.Services.AddSingleton<IRoomCategoryMapper, RoomCategoryMapper>();
+builder.Services.AddSingleton<IGalleryImageMapper, GalleryImageMapper>();
+builder.Services.AddSingleton<IReviewMapper, ReviewMapper>();
+
+
+builder.Services.AddScoped<IPaymentService, MockPaymentService>();
+builder.Services.AddScoped<IEmailService, SmtpEmailService>();
+builder.Services.AddScoped<IPdfService, QuestPdfService>();
+
+builder.Services.AddScoped<IRoomService, RoomService>();
+builder.Services.AddScoped<IHotelService, HotelService>();
+builder.Services.AddScoped<IRoomAvailabilityService, RoomAvailabilityService>();
+
+builder.Services.AddScoped<IReviewService, ReviewService>();
+builder.Services.AddScoped<ICartMapper, CartMapper>();
 
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 

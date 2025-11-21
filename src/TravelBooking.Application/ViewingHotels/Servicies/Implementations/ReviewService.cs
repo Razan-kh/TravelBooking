@@ -1,8 +1,9 @@
 using TravelBooking.Application.DTOs;
 using TravelBooking.Application.ViewingHotels.Mappers;
 using TravelBooking.Domain.Reviews.Repositories;
+using TravelBooking.Application.ViewingHotels.Services.Interfaces;
 
-namespace TravelBooking.Application.ViewingHotels.Services;
+namespace TravelBooking.Application.ViewingHotels.Services.Implementations;
 
 public class ReviewService : IReviewService
 {

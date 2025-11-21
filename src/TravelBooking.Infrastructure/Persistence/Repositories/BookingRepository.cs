@@ -17,8 +17,6 @@ public class BookingRepository : IBookingRepository
     public async Task AddAsync(Booking booking, CancellationToken ct = default)
     {
         await _context.Bookings.AddAsync(booking, ct);
-        await _context.SaveChangesAsync(ct);
-
     }
     
     public async Task<Booking?> GetByIdAsync(Guid id, CancellationToken ct = default)

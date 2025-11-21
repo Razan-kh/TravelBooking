@@ -4,7 +4,7 @@ using TravelBooking.Application.ViewingHotels.Services.Interfaces;
 using TravelBooking.Domain.Hotels.Entities;
 using TravelBooking.Domain.Rooms.Repositories;
 
-namespace TravelBooking.Application.ViewingHotels.Services;
+namespace TravelBooking.Application.ViewingHotels.Services.Implementations;
 
 public class RoomService : IRoomService
 {

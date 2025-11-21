@@ -1,8 +1,7 @@
 using QuestPDF.Fluent;
 using QuestPDF.Helpers;
-using QuestPDF.Infrastructure;
-using TravelBooking.Application.Cheackout.Servicies;
 using TravelBooking.Domain.Bookings.Entities;
+using TravelBooking.Application.Cheackout.Servicies.Interfaces;
 
 namespace TravelBooking.Infrastructure.Services;
 

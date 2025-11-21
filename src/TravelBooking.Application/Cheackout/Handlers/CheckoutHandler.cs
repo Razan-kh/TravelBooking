@@ -1,118 +1,72 @@
 using MediatR;
 using TravelBooking.Application.Shared.Results;
 using TravelBooking.Application.Cheackout.Commands;
-using TravelBooking.Domain.Bookings.Repositories;
 using TravelBooking.Application.Cheackout.Servicies;
-using TravelBooking.Domain.Carts.Repositories;
-using TravelBooking.Application.Shared.Interfaces;
-using TravelBooking.Domain.Bookings.Entities;
+using TravelBooking.Application.AddingToCar.Services.Interfaces;
+using TravelBooking.Application.Cheackout.Servicies.Interfaces;
 using TravelBooking.Domain.Users.Repositories;
+using TravelBooking.Application.Shared.Interfaces;
 
 namespace TravelBooking.Application.Bookings.Commands;
 
 public class CheckoutHandler : IRequestHandler<CheckoutCommand, Result>
 {
-    private readonly ICartRepository _cartRepository;
-    private readonly IBookingRepository _bookingRepository;
+    private readonly ICartService _cartService;
     private readonly IPaymentService _paymentService;
-    private readonly IEmailService _emailService;
+    private readonly IBookingService _bookingService;
     private readonly IPdfService _pdfService;
-    private readonly IUnitOfWork _unitOfWork;
+    private readonly IEmailService _emailService;
     private readonly IUserRepository _userRepository;
+    private readonly IUnitOfWork _unitOfWork;
 
     public CheckoutHandler(
-        ICartRepository cartRepository,
-        IBookingRepository bookingRepository,
+        ICartService cartService,
         IPaymentService paymentService,
-        IEmailService emailService,
+        IBookingService bookingService,
         IPdfService pdfService,
+        IEmailService emailService,
+        IUserRepository userRepository,
         IUnitOfWork unitOfWork)
     {
-        _cartRepository = cartRepository;
-        _bookingRepository = bookingRepository;
+        _cartService = cartService;
         _paymentService = paymentService;
-        _emailService = emailService;
+        _bookingService = bookingService;
         _pdfService = pdfService;
+        _emailService = emailService;
+        _userRepository = userRepository;
         _unitOfWork = unitOfWork;
     }
 
-    public async Task<Result> Handle(CheckoutCommand request, CancellationToken cancellationToken)
+    public async Task<Result> Handle(CheckoutCommand request, CancellationToken ct)
     {
-        var cart = await _cartRepository.GetUserCartAsync(request.UserId);
+        var cart = await _cartService.GetUserCartAsync(request.UserId, ct);
         if (cart == null || !cart.Items.Any())
             return Result.Failure("Cart is empty.", "EMPTY_CART", 400);
 
-        // ✅ Process payment
-        var paymentResult = await _paymentService.ProcessPaymentAsync(request.UserId, request.PaymentMethod);
+        var paymentResult = await _paymentService.ProcessPaymentAsync(
+            request.UserId, request.PaymentMethod, ct);
+
         if (!paymentResult.IsSuccess)
             return Result.Failure(paymentResult.Error, "PAYMENT_FAILED", 400);
 
-        // Group cart items by hotel
-        var itemsByHotel = cart.Items.GroupBy(i => i.Id);
+        var bookings = await _bookingService.CreateBookingsAsync(cart, request, ct);
 
-        foreach (var hotelGroup in itemsByHotel)
+        await _unitOfWork.SaveChangesAsync(ct);
+
+        var user = await _userRepository.GetByIdAsync(request.UserId, ct);
+
+        foreach (var booking in bookings)
         {
-            var hotelId = hotelGroup.Key;
-            var items = hotelGroup.ToList();
+            var pdf = _pdfService.GenerateInvoice(booking);
 
-            // Calculate total price per hotel including discounts
-            decimal totalAmount = 0;
-            var rooms = new List<Domain.Rooms.Entities.Room>();
-
-            foreach (var item in items)
-            {
-                var roomCategory = item.RoomCategory; // assume populated from cart
-                decimal price = roomCategory.PricePerNight * item.Quantity;
-
-                // Apply discount if any valid discount exists for the date
-                var discount = roomCategory.Discounts
-                    .FirstOrDefault(d => d.StartDate <= item.CheckIn.ToDateTime(TimeOnly.MinValue)
-                                      && d.EndDate >= item.CheckOut.ToDateTime(TimeOnly.MinValue));
-
-                if (discount != null)
-                    price -= price * (discount.DiscountPercentage / 100m);
-
-                totalAmount += price;
-
-                rooms.Add(new Domain.Rooms.Entities.Room
-                {
-                    RoomCategoryId = roomCategory.Id,
-                    RoomCategory = roomCategory
-                });
-            }
-
-            // Create booking per hotel
-            var booking = new Domain.Bookings.Entities.Booking
-            {
-                UserId = request.UserId,
-                HotelId = hotelId,
-                BookingDate = DateTime.UtcNow,
-                CheckInDate = DateOnly.FromDateTime(items.Min(i => i.CheckIn.ToDateTime(TimeOnly.MinValue))),
-                CheckOutDate = DateOnly.FromDateTime(items.Max(i => i.CheckOut.ToDateTime(TimeOnly.MinValue))),
-                PaymentDetails = new Domain.Payments.Entities.PaymentDetails
-                {
-                    Amount = totalAmount,
-                    PaymentDate = DateTime.UtcNow,
-                    PaymentMethod = request.PaymentMethod,
-                    PaymentNumber = new Random().Next(100000, 999999)
-                },
-                Rooms = rooms
-            };
-
-            await _bookingRepository.AddAsync(booking);
-
-            // Generate PDF and send email
-            var pdfBytes = _pdfService.GenerateInvoice(booking);
-
-            var user = await _userRepository.GetByIdAsync(request.UserId);
-            var email = user?.Email;
-
-            await _emailService.SendBookingConfirmationAsync(email, booking, pdfBytes);
+            await _emailService.SendBookingConfirmationAsync(
+                user!.Email,
+                booking,
+                pdf
+            );
         }
 
-        // Clear user cart after all bookings created
-        await _cartRepository.ClearUserCartAsync(request.UserId);
-        await _unitOfWork.SaveChangesAsync(cancellationToken);
+        await _cartService.ClearCartAsync(request.UserId, ct);
 
         return Result.Success();
     }
