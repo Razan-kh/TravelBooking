@@ -1,9 +1,8 @@
-
 using Sieve.Services;
-using TravelBooking.Domain.Enums.Payments;
+using TravelBooking.Domain.Payments.Enums;
 using TravelBooking.Domain.Shared.Entities;
 
-namespace TravelBooking.Domain.Entities.Payments;
+namespace TravelBooking.Domain.Payments.Entities;
 
 public class PaymentDetails : BaseEntity
 {

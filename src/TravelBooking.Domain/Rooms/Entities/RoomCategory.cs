@@ -1,9 +1,11 @@
 using Sieve.Services;
-using TravelBooking.Domain.Discounts;
 using TravelBooking.Domain.Hotels;
 using TravelBooking.Domain.Shared.Entities;
-using TravelBooking.Domain.Enums;
 using TravelBooking.Domain.Rooms.Enums;
+using TravelBooking.Domain.Hotels.Entities;
+using TravelBooking.Domain.Amenities.Entities;
+using TravelBooking.Domain.Discounts;
+using TravelBooking.Domain.Discounts.Entities;
 
 namespace TravelBooking.Domain.Rooms.Entities;
 

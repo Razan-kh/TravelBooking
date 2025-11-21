@@ -1,9 +1,7 @@
-using Sieve.Services;
-using TravelBooking.Domain.Entities.Discounts;
 using TravelBooking.Domain.Rooms.Entities;
 using TravelBooking.Domain.Shared.Entities;
 
-namespace TravelBooking.Domain.Discounts;
+namespace TravelBooking.Domain.Discounts.Entities;
 
 public class Discount : BaseEntity
 {

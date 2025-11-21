@@ -1,12 +1,12 @@
-using Sieve.Services;
-using TravelBooking.Domain.Entities.Discounts;
-using TravelBooking.Domain.Entities.Payments;
 using TravelBooking.Domain.Hotels;
+using TravelBooking.Domain.Hotels.Entities;
+using TravelBooking.Domain.Payments.Entities;
 using TravelBooking.Domain.Rooms.Entities;
 using TravelBooking.Domain.Shared.Entities;
 using TravelBooking.Domain.Users.Entities;
 
-namespace TravelBooking.Domain.Bookings;
+namespace TravelBooking.Domain.Bookings.Entities;
+
 public class Booking : BaseEntity
 {
     public Guid UserId { get; set; }

@@ -1,3 +1,7 @@
-namespace TravelBooking.Domain.Enums.Payments;
+namespace TravelBooking.Domain.Payments.Enums;
 
-public enum PaymentMethod { Card, Cash }
+public enum PaymentMethod
+{
+    Card = 0,
+    Cash = 1
+}

@@ -1,9 +1,9 @@
 using Sieve.Services;
-using TravelBooking.Domain.Hotels;
+using TravelBooking.Domain.Hotels.Entities;
 using TravelBooking.Domain.Shared.Entities;
 using TravelBooking.Domain.Users.Entities;
 
-namespace TravelBooking.Domain.Entities.Discounts;
+namespace TravelBooking.Domain.Reviews.Entities;
 
 public class Review : BaseEntity
 {

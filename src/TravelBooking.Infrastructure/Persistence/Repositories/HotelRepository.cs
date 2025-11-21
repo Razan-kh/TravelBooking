@@ -1,7 +1,6 @@
 using Microsoft.EntityFrameworkCore;
-using TravelBooking.Domain.Hotels;
 using TravelBooking.Domain.Hotels.Interfaces.Repositories;
-using TravelBooking.Infrastructure.Persistence;
+using TravelBooking.Domain.Hotels.Entities;
 
 namespace TravelBooking.Infrastructure.Persistence.Repositories;
 
@@ -31,4 +30,17 @@ public class HotelRepository : IHotelRepository
 
     public async Task<List<Hotel>> ExecutePagedQueryAsync(
     IQueryable<Hotel> query, int take, CancellationToken ct) => await query.Take(take).ToListAsync(ct);
+
+    public async Task<Hotel?> GetByIdAsync(Guid id, CancellationToken ct = default)
+    {
+        return await _db.Hotels
+            .Include(h => h.Gallery)
+            .Include(h => h.Reviews)
+                .ThenInclude(r => r.User)
+            .Include(h => h.RoomCategories)
+                .ThenInclude(rc => rc.Amenities)
+            .FirstOrDefaultAsync(h => h.Id == id, ct);
+    }
+
+    public Task<IEnumerable<Hotel>> SearchAsync() => Task.FromResult(Enumerable.Empty<Hotel>()); // implement filtering
 }

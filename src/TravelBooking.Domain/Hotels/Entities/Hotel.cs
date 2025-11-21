@@ -1,12 +1,14 @@
 using Sieve.Services;
-using TravelBooking.Domain.Bookings;
+using TravelBooking.Domain.Bookings.Entities;
 using TravelBooking.Domain.Cities;
-using TravelBooking.Domain.Discounts;
-using TravelBooking.Domain.Entities.Discounts;
+using TravelBooking.Domain.Hotels.Enums;
+using TravelBooking.Domain.Images.Entities;
+using TravelBooking.Domain.Owners.Entities;
+using TravelBooking.Domain.Reviews.Entities;
 using TravelBooking.Domain.Rooms.Entities;
 using TravelBooking.Domain.Shared.Entities;
 
-namespace TravelBooking.Domain.Hotels;
+namespace TravelBooking.Domain.Hotels.Entities;
 
 public class Hotel : BaseEntity
 {

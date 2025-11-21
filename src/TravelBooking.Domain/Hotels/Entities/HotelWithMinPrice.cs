@@ -1,3 +1,5 @@
+using TravelBooking.Domain.Hotels.Entities;
+
 namespace TravelBooking.Domain.Hotels;
 
 public sealed class HotelWithMinPrice

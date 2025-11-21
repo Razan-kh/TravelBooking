@@ -5,7 +5,7 @@ using TravelBooking.Domain.Users.Enums;
 using Microsoft.EntityFrameworkCore;
 
 namespace TravelBooking.Infrastructure.Persistence;
-
+/*
 public static class DatabaseSeeder
 {
     public static async Task SeedAsync(AppDbContext db)
@@ -30,3 +30,4 @@ public static class DatabaseSeeder
         }
     }
 }
+*/

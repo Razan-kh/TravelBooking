@@ -7,7 +7,12 @@ using TravelBooking.Domain.Users.Repositories;
 using TravelBooking.Infrastructure.Services;
 using TravelBooking.Application.Interfaces.Security;
 using Sieve.Services;
-using Application.Interfaces;
+using TravelBooking.Application.Shared.Interfaces;
+using TravelBooking.Domain.Rooms.Repositories;
+using TravelBooking.Domain.Bookings.Repositories;
+using TravelBooking.Domain.Reviews.Repositories;
+using TravelBooking.Domain.Hotels.Interfaces.Repositories;
+using TravelBooking.Domain.Carts.Repositories;
 
 namespace TravelBooking.Infrastructure;
 
@@ -22,9 +27,16 @@ public static class DependencyInjection
             (IAppDbContext)provider.GetRequiredService<AppDbContext>());
 
         services.AddScoped<IUserRepository, UserRepository>();
+        services.AddScoped<IRoomRepository, RoomRepository>();
+        services.AddScoped<IBookingRepository, BookingRepository>();
+        services.AddScoped<IReviewRepository, ReviewRepository>();
+        services.AddScoped<IHotelRepository, HotelRepository>();
+        services.AddScoped<ICartRepository, CartRepository>();
+
         services.AddScoped<IPasswordHasher, AspNetPasswordHasher>();
         services.AddScoped<IJwtService, JwtService>();
         services.AddScoped<ISieveProcessor, SieveProcessor>();
+        services.AddScoped<IUnitOfWork, UnitOfWork>();
 
         return services;
     }

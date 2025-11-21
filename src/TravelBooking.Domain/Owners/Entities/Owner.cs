@@ -1,8 +1,8 @@
-using Sieve.Services;
 using TravelBooking.Domain.Hotels;
+using TravelBooking.Domain.Hotels.Entities;
 using TravelBooking.Domain.Shared.Entities;
 
-namespace TravelBooking.Domain.Discounts;
+namespace TravelBooking.Domain.Owners.Entities;
 
 public class Owner : BaseEntity
 {

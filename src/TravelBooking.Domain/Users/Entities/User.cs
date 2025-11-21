@@ -2,6 +2,7 @@ using TravelBooking.Domain.Users.Enums;
 using System;
 using TravelBooking.Domain.Bookings;
 using TravelBooking.Domain.Shared.Entities;
+using TravelBooking.Domain.Bookings.Entities;
 
 namespace TravelBooking.Domain.Users.Entities;
 

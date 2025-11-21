@@ -7,7 +7,7 @@ using TravelBooking.Domain.Rooms.Entities;
 using TravelBooking.Domain.Rooms.Enums;
 
 namespace TravelBooking.Infrastructure.Persistence;
-
+/*
 public class SeedService : ISeedService
 {
     private readonly AppDbContext _db;
@@ -35,6 +35,7 @@ public class SeedService : ISeedService
         //----------------
 
         // 1️⃣ Seed Owners
+        /*
         if (!_db.Owners.Any())
         {
             var owners = new List<Owner>
@@ -199,3 +200,4 @@ public class SeedService : ISeedService
         Console.WriteLine("✅ Seeded rooms");
     }
 }
+*/
