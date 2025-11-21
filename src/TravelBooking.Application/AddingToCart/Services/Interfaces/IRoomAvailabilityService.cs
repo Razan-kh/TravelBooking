@@ -1,4 +1,4 @@
-namespace TravelBooking.Application.AddingToCar.Services.Interfaces;
+namespace TravelBooking.Application.AddingToCart.Services.Interfaces;
 
 public interface IRoomAvailabilityService
 {

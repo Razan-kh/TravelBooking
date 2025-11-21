@@ -1,10 +1,10 @@
 
 using MediatR;
-using TravelBooking.Application.AddingToCar.Commands;
-using TravelBooking.Application.AddingToCar.Services.Interfaces;
+using TravelBooking.Application.AddingToCart.Commands;
+using TravelBooking.Application.AddingToCart.Services.Interfaces;
 using TravelBooking.Application.Shared.Results;
 
-namespace TravelBooking.Application.AddingToCart.Handlers;
+namespace TravelBooking.Application.AddingToCartt.Handlers;
 
 public class RemoveCartItemHandler : IRequestHandler<RemoveCartItemCommand, Result>
 {

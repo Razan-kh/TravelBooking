@@ -1,9 +1,9 @@
 using MediatR;
-using TravelBooking.Application.AddingToCar.Commands;
+using TravelBooking.Application.AddingToCart.Commands;
 using TravelBooking.Application.Shared.Results;
-using TravelBooking.Application.AddingToCar.Services.Interfaces;
+using TravelBooking.Application.AddingToCart.Services.Interfaces;
 
-namespace TravelBooking.Application.AddingToCar.Handlers;
+namespace TravelBooking.Application.AddingToCart.Handlers;
 
 public class AddToCartHandler : IRequestHandler<AddRoomToCartCommand, Result>
 {

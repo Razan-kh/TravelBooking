@@ -1,9 +1,8 @@
 using Riok.Mapperly.Abstractions;
-using TravelBooking.Application.AddingToCar.Mappers;
 using TravelBooking.Application.Carts.DTOs;
 using TravelBooking.Domain.Carts.Entities;
 
-namespace TravelBooking.Application.AddingToCar.Mappers;
+namespace TravelBooking.Application.AddingToCart.Mappers;
 
 [Mapper]
 public partial class CartMapper : ICartMapper

@@ -2,7 +2,7 @@ using TravelBooking.Application.Carts.DTOs;
 using TravelBooking.Application.Shared.Results;
 using TravelBooking.Domain.Carts.Entities;
 
-namespace TravelBooking.Application.AddingToCar.Services.Interfaces;
+namespace TravelBooking.Application.AddingToCart.Services.Interfaces;
 
 public interface ICartService
 {

@@ -3,15 +3,15 @@ using TravelBooking.Application.ViewingHotels.Queries;
 using TravelBooking.Infrastructure.Services;
 using TravelBooking.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
-using TravelBooking.Application.AddingToCar.Services.Interfaces;
-using TravelBooking.Application.AddingToCar.Services.Implementations;
+using TravelBooking.Application.AddingToCart.Services.Interfaces;
+using TravelBooking.Application.AddingToCart.Services.Implementations;
 using TravelBooking.Application.Cheackout.Servicies.Implementations;
 using TravelBooking.Application.ViewingHotels.Services.Implementations;
 using TravelBooking.Application.Cheackout.Servicies.Interfaces;
 using TravelBooking.Infrastructure.Services.Email;
 using TravelBooking.Application.ViewingHotels.Services.Interfaces;
 using TravelBooking.Application.ViewingHotels.Mappers;
-using TravelBooking.Application.AddingToCar.Mappers;
+using TravelBooking.Application.AddingToCart.Mappers;
 
 var builder = WebApplication.CreateBuilder(args);
 

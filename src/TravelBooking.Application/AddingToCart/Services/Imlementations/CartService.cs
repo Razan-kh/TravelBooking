@@ -1,12 +1,12 @@
-using TravelBooking.Application.AddingToCar.Mappers;
-using TravelBooking.Application.AddingToCar.Services.Interfaces;
+using TravelBooking.Application.AddingToCart.Mappers;
+using TravelBooking.Application.AddingToCart.Services.Interfaces;
 using TravelBooking.Application.Carts.DTOs;
 using TravelBooking.Application.Shared.Interfaces;
 using TravelBooking.Application.Shared.Results;
 using TravelBooking.Domain.Carts.Entities;
 using TravelBooking.Domain.Carts.Repositories;
 
-namespace TravelBooking.Application.AddingToCar.Services.Implementations;
+namespace TravelBooking.Application.AddingToCart.Services.Implementations;
 
 public class CartService : ICartService
 {
