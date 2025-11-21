@@ -4,4 +4,4 @@ using TravelBooking.Application.Shared.Results;
 
 namespace TravelBooking.Application.ViewingHotels.Queries;
 
-public record GetHotelDetailsQuery(Guid HotelId) : IRequest<Result<HotelDetailsDto>>;
+public record GetHotelDetailsQuery(Guid HotelId, DateOnly? CheckIn, DateOnly? CheckOut) : IRequest<Result<HotelDetailsDto>>;
