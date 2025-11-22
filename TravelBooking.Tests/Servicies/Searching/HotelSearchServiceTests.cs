@@ -6,8 +6,9 @@ using Sieve.Models;
 using Sieve.Services;
 using TravelBooking.Application.Queries;
 using TravelBooking.Application.Searching.Servicies.Implementations;
-using TravelBooking.Domain.Cities;
-using TravelBooking.Domain.Hotels;
+using TravelBooking.Domain.Cities.Entities;
+using TravelBooking.Domain.Hotels.Entities;
+using TravelBooking.Domain.Amenities.Entities;
 using TravelBooking.Domain.Hotels.Interfaces.Repositories;
 using TravelBooking.Domain.Rooms.Entities;
 using AutoFixture;
@@ -18,14 +19,15 @@ using Sieve.Models;
 using Sieve.Services;
 using TravelBooking.Application.Queries;
 using TravelBooking.Application.Searching.Servicies.Implementations;
-using TravelBooking.Domain.Cities;
+using TravelBooking.Domain.Cities.Entities;
 using TravelBooking.Domain.Hotels;
 using TravelBooking.Domain.Hotels.Interfaces.Repositories;
 using TravelBooking.Domain.Rooms.Entities;
-
+using TravelBooking.Tests.AddingToCart.TestHelpers;
 public class HotelServiceTests
 {
-    private readonly Fixture _fixture;
+    private readonly IFixture _fixture = FixtureFactory.Create();
+
     private readonly Mock<IHotelRepository> _repo;
     private readonly Mock<ISieveProcessor> _sieve;
     private readonly HotelService _sut;
@@ -43,19 +45,19 @@ public class HotelServiceTests
         _sieve = new Mock<ISieveProcessor>();
 
         // Sieve always returns whatever IQueryable it receives
-_sieve.Setup(s => s.Apply(
-        It.IsAny<SieveModel?>(),
-        It.IsAny<IQueryable<Hotel>>(),
-        It.IsAny<object[]?>(),
-        It.IsAny<bool>(),
-        It.IsAny<bool>(),
-        It.IsAny<bool>()))
-    .Returns((SieveModel? m,
-              IQueryable<Hotel> q,
-              object[]? data,
-              bool applyFiltering,
-              bool applySorting,
-              bool applyPagination) => q);
+        _sieve.Setup(s => s.Apply(
+                It.IsAny<SieveModel?>(),
+                It.IsAny<IQueryable<Hotel>>(),
+                It.IsAny<object[]?>(),
+                It.IsAny<bool>(),
+                It.IsAny<bool>(),
+                It.IsAny<bool>()))
+            .Returns((SieveModel? m,
+                      IQueryable<Hotel> q,
+                      object[]? data,
+                      bool applyFiltering,
+                      bool applySorting,
+                      bool applyPagination) => q);
 
         _sut = new HotelService(_repo.Object, _sieve.Object);
     }
@@ -196,7 +198,7 @@ _sieve.Setup(s => s.Apply(
 
         var request = new SearchHotelsQuery
         {
-            Amenities = new []{ "wifi", "pool" }
+            Amenities = new[] { "wifi", "pool" }
         };
 
         var result = await _sut.SearchAsync(request, CancellationToken.None);
@@ -288,7 +290,7 @@ _sieve.Setup(s => s.Apply(
         {
             new Hotel { Id = Guid.NewGuid(), Name = "Test", City = london , RoomCategories = { new RoomCategory { PricePerNight = 100m } }
          } }.AsQueryable();
-        
+
         MockQuery(hotels);
 
         var request = new SearchHotelsQuery();
@@ -301,6 +303,6 @@ _sieve.Setup(s => s.Apply(
                 It.IsAny<object[]>(),
                 true, true, true),
             Times.Once);
-        
+
     }
 }

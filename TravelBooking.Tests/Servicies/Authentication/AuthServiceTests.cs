@@ -11,7 +11,7 @@ using TravelBooking.Domain.Users.Entities;
 using TravelBooking.Application.Interfaces.Security;
 
 namespace TravelBooking.Tests.Services.Authentication;
-/*
+// important
 public class AuthServiceTests
 {
     private readonly IFixture _fixture;
@@ -41,6 +41,7 @@ public class AuthServiceTests
         // Arrange
         var user = _fixture.Build<User>()
             .With(u => u.PasswordHash, "hashedPassword")
+            .Without(u => u.Bookings)
             .Create();
         var email = user.Email;
         var password = "plainPassword";
@@ -95,6 +96,7 @@ public class AuthServiceTests
         // Arrange
         var user = _fixture.Build<User>()
             .With(u => u.PasswordHash, "hashedPassword")
+            .Without(u => u.Bookings)  
             .Create();
         var password = "wrongPassword";
 
@@ -134,4 +136,3 @@ public class AuthServiceTests
         result.Error.Should().Be("Invalid credentials"); 
     }
 }
-*/
