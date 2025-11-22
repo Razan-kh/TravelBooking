@@ -1,7 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using TravelBooking.Domain.Users.Entities;
 using TravelBooking.Domain.Bookings.Entities;
-using TravelBooking.Domain.Cities;
+using TravelBooking.Domain.Cities.Entities;
 using TravelBooking.Domain.Rooms.Entities;
 using TravelBooking.Domain.Discounts.Entities;
 using TravelBooking.Domain.Hotels.Entities;
@@ -67,7 +67,7 @@ public class AppDbContext : DbContext, IAppDbContext
             .HasMany(c => c.Items)
             .WithOne(i => i.Cart)
             .HasForeignKey(i => i.CartId)
-            .OnDelete(DeleteBehavior.Cascade); 
+            .OnDelete(DeleteBehavior.Cascade);
     }
 
     public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)

@@ -1,7 +1,7 @@
 using TravelBooking.Domain.Hotels.Entities;
 using TravelBooking.Domain.Shared.Entities;
 
-namespace TravelBooking.Domain.Cities;
+namespace TravelBooking.Domain.Cities.Entities;
 
 public class City : BaseEntity
 {

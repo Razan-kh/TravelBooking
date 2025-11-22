@@ -4,7 +4,7 @@ using TravelBooking.Application.ViewingHotels.Queries;
 using TravelBooking.Application.Shared.Results;
 using TravelBooking.Application.ViewingHotels.Services.Interfaces;
 
-namespace TravelBooking.Application.Handlers;
+namespace TravelBooking.Application.ViewingHotels.Handlers;
 
 public class GetHotelDetailsHandler
     : IRequestHandler<GetHotelDetailsQuery, Result<HotelDetailsDto>>

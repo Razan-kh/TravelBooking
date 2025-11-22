@@ -1,10 +1,10 @@
 using MediatR;
+using TravelBooking.Application.AddingToCart.Queries;
 using TravelBooking.Application.AddingToCart.Services.Interfaces;
-using TravelBooking.Application.AddingToCartt.Queries;
 using TravelBooking.Application.Carts.DTOs;
 using TravelBooking.Application.Shared.Results;
 
-namespace TravelBooking.Application.AddingToCartt.Handlers;
+namespace TravelBooking.Application.AddingToCart.Handlers;
 
 public class GetCartQueryHandler : IRequestHandler<GetCartQuery, Result<List<CartItemDto>>>
 {
