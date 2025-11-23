@@ -19,12 +19,12 @@ using TravelBooking.Application.AddingToCart.Mappers;
 
 using TravelBooking.Application.AddingToCart.Mappers;
 using TravelBooking.Domain.Reviews.Entities;
-using TravelBooking.Domain.Rooms.Repositories;
 using TravelBooking.Application.Shared.Interfaces;
 using TravelBooking.Application.ViewingHotels.Services.Implementations;
 using TravelBooking.Application.ViewingHotels.Mappers;
 using TravelBooking.Domain.Reviews.Repositories;
 using TravelBooking.Application.DTOs;
+using TravelBooking.Domain.Rooms.Interfaces;
 
 namespace TravelBooking.Tests.Services;
 

@@ -7,6 +7,7 @@ using TravelBooking.Domain.Payments.Entities;
 using TravelBooking.Domain.Rooms.Entities;
 using TravelBooking.Application.Cheackout.Servicies;
 using TravelBooking.Domain.Payments.Enums;
+
 namespace TravelBooking.Application.Cheackout.Servicies.Implementations;
 
 public class BookingService : IBookingService

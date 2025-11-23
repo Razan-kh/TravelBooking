@@ -38,5 +38,10 @@
     <ProjectReference Include="..\TravelBooking.Application\TravelBooking.Application.csproj" />
     <ProjectReference Include="..\TravelBooking.Infrastructure\TravelBooking.Infrastructure.csproj" />
   </ItemGroup>
+  
+  <ItemGroup>
+    <ProjectReference Include="..\TravelBooking.Application\TravelBooking.Application.csproj" />
+    <ProjectReference Include="..\TravelBooking.Infrastructure\TravelBooking.Infrastructure.csproj" />
+  </ItemGroup>
 
 </Project>

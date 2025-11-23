@@ -14,4 +14,8 @@ public interface IHotelRepository
     Task<List<(City city, int visitCount)>> GetTrendingCitiesAsync(int count);
     Task<List<Hotel>> GetRecentlyVisitedHotelsAsync(Guid userId, int count);
     Task<List<HotelWithMinPrice>> GetFeaturedHotelsAsync(int count);
+    Task<List<Hotel>> GetHotelsAsync(string? filter, int page, int pageSize, CancellationToken ct);
+    Task AddAsync(Hotel hotel, CancellationToken ct);
+    Task UpdateAsync(Hotel hotel, CancellationToken ct);
+    Task DeleteAsync(Hotel hotel, CancellationToken ct);
 }

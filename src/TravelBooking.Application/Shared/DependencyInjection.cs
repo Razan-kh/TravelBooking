@@ -1,11 +1,12 @@
 using FluentValidation;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
-using TravelBooking.Application.Shared;
 using TravelBooking.Application.Shared.Behaviors;
 using System.Reflection;
 using TravelBooking.Application.Users.Services.Interfaces;
 using TravelBooking.Application.Users.Services.Implementations;
+using TravelBooking.Application.Services.Implementation;
+using TravelBooking.Application.Services.Interfaces;
 
 namespace TravelBooking.Application.Shared;
 
@@ -19,6 +20,7 @@ public static class DependencyInjection
         });
         
         services.AddScoped<IAuthService, AuthService>();
+        services.AddScoped<IHomeService, HomeService>();
 
       services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
 

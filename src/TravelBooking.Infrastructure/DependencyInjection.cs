@@ -8,7 +8,6 @@ using TravelBooking.Infrastructure.Services;
 using TravelBooking.Application.Interfaces.Security;
 using Sieve.Services;
 using TravelBooking.Application.Shared.Interfaces;
-using TravelBooking.Domain.Rooms.Repositories;
 using TravelBooking.Domain.Bookings.Repositories;
 using TravelBooking.Domain.Reviews.Repositories;
 using TravelBooking.Domain.Hotels.Interfaces.Repositories;
@@ -19,6 +18,12 @@ using TravelBooking.Application.RecentlyVisited.Mappers;
 using TravelBooking.Application.TrendingCities.Mappers;
 using TravelBooking.Infrastructure.Persistence;
 using TravelBooking.Infrastructure.Persistence.Repositories;
+using Microsoft.Extensions.DependencyInjection;
+using TravelBooking.Infrastructure.Persistence;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using TravelBooking.Infrastructure.Persistence.Repositories;
+using TravelBooking.Domain.Rooms.Interfaces;
 
 namespace TravelBooking.Infrastructure;
 
@@ -44,10 +49,24 @@ public static class DependencyInjection
         services.AddScoped<ISieveProcessor, SieveProcessor>();
         services.AddScoped<IUnitOfWork, UnitOfWork>();
 
-        
+
         services.AddSingleton<IFeaturedHotelMapper, FeaturedHotelMapper>();
         services.AddSingleton<IRecentlyVisitedHotelMapper, RecentlyVisitedHotelMapper>();
         services.AddSingleton<ITrendingCityMapper, TrendingCityMapper>();
+
+        return services;
+    }
+    public static IServiceCollection AddInfrastructureServices(this IServiceCollection services, IConfiguration configuration)
+    {
+        services.AddDbContext<AppDbContext>(options =>
+        {
+            options.UseSqlServer(
+                configuration.GetConnectionString("DefaultConnection"),
+                sql => sql.MigrationsAssembly(typeof(AppDbContext).Assembly.FullName));
+        });
+        services.AddScoped<IRoomRepository, RoomRepository>();
+        services.AddScoped<IHotelRepository, HotelRepository>();
+        services.AddScoped<ICityRepository, CityRepository>();
 
         return services;
     }
