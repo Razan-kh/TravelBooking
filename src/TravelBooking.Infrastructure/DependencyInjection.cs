@@ -13,6 +13,12 @@ using TravelBooking.Domain.Bookings.Repositories;
 using TravelBooking.Domain.Reviews.Repositories;
 using TravelBooking.Domain.Hotels.Interfaces.Repositories;
 using TravelBooking.Domain.Carts.Repositories;
+using Microsoft.Extensions.DependencyInjection;
+using TravelBooking.Application.FeaturedDeals.Mappers;
+using TravelBooking.Application.RecentlyVisited.Mappers;
+using TravelBooking.Application.TrendingCities.Mappers;
+using TravelBooking.Infrastructure.Persistence;
+using TravelBooking.Infrastructure.Persistence.Repositories;
 
 namespace TravelBooking.Infrastructure;
 
@@ -37,6 +43,11 @@ public static class DependencyInjection
         services.AddScoped<IJwtService, JwtService>();
         services.AddScoped<ISieveProcessor, SieveProcessor>();
         services.AddScoped<IUnitOfWork, UnitOfWork>();
+
+        
+        services.AddSingleton<IFeaturedHotelMapper, FeaturedHotelMapper>();
+        services.AddSingleton<IRecentlyVisitedHotelMapper, RecentlyVisitedHotelMapper>();
+        services.AddSingleton<ITrendingCityMapper, TrendingCityMapper>();
 
         return services;
     }

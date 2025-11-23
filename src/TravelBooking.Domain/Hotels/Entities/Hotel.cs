@@ -1,7 +1,6 @@
 using Sieve.Services;
 using TravelBooking.Domain.Bookings.Entities;
 using TravelBooking.Domain.Cities.Entities;
-using TravelBooking.Domain.Cities.Entities;
 using TravelBooking.Domain.Hotels.Enums;
 using TravelBooking.Domain.Images.Entities;
 using TravelBooking.Domain.Owners.Entities;

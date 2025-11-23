@@ -19,6 +19,7 @@ using TravelBooking.Infrastructure.Services.Email;
 using TravelBooking.Application.ViewingHotels.Services.Interfaces;
 using TravelBooking.Application.ViewingHotels.Mappers;
 using TravelBooking.Application.AddingToCart.Mappers;
+using TravelBooking.Application;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -31,6 +32,7 @@ builder.Services.AddInfrastructure(builder.Configuration);
 
 builder.Services.AddControllers();
 builder.Services.AddApplication();
+builder.Services.AddApplicationServices();
 
 var jwtSettings = new JwtSettings();
 builder.Configuration.GetSection("JwtSettings").Bind(jwtSettings);

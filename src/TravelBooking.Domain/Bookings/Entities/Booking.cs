@@ -1,4 +1,3 @@
-using TravelBooking.Domain.Hotels;
 using TravelBooking.Domain.Hotels.Entities;
 using TravelBooking.Domain.Payments.Entities;
 using TravelBooking.Domain.Rooms.Entities;

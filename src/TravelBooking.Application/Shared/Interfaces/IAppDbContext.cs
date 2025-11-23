@@ -1,12 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using TravelBooking.Domain.Amenities.Entities;
-using TravelBooking.Domain.Bookings;
-using TravelBooking.Domain.Bookings.Entities;
 using TravelBooking.Domain.Cities.Entities;
-using TravelBooking.Domain.Cities.Entities;
-using TravelBooking.Domain.Discounts;
 using TravelBooking.Domain.Discounts.Entities;
-using TravelBooking.Domain.Hotels;
 using TravelBooking.Domain.Hotels.Entities;
 using TravelBooking.Domain.Owners.Entities;
 using TravelBooking.Domain.Reviews.Entities;
