@@ -1,5 +1,5 @@
 using TravelBooking.Application.AddingToCart.Services.Interfaces;
-using TravelBooking.Domain.Rooms.Repositories;
+using TravelBooking.Domain.Rooms.Interfaces;
 
 namespace TravelBooking.Application.ViewingHotels.Services.Implementations;
 

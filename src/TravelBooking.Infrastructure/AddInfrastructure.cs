@@ -2,13 +2,13 @@ using Microsoft.Extensions.DependencyInjection;
 using TravelBooking.Domain.Bookings.Repositories;
 using TravelBooking.Infrastructure.Persistence.Repositories;
 using TravelBooking.Domain.Carts.Repositories;
-using TravelBooking.Domain.Rooms.Repositories;
 using TravelBooking.Application.Shared.Interfaces;
 using TravelBooking.Infrastructure.Persistence;
 using TravelBooking.Domain.Reviews.Repositories;
 using TravelBooking.Domain.Users.Repositories;
 using TravelBooking.Infrastructure.Persistence.Repositories;
 using TravelBooking.Domain.Hotels.Interfaces.Repositories;
+using TravelBooking.Domain.Rooms.Interfaces;
 
 namespace TravelBooking.Infrastructure;
 

@@ -1,5 +1,4 @@
 using MediatR;
-using TravelBooking.Application.Common;
 using MediatR;
 using TravelBooking.Application.Cities.Commands;
 using TravelBooking.Application.Cities.Dtos;

@@ -1,3 +1,4 @@
+/*
 using TravelBooking.Domain.Rooms.Repositories;
 using TravelBooking.Domain.Rooms.Entities;
 using TravelBooking.Infrastructure.Persistence;
@@ -42,3 +43,4 @@ public class RoomRepository : IRoomRepository
             .CountAsync(ct);
     }
 }
+*/

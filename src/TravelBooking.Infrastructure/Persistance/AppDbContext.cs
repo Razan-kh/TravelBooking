@@ -13,6 +13,7 @@ using TravelBooking.Domain.Owners.Entities;
 using TravelBooking.Application.Shared.Interfaces;
 using TravelBooking.Domain.Carts.Entities;
 using TravelBooking.Domain.Payments.Entities;
+using TravelBooking.Domain.Cities.Entities;
 
 namespace TravelBooking.Infrastructure.Persistence;
 

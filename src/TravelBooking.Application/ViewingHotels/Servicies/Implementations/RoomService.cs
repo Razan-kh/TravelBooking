@@ -3,7 +3,6 @@ using TravelBooking.Application.ViewingHotels.Mappers;
 using TravelBooking.Application.ViewingHotels.Services.Interfaces;
 using TravelBooking.Domain.Hotels.Entities;
 using TravelBooking.Domain.Rooms.Interfaces;
-using TravelBooking.Domain.Rooms.Repositories;
 
 namespace TravelBooking.Application.ViewingHotels.Services.Implementations;
 

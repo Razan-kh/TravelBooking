@@ -1,3 +1,4 @@
+/*
 using Microsoft.EntityFrameworkCore;
 using TravelBooking.Domain.Hotels.Interfaces.Repositories;
 using TravelBooking.Domain.Hotels.Entities;
@@ -105,3 +106,4 @@ public class HotelRepository : IHotelRepository
         return query.Select(x => (x.City, x.VisitCount)).ToList();
     }
 }
+*/

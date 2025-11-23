@@ -1,3 +1,4 @@
+/*
 using Microsoft.EntityFrameworkCore;
 using TravelBooking.Domain.Users.Entities;
 using TravelBooking.Domain.Bookings.Entities;
@@ -64,3 +65,4 @@ public class AppDbContext : DbContext, IAppDbContext
     public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
         => base.SaveChangesAsync(cancellationToken);
 }
+*/

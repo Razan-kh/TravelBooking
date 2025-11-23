@@ -45,10 +45,12 @@ public class HomeService_TrendingCities_Tests
     [Fact]
     public async Task GetTrendingCitiesAsync_ShouldReturnMappedResults()
     {
-        var cities = _fixture.Build<City>()
-            .Without(c => c.Hotels)
-            .CreateMany(3)
-            .ToList();
+_fixture.Customize<City>(c => c
+    .With(x => x.Id, Guid.NewGuid())
+    .Without(x => x.Hotels)
+);
+var city = _fixture.Create<City>();
+
 
         _repoMock
             .Setup(r => r.GetTrendingCitiesAsync(3))

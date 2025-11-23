@@ -2,6 +2,12 @@ using Microsoft.EntityFrameworkCore;
 using TravelBooking.Domain.Rooms.Entities;
 using TravelBooking.Domain.Rooms.Interfaces;
 using TravelBooking.Infrastructure.Persistence;
+using Microsoft.EntityFrameworkCore;
+using TravelBooking.Infrastructure.Persistence;
+using TravelBooking.Domain.Hotels.Entities;
+using TravelBooking.Domain.Cities;
+using TravelBooking.Domain.Hotels;
+using TravelBooking.Domain.Cities.Entities;
 
 namespace TravelBooking.Infrastructure.Persistence.Repositories;
 
@@ -55,5 +61,37 @@ public class RoomRepository : IRoomRepository
     {
         _context.Rooms.Remove(room);
         await _context.SaveChangesAsync(ct);
+    }
+
+    public async Task<int> CountAvailableRoomsAsync(Guid roomCategoryId, DateOnly checkIn, DateOnly checkOut, CancellationToken ct = default)
+    {
+        var allRooms = await _context.Rooms.Where(r => r.RoomCategoryId == roomCategoryId).ToListAsync(ct);
+        var bookedRoomIds = await _context.Bookings
+            .Where(b => b.CheckInDate < checkOut && b.CheckOutDate > checkIn)
+            .SelectMany(b => b.Rooms)
+            .Where(r => r.RoomCategoryId == roomCategoryId)
+            .Select(r => r.Id)
+            .ToListAsync(ct);
+
+        return allRooms.Count(r => !bookedRoomIds.Contains(r.Id));
+    }
+
+    public Task<IEnumerable<Room>> GetRoomsByCategoryAsync(Guid roomCategoryId, CancellationToken ct = default)
+        => Task.FromResult(_context.Rooms.Where(r => r.RoomCategoryId == roomCategoryId).AsEnumerable());
+    
+    public async Task<List<RoomCategory>> GetRoomCategoriesByHotelIdAsync(Guid hotelId, CancellationToken ct)
+    {
+        return await _context.RoomCategories
+            .Where(rc => rc.HotelId == hotelId)
+            .Include(rc => rc.Amenities)
+            .Include(rc => rc.Discounts)
+            .ToListAsync(ct);
+    }
+
+    public async Task<int> CountTotalRoomsAsync(Guid roomCategoryId, CancellationToken ct)
+    {
+        return await _context.Rooms
+            .Where(r => r.RoomCategoryId == roomCategoryId)
+            .CountAsync(ct);
     }
 }
