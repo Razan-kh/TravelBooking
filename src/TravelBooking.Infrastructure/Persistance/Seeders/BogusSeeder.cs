@@ -1,3 +1,4 @@
+/*
 using Bogus;
 using Microsoft.EntityFrameworkCore;
 using System.Globalization;
@@ -283,3 +284,4 @@ public static class BogusSeeder
         return values[RandomNumber(0, values.Length - 1)];
     }
 }
+*/

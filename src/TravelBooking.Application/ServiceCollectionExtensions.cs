@@ -4,10 +4,10 @@ using TravelBooking.Application.Cities.Servicies;
 using TravelBooking.Application.Hotels.Servicies;
 using TravelBooking.Application.Rooms.Queries;
 using TravelBooking.Application.Rooms.Services;
-using TravelBooking.Domain.Cities.Interfaces.Services;
-using TravelBooking.Domain.Rooms.interfaces.Services;
 using TravelBooking.Application.Mappers.Interfaces;
 using TravelBooking.Application.Mappers;
+using TravelBooking.Application.Cities.Interfaces.Servicies;
+using TravelBooking.Application.Rooms.Services.Interfaces;
 
 namespace TravelBooking.Application;
 

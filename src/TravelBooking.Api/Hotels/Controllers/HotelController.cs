@@ -1,6 +1,7 @@
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using TravelBooking.Application.Hotels.Commands;
+using TravelBooking.Application.Hotels.Dtos;
 using TravelBooking.Application.Hotels.Queries;
 
 namespace TravelBooking.Api.Hotels.Controllers;
@@ -40,12 +41,12 @@ public class HotelController : ControllerBase
     }
 
     [HttpPut("{id:guid}")]
-    public async Task<IActionResult> UpdateHotel(Guid id, [FromBody] UpdateHotelCommand command)
+    public async Task<IActionResult> UpdateHotel(Guid id, [FromBody] UpdateHotelDto dto)
     {
-        if (id != command.Id)
+        if (id != dto.Id)
             return BadRequest("ID mismatch");
 
-        var result = await _mediator.Send(command);
+        var result = await _mediator.Send(new UpdateHotelCommand(dto));
         return result.IsSuccess ? NoContent() : BadRequest(result.Error);
     }
 

@@ -1,44 +1,55 @@
+using TravelBooking.Application.Cities.Dtos;
+using TravelBooking.Application.Cities.Interfaces.Servicies;
+using TravelBooking.Application.Mappers.Interfaces;
 using TravelBooking.Domain.Cities;
-using TravelBooking.Domain.Cities.Interfaces.Services;
 
 namespace TravelBooking.Application.Cities.Servicies;
 
 public class CityService : ICityService
 {
     private readonly ICityRepository _cityRepo;
+    private readonly ICityMapper _mapper;
 
-    public CityService(ICityRepository cityRepo)
+    public CityService(ICityRepository cityRepo, ICityMapper mapper)
     {
         _cityRepo = cityRepo;
+        _mapper = mapper;
     }
 
-    public async Task<List<City>> GetCitiesAsync(string? filter, int page, int pageSize, CancellationToken ct)
+    public async Task<List<CityDto>> GetCitiesAsync(string? filter, int page, int pageSize, CancellationToken ct)
     {
         var cities = await _cityRepo.GetCitiesAsync(filter, page, pageSize, ct);
-        return cities;
+        return cities.Select(c => _mapper.Map(c)).ToList();
     }
 
-    public async Task<City?> GetCityByIdAsync(Guid id, CancellationToken ct)
+    public async Task<CityDto?> GetCityByIdAsync(Guid id, CancellationToken ct)
     {
-        return await _cityRepo.GetByIdAsync(id, ct);
+        var city = await _cityRepo.GetByIdAsync(id, ct);
+        return city == null ? null : _mapper.Map(city);
     }
 
-    public async Task<City> CreateCityAsync(City city, CancellationToken ct)
+    public async Task<CityDto> CreateCityAsync(CreateCityDto dto, CancellationToken ct)
     {
+        var city = _mapper.Map(dto); // Map DTO → Entity
         city.Id = Guid.NewGuid();
         await _cityRepo.AddAsync(city, ct);
-        return city;
+        return _mapper.Map(city);    // Map Entity → DTO
     }
 
-    public async Task UpdateCityAsync(City city, CancellationToken ct)
+    public async Task UpdateCityAsync(UpdateCityDto dto, CancellationToken ct)
     {
+        var city = await _cityRepo.GetByIdAsync(dto.Id, ct);
+        if (city == null) 
+            throw new KeyNotFoundException($"City with ID {dto.Id} not found.");
+
+        _mapper.UpdateCityFromDto(dto, city); 
         await _cityRepo.UpdateAsync(city, ct);
     }
 
     public async Task DeleteCityAsync(Guid id, CancellationToken ct)
     {
-        var existing = await _cityRepo.GetByIdAsync(id, ct);
-        if (existing == null) return;
-        await _cityRepo.DeleteAsync(existing, ct);
+        var city = await _cityRepo.GetByIdAsync(id, ct);
+        if (city == null) return;
+        await _cityRepo.DeleteAsync(city, ct);
     }
 }

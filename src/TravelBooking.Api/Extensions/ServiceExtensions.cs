@@ -1,7 +1,6 @@
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using TravelBooking.Infrastructure.Persistence;
-using TravelBooking.Infrastructure.Persistence.Seeders;
 using TravelBooking.Application.Cities.Commands;
 using TravelBooking.Application.Rooms.Queries;
 
@@ -30,6 +29,6 @@ public static class ServiceExtensions
         var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
 
         await db.Database.MigrateAsync();
-        await BogusSeeder.SeedAsync(db);
+      //  await BogusSeeder.SeedAsync(db);
     }
 }

@@ -1,5 +1,6 @@
 using MediatR;
 using TravelBooking.Application.Hotels.Commands;
+using TravelBooking.Application.Hotels.Servicies;
 using TravelBooking.Application.Shared.Results;
 
 namespace TravelBooking.Application.Hotels.Handlers;

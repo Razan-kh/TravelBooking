@@ -5,7 +5,7 @@ using TravelBooking.Application.Cities.Commands;
 using TravelBooking.Application.Cities.Dtos;
 using TravelBooking.Application.Mappers.Interfaces;
 using TravelBooking.Application.Shared.Results;
-using TravelBooking.Domain.Cities.Interfaces.Services;
+using TravelBooking.Application.Cities.Interfaces.Servicies;
 
 namespace TravelBooking.Application.Cities.Handlers;
 
@@ -20,17 +20,14 @@ public class UpdateCityCommandHandler : IRequestHandler<UpdateCityCommand, Resul
 
     public async Task<Result> Handle(UpdateCityCommand request, CancellationToken cancellationToken)
     {
-        var dto = request.Dto;
-
-        var city = await _cityService.GetCityByIdAsync(dto.Id, cancellationToken);
-        if (city == null)
-            return Result.Failure($"City with ID {dto.Id} not found.");
-
-        city.Name = dto.Name;
-        city.Country = dto.Country;
-        city.PostalCode = dto.PostalCode;
-
-        await _cityService.UpdateCityAsync(city, cancellationToken);
-        return Result.Success();
+        try
+        {
+            await _cityService.UpdateCityAsync(request.Dto, cancellationToken);
+            return Result.Success();
+        }
+        catch (KeyNotFoundException ex)
+        {
+            return Result.Failure(ex.Message, "NOT_FOUND", 404);
+        }
     }
 }

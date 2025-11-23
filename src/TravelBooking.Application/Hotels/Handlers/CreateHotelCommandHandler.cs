@@ -1,9 +1,11 @@
 using MediatR;
 using TravelBooking.Application.Hotels.Commands;
+using TravelBooking.Application.Hotels.Dtos;
+using TravelBooking.Application.Hotels.Servicies;
 using TravelBooking.Application.Shared.Results;
 using TravelBooking.Domain.Hotels.Entities;
 
-public class CreateHotelCommandHandler : IRequestHandler<CreateHotelCommand, Result<Guid>>
+public class CreateHotelCommandHandler : IRequestHandler<CreateHotelCommand, Result<HotelDto>>
 {
     private readonly IHotelService _hotelService;
 
@@ -12,21 +14,9 @@ public class CreateHotelCommandHandler : IRequestHandler<CreateHotelCommand, Res
         _hotelService = hotelService;
     }
 
-    public async Task<Result<Guid>> Handle(CreateHotelCommand request, CancellationToken ct)
+    public async Task<Result<HotelDto>> Handle(CreateHotelCommand request, CancellationToken ct)
     {
-        var hotel = new Hotel
-        {
-            Id = Guid.NewGuid(),
-            Name = request.Name,
-            CityId = request.CityId,
-            OwnerId = request.OwnerId,
-            StarRating = request.StarRate,
-            TotalRooms = request.RoomNumber,
-            Description = request.Description,
-            
-        };
-
-        await _hotelService.CreateHotelAsync(hotel, ct);
-        return Result<Guid>.Success(hotel.Id);
+        var hotelDto = await _hotelService.CreateHotelAsync(request.Dto, ct);
+        return Result<HotelDto>.Success(hotelDto);
     }
 }

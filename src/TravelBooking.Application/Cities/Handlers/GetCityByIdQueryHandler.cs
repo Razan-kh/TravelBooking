@@ -1,9 +1,9 @@
 using MediatR;
 using TravelBooking.Application.Cities.Commands;
 using TravelBooking.Application.Cities.Dtos;
+using TravelBooking.Application.Cities.Interfaces.Servicies;
 using TravelBooking.Application.Mappers.Interfaces;
 using TravelBooking.Application.Shared.Results;
-using TravelBooking.Domain.Cities.Interfaces.Services;
 
 namespace TravelBooking.Application.Cities.Handlers;
 
@@ -23,8 +23,6 @@ public class GetCityByIdQueryHandler : IRequestHandler<GetCityByIdQuery, Result<
         var city = await _cityService.GetCityByIdAsync(request.Id, cancellationToken);
         if (city == null)
             return Result.Failure<CityDto>("City not found.");
-
-        var dto = _cityMapper.Map(city);
-        return Result.Success(dto);
+        return Result.Success(city);
     }
 }

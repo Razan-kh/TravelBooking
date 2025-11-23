@@ -1,10 +1,10 @@
 using Microsoft.Extensions.DependencyInjection;
 using TravelBooking.Domain.Hotels.Repositories;
-using TravelBooking.Domain.Rooms.Repositories;
 using TravelBooking.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using TravelBooking.Infrastructure.Persistence.Repositories;
+using TravelBooking.Domain.Rooms.Interfaces;
 
 namespace TravelBooking.Infrastructure;
 
