@@ -27,12 +27,19 @@ public class RoomServiceTests
     {
         // Arrange
         var allRooms = _fixture.CreateMany<Room>(50).ToList();
+
+        
         _repoMock.Setup(r => r.GetRoomsAsync(It.IsAny<string?>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(allRooms);
 
         // mapper maps each Room to a RoomDto
         _mapperMock.Setup(m => m.Map(It.IsAny<Room>()))
-            .Returns<Room>(r => new RoomDto(r.Id, r.RoomNumber, 2, 1, "Category"));
+            .Returns<Room>(r => new RoomDto{ Id = r.Id,
+                                        RoomNumber = r.RoomNumber,
+                                        AdultsCapacity = 2,
+                                        ChildrenCapacity = 1,
+                                        CategoryName = "Category"
+                                    });
 
         // Act - request page 2, pageSize 10
         var result = await _service.GetRoomsAsync(null, page: 2, pageSize: 10, CancellationToken.None);
@@ -49,7 +56,14 @@ public class RoomServiceTests
     {
         // Arrange
         var room = _fixture.Create<Room>();
-        var dto = new RoomDto(room.Id, room.RoomNumber, 2, 1, "Cat");
+        var dto = new RoomDto
+        {
+            Id = room.Id,
+            RoomNumber = room.RoomNumber,
+            AdultsCapacity = 2,
+            ChildrenCapacity = 1,
+            CategoryName = "Cat"
+        };
         _repoMock.Setup(r => r.GetByIdAsync(room.Id, It.IsAny<CancellationToken>()))
             .ReturnsAsync(room);
         _mapperMock.Setup(m => m.Map(room)).Returns(dto);

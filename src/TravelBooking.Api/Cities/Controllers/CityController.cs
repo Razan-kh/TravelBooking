@@ -2,9 +2,11 @@ using Microsoft.AspNetCore.Mvc;
 using MediatR;
 using TravelBooking.Application.Cities.Commands;
 using TravelBooking.Application.Cities.Dtos;
+using Microsoft.AspNetCore.Authorization;
 
 namespace TravelBooking.Api.Cities.Controllers;
 
+[Authorize(Roles = "Admin")]
 [ApiController]
 [Route("api/city")]
 public class CityController : ControllerBase
