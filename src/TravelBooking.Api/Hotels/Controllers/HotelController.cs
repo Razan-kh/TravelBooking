@@ -3,9 +3,11 @@ using Microsoft.AspNetCore.Mvc;
 using TravelBooking.Application.Hotels.Commands;
 using TravelBooking.Application.Hotels.Dtos;
 using TravelBooking.Application.Hotels.Queries;
+using Microsoft.AspNetCore.Authorization;
 
 namespace TravelBooking.Api.Hotels.Controllers;
 
+[Authorize(Roles = "Admin")]
 [ApiController]
 [Route("api/[controller]")]
 public class HotelController : ControllerBase
@@ -22,7 +24,7 @@ public class HotelController : ControllerBase
     {
         var result = await _mediator.Send(command);
         return result.IsSuccess
-            ? CreatedAtAction(nameof(GetHotelById), new { id = result.Value }, result)
+            ? CreatedAtAction(nameof(GetHotelById), new { id = result.Value.Id }, result.Value) 
             : BadRequest(result.Error);
     }
 

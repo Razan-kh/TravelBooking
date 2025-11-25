@@ -2,9 +2,11 @@ using Microsoft.AspNetCore.Mvc;
 using MediatR;
 using TravelBooking.Application.Rooms.Queries;
 using TravelBooking.Application.Rooms.Commands;
+using Microsoft.AspNetCore.Authorization;
 
 namespace TravelBooking.Api.Rooms.Controllers;
 
+[Authorize(Roles = "Admin")]
 [ApiController]
 [Route("api/[controller]")]
 public class RoomsController : ControllerBase
