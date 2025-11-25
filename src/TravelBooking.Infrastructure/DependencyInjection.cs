@@ -30,10 +30,10 @@ namespace TravelBooking.Infrastructure;
 public static class DependencyInjection
 {
     public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration config)
-    {
+    {/*
         services.AddDbContext<AppDbContext>(options =>
             options.UseSqlServer(config.GetConnectionString("DefaultConnection")));
-
+*/
         services.AddScoped<IAppDbContext>(provider =>
             (IAppDbContext)provider.GetRequiredService<AppDbContext>());
 
@@ -58,12 +58,14 @@ public static class DependencyInjection
     }
     public static IServiceCollection AddInfrastructureServices(this IServiceCollection services, IConfiguration configuration)
     {
+        /*
         services.AddDbContext<AppDbContext>(options =>
         {
             options.UseSqlServer(
                 configuration.GetConnectionString("DefaultConnection"),
                 sql => sql.MigrationsAssembly(typeof(AppDbContext).Assembly.FullName));
         });
+        */
         services.AddScoped<IRoomRepository, RoomRepository>();
         services.AddScoped<IHotelRepository, HotelRepository>();
         services.AddScoped<ICityRepository, CityRepository>();

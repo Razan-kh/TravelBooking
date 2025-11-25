@@ -91,11 +91,22 @@ builder.Services.AddScoped<IReviewService, ReviewService>();
 builder.Services.AddScoped<ICartMapper, CartMapper>();
 
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
-
+/*
 builder.Services.AddDbContext<AppDbContext>(options =>
 {
     options.UseSqlServer(connectionString); // or UseNpgsql, UseSqlite, etc.
 });
+*/
+if (!builder.Environment.IsEnvironment("Test")) 
+{
+    // Normal SQL Server registration for production/dev
+    builder.Services.AddDbContext<AppDbContext>(options =>
+        options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+}
+else
+{
+    // In test environment, the DbContext will be replaced in ApiTestFactory
+}
 
 DotNetEnv.Env.Load();
 
@@ -126,15 +137,22 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 var app = builder.Build();
 
 // Configure middleware
+/*
+
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+*/
 
+if (app.Environment.IsDevelopment() || app.Environment.IsEnvironment("Test"))
+{
+    app.UseSwagger();
+    app.UseSwaggerUI();
+}
 app.MapControllers();
 app.UseHttpsRedirection();
-app.UseAuthorization();
 app.MapControllers();
 
 /*
@@ -144,9 +162,9 @@ using (var scope = app.Services.CreateScope())
     await DatabaseSeeder.SeedAsync(db);
 }
 */
-app.Run();
 app.UseRouting();
-app.UseAuthorization(); // optional if using auth
+app.UseAuthentication();
+app.UseAuthorization();
 
 if (!app.Environment.IsDevelopment())
 {
@@ -164,3 +182,6 @@ using (var scope = app.Services.CreateScope())
 }
 */
 app.Run();
+
+// Make the Program class public for WebApplicationFactory
+public partial class Program { }
