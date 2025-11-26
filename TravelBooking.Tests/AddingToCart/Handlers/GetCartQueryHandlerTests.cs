@@ -33,8 +33,13 @@ public class GetCartQueryHandlerTests
             .Setup(x => x.GetCartAsync(userId, It.IsAny<CancellationToken>()))
             .ReturnsAsync(expected);
 
+        var query = new GetCartQuery
+        {
+            UserId = userId   
+        };
+
         // Act
-        var result = await _handler.Handle(new GetCartQuery(userId), default);
+        var result = await _handler.Handle(query, default);
 
         // Assert
         Assert.True(result.IsSuccess);

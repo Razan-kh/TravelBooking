@@ -1,10 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using TravelBooking.Domain.Bookings.Entities;
-using TravelBooking.Domain.Cities;
 using TravelBooking.Domain.Discounts.Entities;
-using TravelBooking.Domain.Hotels;
 using TravelBooking.Domain.Rooms.Entities;
-using Microsoft.EntityFrameworkCore.Design;
 using TravelBooking.Domain.Users.Entities;
 using TravelBooking.Domain.Hotels.Entities;
 using TravelBooking.Domain.Amenities.Entities;
@@ -39,15 +36,7 @@ public class AppDbContext : DbContext, IAppDbContext
     {
         base.OnModelCreating(modelBuilder);
 
-        modelBuilder.Entity<Booking>()
-            .HasMany(b => b.Rooms)
-            .WithMany(r => r.Bookings)
-            .UsingEntity<Dictionary<string, object>>(
-                "BookingRoom", // table name
-                j => j.HasOne<Room>().WithMany().HasForeignKey("RoomId").OnDelete(DeleteBehavior.Restrict),
-                j => j.HasOne<Booking>().WithMany().HasForeignKey("BookingId").OnDelete(DeleteBehavior.Cascade),
-                j => j.HasKey("BookingId", "RoomId")
-            );
+ 
 
         // Cart ↔ CartItem relationship
         modelBuilder.Entity<Cart>()
@@ -67,22 +56,22 @@ public class AppDbContext : DbContext, IAppDbContext
             .HasForeignKey(r => r.HotelId)
             .OnDelete(DeleteBehavior.Cascade);
 
-            modelBuilder.Entity<Booking>()
-    .HasMany(b => b.Rooms)
-    .WithMany(r => r.Bookings)
-    .UsingEntity<Dictionary<string, object>>(
-        "BookingRoom",
-        j => j
-            .HasOne<Room>()
-            .WithMany()
-            .HasForeignKey("RoomId")
-            .OnDelete(DeleteBehavior.Cascade),
-        j => j
-            .HasOne<Booking>()
-            .WithMany()
-            .HasForeignKey("BookingId")
-            .OnDelete(DeleteBehavior.Cascade)
-    );
-
+    modelBuilder.Entity<Booking>()
+        .HasMany(b => b.Rooms)
+        .WithMany(r => r.Bookings)
+        .UsingEntity<Dictionary<string, object>>(
+            "BookingRoom",
+            j => j
+                .HasOne<Room>()
+                .WithMany()
+                .HasForeignKey("RoomId")
+                .OnDelete(DeleteBehavior.NoAction), // Changed from Cascade to NoAction
+            j => j
+                .HasOne<Booking>()
+                .WithMany()
+                .HasForeignKey("BookingId")
+                .OnDelete(DeleteBehavior.NoAction), // Changed from Cascade to NoAction
+            j => j.HasKey("BookingId", "RoomId")
+        );
     }
 }

@@ -1,40 +1,40 @@
 using System.Security.Claims;
 using System.Text.Encodings.Web;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using TravelBooking.Tests.Models;
 
 namespace TravelBooking.Tests.Integration;
 
 public class TestAuthHandler : AuthenticationHandler<AuthenticationSchemeOptions>
 {
-    public const string TestScheme = "TestScheme";
+    private readonly TestUserContext _userContext;
+    public const string Scheme = "TestScheme";
 
     public TestAuthHandler(
         IOptionsMonitor<AuthenticationSchemeOptions> options,
         ILoggerFactory logger,
         UrlEncoder encoder,
-        ISystemClock clock)
-        : base(options, logger, encoder, clock) { }
+        ISystemClock clock,
+        TestUserContext userContext)
+        : base(options, logger, encoder, clock)
+    {
+        _userContext = userContext;
+    }
 
     protected override Task<AuthenticateResult> HandleAuthenticateAsync()
     {
-        // If the test sets header "Test-User" and optionally "Test-Role", authenticate the user.
-        if (!Request.Headers.TryGetValue("Test-User", out var userName))
-            return Task.FromResult(AuthenticateResult.Fail("Missing Test-User header"));
-
-        var role = Request.Headers.TryGetValue("Test-Role", out var r) ? r.ToString() : "User";
-
         var claims = new[]
         {
-            new Claim(ClaimTypes.Name, userName.ToString()),
-            new Claim(ClaimTypes.Role, role)
+            new Claim(ClaimTypes.Name, "test_user"),
+            new Claim(ClaimTypes.Role, _userContext.Role),
+            new Claim(ClaimTypes.NameIdentifier, _userContext.UserId.ToString())
         };
 
-        var identity = new ClaimsIdentity(claims, TestScheme);
+        var identity = new ClaimsIdentity(claims, "Test");
         var principal = new ClaimsPrincipal(identity);
-        var ticket = new AuthenticationTicket(principal, TestScheme);
+        var ticket = new AuthenticationTicket(principal, Scheme);
 
         return Task.FromResult(AuthenticateResult.Success(ticket));
     }

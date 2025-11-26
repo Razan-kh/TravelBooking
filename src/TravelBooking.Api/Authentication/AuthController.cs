@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using TravelBooking.Application.Users.Commands;
 using TravelBooking.Application.Users.DTOs;
 using TravelBooking.Api.Extensions;
+using Microsoft.AspNetCore.Authorization;
 
 namespace TravelBooking.Api.Controllers;
 
@@ -11,7 +12,7 @@ namespace TravelBooking.Api.Controllers;
 public class AuthController(IMediator mediator) : ControllerBase
 {
     private readonly IMediator _mediator = mediator;
-
+    [AllowAnonymous] 
     [HttpPost("login")]
     public async Task<ActionResult<LoginResponseDto>> Login([FromBody] LoginRequestDto request)
     {

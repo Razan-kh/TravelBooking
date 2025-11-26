@@ -1,25 +1,25 @@
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.EntityFrameworkCore;
-using TravelBooking.Api;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.VisualStudio.TestPlatform.TestHost;
 using TravelBooking.Infrastructure.Persistence;
+using Microsoft.Extensions.Options;
+using Moq;
+using TravelBooking.Application.Interfaces.Security;
+using TravelBooking.Domain.Users.Entities;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.IdentityModel.Tokens;
 using System.Security.Claims;
 using System.Text;
-using Microsoft.Extensions.Options;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 namespace TravelBooking.Tests.Integration;
+
 public class ApiTestFactory : WebApplicationFactory<Program>
 {
     private string _dbName = Guid.NewGuid().ToString();
 
-    public void SetInMemoryDbName(string name)
-    {
-        _dbName = name;
-    }
+    public void SetInMemoryDbName(string name) => _dbName = name;
 
     protected override void ConfigureWebHost(IWebHostBuilder builder)
     {
@@ -27,63 +27,100 @@ public class ApiTestFactory : WebApplicationFactory<Program>
 
         builder.ConfigureServices(services =>
         {
-            // Replace SQL Server with InMemory
-            var descriptor = services.SingleOrDefault(
-                d => d.ServiceType == typeof(DbContextOptions<AppDbContext>));
+            // Remove ALL existing DbContext registrations more aggressively
+            RemoveService<DbContextOptions<AppDbContext>>(services);
+            RemoveService<DbContextOptions>(services);
+            RemoveService<AppDbContext>(services);
 
-            if (descriptor != null)
-                services.Remove(descriptor);
-
-            services.AddDbContext<AppDbContext>(options =>
-                options.UseInMemoryDatabase(_dbName));
-
-            // Remove default JWT
-            var jwtOptions = services
-                .Where(s => s.ServiceType == typeof(IConfigureOptions<JwtBearerOptions>))
-                .ToList();
-
-            foreach (var opt in jwtOptions)
-                services.Remove(opt);
-
-            // Add Test JWT
-            services.AddAuthentication("TestAuth")
-                .AddJwtBearer("TestAuth", options =>
-                {
-                    options.TokenValidationParameters = new TokenValidationParameters
-                    {
-                        ValidateIssuer = false,
-                        ValidateAudience = false,
-                        ValidateLifetime = false,
-                        ValidateIssuerSigningKey = true,
-                        IssuerSigningKey = new SymmetricSecurityKey(
-                            Encoding.UTF8.GetBytes("ThisIsAVeryLongTestKey_ForIntegrationTests_1234567890!")
-                        ),
-                        RoleClaimType = ClaimTypes.Role
-                    };
-                });
-        });
-    }
-}
-
-
-/*
-public class ApiTestFactory : WebApplicationFactory<Program>
-{
-    protected override void ConfigureWebHost(IWebHostBuilder builder)
-    {
-        builder.ConfigureServices(services =>
-        {
-            // Remove the existing DbContext registration
-            var descriptor = services.SingleOrDefault(
-                d => d.ServiceType == typeof(DbContextOptions<AppDbContext>));
-            if (descriptor != null) services.Remove(descriptor);
-
-            // Add InMemory DbContext for testing
+            // Add InMemory database with proper configuration
             services.AddDbContext<AppDbContext>(options =>
             {
-                options.UseInMemoryDatabase("TestDb");
+                options.UseInMemoryDatabase(_dbName);
+                options.EnableSensitiveDataLogging();
+                options.EnableDetailedErrors();
             });
+
+            // Remove and mock other services
+            RemoveAndMockPasswordHasher(services);
+            RemoveAndMockJwtService(services);
+
+            // Configure authentication
+            ConfigureTestAuthentication(services);
+
+            // Build the service provider to ensure database is created
+            var sp = services.BuildServiceProvider();
+            using (var scope = sp.CreateScope())
+            {
+                var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+                db.Database.EnsureCreated();
+            }
+        });
+    }
+
+    private void RemoveService<T>(IServiceCollection services)
+    {
+        var descriptor = services.SingleOrDefault(d => d.ServiceType == typeof(T));
+        if (descriptor != null)
+            services.Remove(descriptor);
+    }
+
+    private void RemoveAndMockPasswordHasher(IServiceCollection services)
+    {
+        RemoveService<IPasswordHasher>(services);
+        
+        var passwordHasherMock = new Mock<IPasswordHasher>();
+        passwordHasherMock.Setup(ph => ph.Verify("hashedpass", "hashedpass"))
+                        .Returns(true);
+        passwordHasherMock.Setup(ph => ph.Verify(It.IsAny<string>(), It.IsAny<string>()))
+                        .Returns(false);
+        
+        services.AddScoped(_ => passwordHasherMock.Object);
+    }
+
+    private void RemoveAndMockJwtService(IServiceCollection services)
+    {
+        RemoveService<IJwtService>(services);
+        
+        var jwtServiceMock = new Mock<IJwtService>();
+        jwtServiceMock.Setup(jwt => jwt.CreateToken(It.IsAny<User>()))
+                      .Returns("TestToken");
+        
+        services.AddScoped(_ => jwtServiceMock.Object);
+    }
+
+    private void ConfigureTestAuthentication(IServiceCollection services)
+    {
+        // Remove existing authentication
+        var authDescriptor = services.SingleOrDefault(d => d.ServiceType == typeof(IAuthenticationService));
+        if (authDescriptor != null)
+            services.Remove(authDescriptor);
+
+        // Remove JWT options
+        var jwtOptions = services.Where(s => s.ServiceType == typeof(IConfigureOptions<JwtBearerOptions>)).ToList();
+        foreach (var opt in jwtOptions)
+            services.Remove(opt);
+
+        // Add test authentication
+        services.AddAuthentication(options =>
+        {
+            options.DefaultAuthenticateScheme = "TestAuth";
+            options.DefaultChallengeScheme = "TestAuth";
+            options.DefaultScheme = "TestAuth";
+        })
+        .AddJwtBearer("TestAuth", options =>
+        {
+            options.TokenValidationParameters = new TokenValidationParameters
+            {
+                ValidateIssuer = false,
+                ValidateAudience = false,
+                ValidateLifetime = false,
+                ValidateIssuerSigningKey = true,
+                IssuerSigningKey = new SymmetricSecurityKey(
+                    Encoding.UTF8.GetBytes("ThisIsAVeryLongTestKey_ForIntegrationTests_1234567890!")
+                ),
+                RoleClaimType = ClaimTypes.Role,
+                NameClaimType = ClaimTypes.NameIdentifier
+            };
         });
     }
 }
-*/

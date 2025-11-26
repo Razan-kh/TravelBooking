@@ -9,7 +9,6 @@ using Microsoft.EntityFrameworkCore;
 using TravelBooking.Domain.Cities.Entities;
 using TravelBooking.Infrastructure.Persistence;
 using Xunit;
-using TravelBooking.IntegrationTests.Helpers;
 using TravelBooking.Infrastructure.Persistence.Repositories;
 
 namespace TravelBooking.IntegrationTests.Repositories;

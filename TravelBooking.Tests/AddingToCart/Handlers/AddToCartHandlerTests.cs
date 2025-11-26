@@ -36,7 +36,6 @@ public class AddToCartHandlerTests
         // Arrange
         var cmd = new AddRoomToCartCommand(
             Guid.NewGuid(),
-            Guid.NewGuid(),
             DateOnly.FromDateTime(DateTime.Today),
             DateOnly.FromDateTime(DateTime.Today), // invalid
             1);

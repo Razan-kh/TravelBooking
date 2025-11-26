@@ -133,6 +133,8 @@ public class HotelRepository : IHotelRepository
         return await _context.Bookings
             .Where(b => b.UserId == userId)
             .OrderByDescending(b => b.BookingDate)
+            .Include(b => b.Hotel)
+                .ThenInclude(h => h.City)
             .Select(b => b.Hotel!)
             .Take(count)
             .ToListAsync();

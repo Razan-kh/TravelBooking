@@ -19,6 +19,8 @@ public class HotelControllerIntegrationTests : IClassFixture<ApiTestFactory>, ID
     private readonly HttpClient _client;
     private readonly AppDbContext _db;
     private readonly Fixture _fixture;
+    private readonly string _role = "Admin";
+    private readonly Guid _adminId = Guid.NewGuid();
 
     public HotelControllerIntegrationTests(ApiTestFactory factory)
     {
@@ -42,7 +44,7 @@ public class HotelControllerIntegrationTests : IClassFixture<ApiTestFactory>, ID
     public async Task CreateHotel_ReturnsCreated_And_CanRetrieve()
     {
         // Arrange
-        _client.AddAdminAuthHeader();
+        _client.AddAuthHeader(_role, _adminId);
 
         using var scope = _factory.Services.CreateScope();
         var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
@@ -79,7 +81,7 @@ public class HotelControllerIntegrationTests : IClassFixture<ApiTestFactory>, ID
     [Fact]
     public async Task GetHotels_ReturnsOk_WithSeededHotels()
     {
-        _client.AddAdminAuthHeader();
+        _client.AddAuthHeader(_role, _adminId);
 
         using var scope = _factory.Services.CreateScope();
         var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
@@ -134,7 +136,7 @@ public class HotelControllerIntegrationTests : IClassFixture<ApiTestFactory>, ID
     [Fact]
     public async Task GetHotelById_ReturnsOk_WhenHotelExists()
     {
-        _client.AddAdminAuthHeader();
+        _client.AddAuthHeader(_role, _adminId);
 
         using var scope = _factory.Services.CreateScope();
         var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
@@ -164,7 +166,7 @@ public class HotelControllerIntegrationTests : IClassFixture<ApiTestFactory>, ID
     [Fact]
     public async Task GetHotelById_ReturnsNotFound_WhenHotelDoesNotExist()
     {
-        _client.AddAdminAuthHeader();
+        _client.AddAuthHeader(_role, _adminId);
 
         var response = await _client.GetAsync($"/api/hotel/{Guid.NewGuid()}");
         response.StatusCode.Should().Be(HttpStatusCode.NotFound);
@@ -175,7 +177,7 @@ public class HotelControllerIntegrationTests : IClassFixture<ApiTestFactory>, ID
     [Fact]
     public async Task UpdateHotel_ReturnsNoContent_WhenHotelExists()
     {
-        _client.AddAdminAuthHeader();
+        _client.AddAuthHeader(_role, _adminId);
 
         using var scope = _factory.Services.CreateScope();
         var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
@@ -220,7 +222,7 @@ public class HotelControllerIntegrationTests : IClassFixture<ApiTestFactory>, ID
     [Fact]
     public async Task UpdateHotel_ReturnsBadRequest_WhenIdMismatch()
     {
-        _client.AddAdminAuthHeader();
+        _client.AddAuthHeader(_role, _adminId);
 
         var updateDto = new UpdateHotelDto( Guid.NewGuid(), "Name", 5, Guid.NewGuid(), Guid.NewGuid(), "desc", null, 10);
 
@@ -233,7 +235,7 @@ public class HotelControllerIntegrationTests : IClassFixture<ApiTestFactory>, ID
     [Fact]
     public async Task DeleteHotel_ReturnsNoContent_WhenHotelExists()
     {
-        _client.AddAdminAuthHeader();
+        _client.AddAuthHeader(_role, _adminId);
 
         using var scope = _factory.Services.CreateScope();
         var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
@@ -262,7 +264,7 @@ public class HotelControllerIntegrationTests : IClassFixture<ApiTestFactory>, ID
     [Fact]
     public async Task DeleteHotel_ReturnsBadRequest_WhenHotelDoesNotExist()
     {
-        _client.AddAdminAuthHeader();
+        _client.AddAuthHeader(_role, _adminId);
 
         var response = await _client.DeleteAsync($"/api/hotel/{Guid.NewGuid()}");
         response.StatusCode.Should().Be(HttpStatusCode.NoContent); 
