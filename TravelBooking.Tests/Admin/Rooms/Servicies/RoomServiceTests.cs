@@ -3,30 +3,51 @@ using FluentAssertions;
 using Moq;
 using TravelBooking.Application.Mappers.Interfaces;
 using TravelBooking.Application.Rooms.Dtos;
+using TravelBooking.Domain.Images.Entities;
+using TravelBooking.Domain.Images.interfaces;
 using TravelBooking.Domain.Rooms.Entities;
 using TravelBooking.Domain.Rooms.Interfaces;
 using TravelBooking.Tests.Rooms;
+using TravelBooking.Application.Images.Servicies;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Abstractions; 
+using TravelBooking.Application.Rooms.Services;
 
 public class RoomServiceTests
 {
     private readonly IFixture _fixture;
     private readonly Mock<IRoomRepository> _repoMock;
     private readonly Mock<IRoomMapper> _mapperMock;
-    private readonly TravelBooking.Application.Rooms.Services.RoomService _service;
+    private readonly Mock<IGalleryImageRepository> _galleryImageRepoMock;
+    private readonly Mock<IImageAppService> _imageAppServiceMock;
+    private readonly RoomService _service;
+    private readonly Mock<ILogger<RoomService>> _loggerMock;
 
     public RoomServiceTests()
     {
         _fixture = new Fixture().Customize(new EntityCustomization());
         _repoMock = new Mock<IRoomRepository>();
         _mapperMock = new Mock<IRoomMapper>();
-        _service = new TravelBooking.Application.Rooms.Services.RoomService(_repoMock.Object, _mapperMock.Object);
+        _galleryImageRepoMock = new Mock<IGalleryImageRepository>();
+        _imageAppServiceMock = new Mock<IImageAppService>();
+        _loggerMock = new Mock<ILogger<RoomService>>();
+
+        _service = new RoomService(
+            _repoMock.Object,
+            _mapperMock.Object,
+            _galleryImageRepoMock.Object,
+            _imageAppServiceMock.Object,
+            _loggerMock.Object
+        );    
     }
 
     [Fact]
     public async Task GetRoomsAsync_ShouldReturnPagedMappedResults_WhenRepositoryHasManyRooms()
     {
         // Arrange
-        var allRooms = _fixture.CreateMany<Room>(50).ToList();
+        var allRooms = _fixture
+        .CreateMany<Room>(50)
+        .ToList();
 
         
         _repoMock.Setup(r => r.GetRoomsAsync(It.IsAny<string?>(), It.IsAny<CancellationToken>()))
@@ -164,7 +185,12 @@ public class RoomServiceTests
     public async Task DeleteRoomAsync_ShouldCallRepoDelete_WhenRoomExists()
     {
         // Arrange
-        var room = _fixture.Create<Room>();
+        var room = _fixture.Build<Room>()
+        .Without(r => r.Gallery)
+        .Without(r => r.Bookings)
+        .Without(r => r.RoomCategory)
+        .Create();
+
         _repoMock.Setup(r => r.GetByIdAsync(room.Id, It.IsAny<CancellationToken>())).ReturnsAsync(room);
         _repoMock.Setup(r => r.DeleteAsync(room, It.IsAny<CancellationToken>())).Returns(Task.CompletedTask).Verifiable();
 

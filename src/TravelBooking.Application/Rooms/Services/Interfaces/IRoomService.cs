@@ -1,4 +1,5 @@
 using TravelBooking.Application.Rooms.Dtos;
+using TravelBooking.Domain.Images.Dtos;
 
 namespace TravelBooking.Application.Rooms.Services.Interfaces;
 public interface IRoomService
@@ -8,4 +9,5 @@ public interface IRoomService
     Task<Guid> CreateRoomAsync(CreateRoomDto dto, CancellationToken ct);
     Task UpdateRoomAsync(UpdateRoomDto dto, CancellationToken ct);
     Task DeleteRoomAsync(Guid id, CancellationToken ct);
+    Task<ImageResponseDto> UploadRoomImageAsync(Guid roomId, ImageUploadDto dto, CancellationToken ct);
 }

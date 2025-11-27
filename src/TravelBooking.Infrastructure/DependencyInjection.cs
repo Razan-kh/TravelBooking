@@ -12,18 +12,14 @@ using TravelBooking.Domain.Bookings.Repositories;
 using TravelBooking.Domain.Reviews.Repositories;
 using TravelBooking.Domain.Hotels.Interfaces.Repositories;
 using TravelBooking.Domain.Carts.Repositories;
-using Microsoft.Extensions.DependencyInjection;
 using TravelBooking.Application.FeaturedDeals.Mappers;
 using TravelBooking.Application.RecentlyVisited.Mappers;
 using TravelBooking.Application.TrendingCities.Mappers;
-using TravelBooking.Infrastructure.Persistence;
-using TravelBooking.Infrastructure.Persistence.Repositories;
-using Microsoft.Extensions.DependencyInjection;
-using TravelBooking.Infrastructure.Persistence;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
-using TravelBooking.Infrastructure.Persistence.Repositories;
 using TravelBooking.Domain.Rooms.Interfaces;
+using  TravelBooking.Domain.Shared.Interfaces;
+using TravelBooking.Domain.Shared.Interfaces;
+using TravelBooking.Infrastructure.Services.Images;
+using TravelBooking.Domain.Images.interfaces;
 
 namespace TravelBooking.Infrastructure;
 
@@ -54,6 +50,15 @@ public static class DependencyInjection
         services.AddSingleton<IRecentlyVisitedHotelMapper, RecentlyVisitedHotelMapper>();
         services.AddSingleton<ITrendingCityMapper, TrendingCityMapper>();
 
+
+        // 1. Bind Cloudinary settings
+        services.Configure<CloudinarySettings>(config.GetSection("Cloudinary"));
+
+        // 2. Register Cloudinary concrete service
+        services.AddScoped<ICloudStorageService, CloudinaryService>();
+        services.AddScoped<IGalleryImageRepository, GalleryImageRepository>(); // ← ADD THIS LINE
+        
+        // Register other services
         return services;
     }
     public static IServiceCollection AddInfrastructureServices(this IServiceCollection services, IConfiguration configuration)

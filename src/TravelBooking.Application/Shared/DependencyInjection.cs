@@ -8,6 +8,7 @@ using TravelBooking.Application.Users.Services.Implementations;
 using TravelBooking.Application.Services.Implementation;
 using TravelBooking.Application.Services.Interfaces;
 using TravelBooking.Application.Utils;
+using TravelBooking.Application.Images.Servicies;
 
 namespace TravelBooking.Application.Shared;
 
@@ -24,6 +25,7 @@ public static class DependencyInjection
         services.AddScoped<IHomeService, HomeService>();
 
       services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
+        services.AddScoped<IImageAppService, ImageAppService>();
 
         // Register pipeline behavior
     services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));

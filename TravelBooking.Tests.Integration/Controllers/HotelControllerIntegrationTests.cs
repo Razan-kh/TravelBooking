@@ -12,6 +12,7 @@ using TravelBooking.Infrastructure.Persistence;
 using TravelBooking.Tests.Integration;
 using TravelBooking.Tests.Integration.Helpers;
 using Xunit;
+using TravelBooking.Tests.Integration.Factories;
 
 public class HotelControllerIntegrationTests : IClassFixture<ApiTestFactory>, IDisposable
 {

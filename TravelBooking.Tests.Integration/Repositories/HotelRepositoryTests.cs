@@ -10,14 +10,15 @@ using TravelBooking.Domain.Hotels.Entities;
 using TravelBooking.Infrastructure.Persistence;
 using TravelBooking.Tests.Integration;
 using Xunit;
+using TravelBooking.Tests.Integration.Factories;
 
-public class HotelRepositoryIntegrationTests : IClassFixture<ApiTestFactory>, IDisposable
+public class HotelRepositoryTests : IClassFixture<ApiTestFactory>, IDisposable
 {
     private readonly ApiTestFactory _factory;
     private readonly AppDbContext _db;
     private readonly Fixture _fixture;
 
-    public HotelRepositoryIntegrationTests(ApiTestFactory factory)
+    public HotelRepositoryTests(ApiTestFactory factory)
     {
         _factory = factory;
         // give each test class a unique in-memory DB to avoid cross-test interference
@@ -140,6 +141,4 @@ public class HotelRepositoryIntegrationTests : IClassFixture<ApiTestFactory>, ID
         var persisted = await _db.Hotels.FindAsync(hotel.Id);
         persisted.Should().BeNull();
     }
-
-    // Add more repository integration tests for complex queries, includes, and methods such as IsRoomCategoryBookedAsync
 }

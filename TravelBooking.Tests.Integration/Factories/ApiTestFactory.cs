@@ -12,8 +12,9 @@ using Microsoft.IdentityModel.Tokens;
 using System.Security.Claims;
 using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.Extensions.Configuration;
 
-namespace TravelBooking.Tests.Integration;
+namespace TravelBooking.Tests.Integration.Factories;
 
 public class ApiTestFactory : WebApplicationFactory<Program>
 {
@@ -54,6 +55,16 @@ public class ApiTestFactory : WebApplicationFactory<Program>
                 var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
                 db.Database.EnsureCreated();
             }
+        });
+                builder.ConfigureAppConfiguration((context, config) =>
+        {
+            // Add test configuration for Cloudinary
+            config.AddInMemoryCollection(new Dictionary<string, string>
+            {
+                ["Cloudinary:CloudName"] = "test-cloud",
+                ["Cloudinary:ApiKey"] = "test-key", 
+                ["Cloudinary:ApiSecret"] = "test-secret"
+            });
         });
     }
 

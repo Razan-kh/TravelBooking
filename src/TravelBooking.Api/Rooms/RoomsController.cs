@@ -3,6 +3,8 @@ using MediatR;
 using TravelBooking.Application.Rooms.Queries;
 using TravelBooking.Application.Rooms.Commands;
 using Microsoft.AspNetCore.Authorization;
+using TravelBooking.Application.Rooms.Commands;
+using TravelBooking.Domain.Images.Dtos;
 
 namespace TravelBooking.Api.Rooms.Controllers;
 
@@ -52,5 +54,24 @@ public class RoomsController : ControllerBase
     {
         var result = await _mediator.Send(new DeleteRoomCommand(id));
         return result.IsSuccess ? NoContent() : NotFound(result.Error);
+    }
+
+    [HttpPost]
+    [Authorize(Roles = "Admin")]
+    [RequestSizeLimit(10 * 1024 * 1024)] // 10MB
+    [Route("api/rooms/{roomId:guid}/images")]
+    public async Task<IActionResult> UploadRoomImage(
+        Guid roomId, 
+        [FromForm] ImageUploadDto imageUploadDto)
+    {
+        if (imageUploadDto.File == null || imageUploadDto.File.Length == 0)
+            return BadRequest("File is required");
+
+        var command = new UploadRoomImageCommand(roomId, imageUploadDto);
+        var result = await _mediator.Send(command);
+        
+        return result.IsSuccess 
+            ? Ok(result.Value) 
+            : BadRequest(result.Error);
     }
 }

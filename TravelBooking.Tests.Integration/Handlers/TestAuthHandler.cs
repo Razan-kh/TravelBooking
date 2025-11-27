@@ -5,7 +5,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using TravelBooking.Tests.Models;
 
-namespace TravelBooking.Tests.Integration;
+namespace TravelBooking.Tests.Integration.Handlers;
 
 public class TestAuthHandler : AuthenticationHandler<AuthenticationSchemeOptions>
 {

@@ -11,6 +11,7 @@ using TravelBooking.Application.Shared.Interfaces;
 using TravelBooking.Domain.Carts.Entities;
 using TravelBooking.Domain.Payments.Entities;
 using TravelBooking.Domain.Cities.Entities;
+using TravelBooking.Domain.Images.Entities;
 
 namespace TravelBooking.Infrastructure.Persistence;
 
@@ -30,6 +31,7 @@ public class AppDbContext : DbContext, IAppDbContext
     public DbSet<Cart> Carts => Set<Cart>();
     public DbSet<CartItem> CartItems => Set<CartItem>();
     public DbSet<User> Users => Set<User>();
+    public DbSet<GalleryImage> GalleryImages => Set<GalleryImage>();
     public DbSet<PaymentDetails> PaymentDetails => Set<PaymentDetails>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)

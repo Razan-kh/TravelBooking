@@ -1,11 +1,11 @@
 using AutoFixture;
 using FluentAssertions;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using TravelBooking.Infrastructure.Persistence;
 using TravelBooking.Infrastructure.Persistence.Repositories;
 using TravelBooking.Tests.Integration.Extensions;
 using Xunit;
+using TravelBooking.Tests.Integration.Factories;
 
 namespace TravelBooking.Tests.Integration.Repositories;
 

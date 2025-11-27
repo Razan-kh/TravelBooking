@@ -18,7 +18,7 @@ using TravelBooking.Tests.Integration.Helpers;
 using Microsoft.VisualStudio.TestPlatform.TestHost;
 using TravelBooking.Domain.Hotels.Entities;
 using System.Net.Http.Json;
-using TravelBooking.Tests.Integration;
+using TravelBooking.Tests.Integration.Factories;
 
 namespace TravelBooking.IntegrationTests.Cities;
 

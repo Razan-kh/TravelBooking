@@ -9,6 +9,7 @@ using TravelBooking.Domain.Users.Entities;
 using TravelBooking.Infrastructure.Persistence;
 using TravelBooking.Tests.Integration.Extensions;
 using Xunit;
+using TravelBooking.Tests.Integration.Factories;
 
 namespace TravelBooking.Tests.Integration.Controllers;
 

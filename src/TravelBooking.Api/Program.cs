@@ -22,6 +22,7 @@ using TravelBooking.Application.AddingToCart.Mappers;
 using TravelBooking.API.Extensions;
 using TravelBooking.Infrastructure;
 using TravelBooking.Application;
+using TravelBooking.Application.Images.Servicies;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -39,6 +40,9 @@ builder.Services.AddApplicationServices();
 var jwtSettings = new JwtSettings();
 builder.Configuration.GetSection("JwtSettings").Bind(jwtSettings);
 builder.Services.AddSingleton(jwtSettings);
+
+builder.Services.AddScoped<ImageAppService>();
+
 
 
 builder.Services.AddAuthentication("Bearer")

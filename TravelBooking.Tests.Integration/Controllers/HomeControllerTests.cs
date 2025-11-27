@@ -36,6 +36,7 @@ using TravelBooking.Domain.Payments.Entities;
 using TravelBooking.Domain.Users.Enums;
 using TravelBooking.Domain.Rooms.Enums;
 using TravelBooking.Domain.Owners.Entities;
+using TravelBooking.Tests.Integration.Factories;
 
 namespace TravelBooking.Tests.Integration.Controllers
 {
