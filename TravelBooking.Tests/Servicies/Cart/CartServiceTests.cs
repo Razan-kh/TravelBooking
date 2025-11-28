@@ -1,4 +1,4 @@
-    using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -6,12 +6,12 @@ using System.Threading.Tasks;
 using AutoFixture;
 using AutoFixture.AutoMoq;
 using Moq;
-using TravelBooking.Application.AddingToCart.Handlers;
-using TravelBooking.Application.AddingToCart.Services.Implementations;
-using TravelBooking.Application.AddingToCart.Services.Interfaces;
-using TravelBooking.Application.AddingToCart.Mappers;
+using TravelBooking.Application.Carts.Handlers;
+using TravelBooking.Application.Carts.Services.Implementations;
+using TravelBooking.Application.Carts.Services.Interfaces;
+using TravelBooking.Application.Carts.Mappers;
 
-using TravelBooking.Application.AddingToCart.Mappers;
+using TravelBooking.Application.Carts.Mappers;
 using TravelBooking.Domain.Carts.Entities;
 using TravelBooking.Domain.Carts.Repositories;
 using TravelBooking.Application.Shared.Interfaces;

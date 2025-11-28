@@ -9,6 +9,8 @@ using TravelBooking.Application.Services.Implementation;
 using TravelBooking.Application.Services.Interfaces;
 using TravelBooking.Application.Utils;
 using TravelBooking.Application.Images.Servicies;
+using TravelBooking.Application.Users.Validators;
+using TravelBooking.Application.Searching.Validators;
 
 namespace TravelBooking.Application.Shared;
 
@@ -30,11 +32,13 @@ public static class DependencyInjection
         // Register pipeline behavior
     services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
 
-    services.AddTransient(
+        services.AddTransient(
     typeof(IPipelineBehavior<,>),
     typeof(UserPipelineBehavior<,>)
-);
-services.AddHttpContextAccessor();
+    );
+        services.AddValidatorsFromAssemblyContaining<LoginCommandValidator>();
+        services.AddValidatorsFromAssemblyContaining<SearchHotelsQueryValidator>();
+        services.AddHttpContextAccessor();
 
 
         return services;

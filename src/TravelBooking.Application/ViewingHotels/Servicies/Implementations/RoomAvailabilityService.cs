@@ -1,4 +1,4 @@
-using TravelBooking.Application.AddingToCart.Services.Interfaces;
+using TravelBooking.Application.Carts.Services.Interfaces;
 using TravelBooking.Domain.Rooms.Interfaces;
 
 namespace TravelBooking.Application.ViewingHotels.Services.Implementations;

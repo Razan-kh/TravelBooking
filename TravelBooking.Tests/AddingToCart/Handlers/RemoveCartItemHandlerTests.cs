@@ -1,8 +1,8 @@
 using AutoFixture;
 using Moq;
-using TravelBooking.Application.AddingToCart.Handlers;
-using TravelBooking.Application.AddingToCart.Commands;
-using TravelBooking.Application.AddingToCart.Services.Interfaces;
+using TravelBooking.Application.Carts.Handlers;
+using TravelBooking.Application.Carts.Commands;
+using TravelBooking.Application.Carts.Services.Interfaces;
 using TravelBooking.Tests.AddingToCart.TestHelpers;
 using TravelBooking.Application.Shared.Results;
 

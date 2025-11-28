@@ -5,6 +5,7 @@ using  TravelBooking.Application.Utils;
 using TravelBooking.Application.Mappers.Interfaces;
 using TravelBooking.Application.Shared.Results;
 using TravelBooking.Domain.Cities;
+using TravelBooking.Application.Cities.Servicies.Implementations;
 
 public class GetCitiesHandler : IRequestHandler<GetCitiesQuery, Result<PagedResult<CityDto>>>
 {

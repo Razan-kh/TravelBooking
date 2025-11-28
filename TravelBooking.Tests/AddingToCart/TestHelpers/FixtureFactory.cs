@@ -1,7 +1,7 @@
 using AutoFixture;
 using AutoFixture.AutoMoq;
 using AutoFixture.Kernel;
-using TravelBooking.Application.AddingToCart.Handlers;
+using TravelBooking.Application.Carts.Handlers;
 using TravelBooking.Domain.Carts.Entities;
 using TravelBooking.Domain.Cities.Entities;
 using TravelBooking.Domain.Rooms.Entities;
@@ -13,8 +13,8 @@ using TravelBooking.Domain.Carts.Entities;
 using TravelBooking.Domain.Discounts.Entities;
 
 using TravelBooking.Domain.Bookings.Entities;
-using TravelBooking.Application.AddingToCart.Commands;
-using TravelBooking.Application.AddingToCart.Services.Interfaces;
+using TravelBooking.Application.Carts.Commands;
+using TravelBooking.Application.Carts.Services.Interfaces;
 using AutoFixture;
 using AutoFixture.AutoMoq;
 
@@ -35,24 +35,24 @@ public static class FixtureFactory
     public static IFixture Create()
     {
         var fixture = new Fixture();
-        
+
         // Configure AutoMoq first
         fixture.Customize(new AutoMoqCustomization { ConfigureMembers = true });
-        
+
         // Handle circular references
         fixture.Behaviors.OfType<ThrowingRecursionBehavior>().ToList()
                 .ForEach(b => fixture.Behaviors.Remove(b));
         fixture.Behaviors.Add(new OmitOnRecursionBehavior());
-        
+
         // Fix DateOnly creation
         fixture.Customize<DateOnly>(c => c.FromFactory<DateTime>(DateOnly.FromDateTime));
-        
+
         // Configure all entities to avoid circular references
         ConfigureEntityCustomizations(fixture);
-        
+
         return fixture;
     }
-    
+
     private static void ConfigureEntityCustomizations(IFixture fixture)
     {
         // RoomCategory customization
@@ -66,7 +66,7 @@ public static class FixtureFactory
             .With(rc => rc.ChildrenCapacity, 1)
             .With(rc => rc.Name, "Standard Room")
             .With(rc => rc.RoomType, RoomType.Standard));
-        
+
         // Hotel customization
         fixture.Customize<Hotel>(composer => composer
             .Without(h => h.City)
@@ -79,31 +79,31 @@ public static class FixtureFactory
             .With(h => h.StarRating, 4)
             .With(h => h.TotalRooms, 50)
             .With(h => h.HotelType, HotelType.Hotel));
-        
+
         // Discount customization
         fixture.Customize<Discount>(composer => composer
             .Without(d => d.RoomCategory)
             .With(d => d.DiscountPercentage, 10.0m)
             .With(d => d.StartDate, DateTime.UtcNow.AddDays(-1))
             .With(d => d.EndDate, DateTime.UtcNow.AddDays(1)));
-        
+
         // Amenity customization
         fixture.Customize<Amenity>(composer => composer
             .Without(a => a.RoomCategories)
             .With(a => a.Name, "WiFi")
             .With(a => a.Description, "Free WiFi"));
-        
+
         // Review customization
         fixture.Customize<Review>(composer => composer
             .Without(r => r.User)
             .Without(r => r.Hotel)
             .With(r => r.Rating, 5)
             .With(r => r.Content, "Great hotel!"));
-        
+
         // GalleryImage customization
         fixture.Customize<GalleryImage>(composer => composer
             .With(g => g.Path, "/images/test.jpg"));
-        
+
         // Booking customization
         fixture.Customize<Booking>(composer => composer
             .Without(b => b.User)
@@ -113,7 +113,7 @@ public static class FixtureFactory
             .With(b => b.CheckInDate, DateOnly.FromDateTime(DateTime.Today.AddDays(1)))
             .With(b => b.CheckOutDate, DateOnly.FromDateTime(DateTime.Today.AddDays(3)))
             .With(b => b.BookingDate, DateTime.UtcNow));
-        
+
         // User customization
         fixture.Customize<User>(composer => composer
             .Without(u => u.Bookings)
@@ -121,7 +121,7 @@ public static class FixtureFactory
             .With(u => u.FirstName, "Test")
             .With(u => u.LastName, "User"));
     }
-    
+
     // Helper method to create RoomCategory with discounts
     public static RoomCategory CreateRoomCategoryWithDiscount(this IFixture fixture, decimal pricePerNight = 100.0m)
     {
@@ -141,7 +141,7 @@ public static class FixtureFactory
             .Without(r => r.Amenities)
             .Create();
     }
-    
+
     // Helper method to create RoomCategory without discounts
     public static RoomCategory CreateRoomCategoryWithoutDiscounts(this IFixture fixture, decimal pricePerNight = 100.0m)
     {
@@ -153,7 +153,7 @@ public static class FixtureFactory
             .Without(r => r.Amenities)
             .Create();
     }
-    
+
     // Other helper methods
     public static AddRoomToCartCommand CreateAddRoomToCartCommand(this IFixture fixture)
     {
@@ -163,18 +163,18 @@ public static class FixtureFactory
             .With(c => c.Quantity, 1)
             .Create();
     }
-    
+
     public static Cart CreateValidCart(this IFixture fixture, int itemCount = 2)
     {
         var cart = fixture.Build<Cart>()
             .Without(c => c.Items)
             .Create();
-        
+
         var items = new List<CartItem>();
         for (int i = 0; i < itemCount; i++)
         {
             var roomCategory = fixture.CreateRoomCategoryWithDiscount(100.0m + (i * 50));
-            
+
             var cartItem = fixture.Build<CartItem>()
                 .With(ci => ci.RoomCategory, roomCategory)
                 .With(ci => ci.RoomCategoryId, roomCategory.Id)
@@ -185,14 +185,14 @@ public static class FixtureFactory
                 .With(ci => ci.CheckOut, DateOnly.FromDateTime(DateTime.Today.AddDays(3)))
                 .Without(ci => ci.Cart)
                 .Create();
-                
+
             items.Add(cartItem);
         }
-        
+
         cart.Items = items;
         return cart;
     }
-    
+
     public static List<Booking> CreateValidBookings(this IFixture fixture, int count = 2)
     {
         return fixture.Build<Booking>()

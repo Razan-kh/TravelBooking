@@ -10,19 +10,21 @@ using TravelBooking.Api.Controllers;
 using TravelBooking.Application.ViewingHotels.Queries;
 using TravelBooking.Infrastructure.Services;
 using Microsoft.EntityFrameworkCore;
-using TravelBooking.Application.AddingToCart.Services.Interfaces;
-using TravelBooking.Application.AddingToCart.Services.Implementations;
+using TravelBooking.Application.Carts.Services.Interfaces;
+using TravelBooking.Application.Carts.Services.Implementations;
 using TravelBooking.Application.Cheackout.Servicies.Implementations;
 using TravelBooking.Application.ViewingHotels.Services.Implementations;
 using TravelBooking.Application.Cheackout.Servicies.Interfaces;
 using TravelBooking.Infrastructure.Services.Email;
 using TravelBooking.Application.ViewingHotels.Services.Interfaces;
 using TravelBooking.Application.ViewingHotels.Mappers;
-using TravelBooking.Application.AddingToCart.Mappers;
+using TravelBooking.Application.Carts.Mappers;
 using TravelBooking.API.Extensions;
 using TravelBooking.Infrastructure;
 using TravelBooking.Application;
 using TravelBooking.Application.Images.Servicies;
+using Serilog;
+using Serilog.Sinks.Elasticsearch;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -61,16 +63,12 @@ builder.Services.AddAuthentication("Bearer")
 builder.Services.AddAuthorization();
 
 
-builder.Services.AddMediatR(cfg => 
-{
-    cfg.RegisterServicesFromAssemblyContaining<HotelsController>();
-});
-
-// MediatR
 builder.Services.AddMediatR(cfg =>
 {
-    cfg.RegisterServicesFromAssemblyContaining<GetHotelDetailsQuery>();
+    cfg.RegisterServicesFromAssemblies(typeof(HotelsController).Assembly,
+                                       typeof(GetHotelDetailsQuery).Assembly);
 });
+
 
 builder.Services.AddScoped<ICartService, CartService>();
 builder.Services.AddScoped<IBookingService, BookingService>();
@@ -95,13 +93,8 @@ builder.Services.AddScoped<IReviewService, ReviewService>();
 builder.Services.AddScoped<ICartMapper, CartMapper>();
 
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
-/*
-builder.Services.AddDbContext<AppDbContext>(options =>
-{
-    options.UseSqlServer(connectionString); // or UseNpgsql, UseSqlite, etc.
-});
-*/
-if (!builder.Environment.IsEnvironment("Test")) 
+
+if (!builder.Environment.IsEnvironment("Test"))
 {
     // Normal SQL Server registration for production/dev
     builder.Services.AddDbContext<AppDbContext>(options =>
@@ -121,70 +114,49 @@ builder.Services.Configure<SmtpSettings>(
 builder.Services.AddInfrastructureServices(builder.Configuration);
 builder.Services.AddApiServices(builder.Configuration);
 
-//builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblyContaining<CreateCityCommand>());
 
-//builder.Services.AddControllers();
-/*
-builder.Services.AddMediatR(cfg =>
-{
-    cfg.RegisterServicesFromAssembly(typeof(Program).Assembly);        // API assembly
-    cfg.RegisterServicesFromAssembly(typeof(GetRoomsQuery).Assembly);  // Application assembly
-});
-*/
-/*
-builder.Services.AddDbContext<AppDbContext>(options =>
-    options.UseSqlServer(
-        builder.Configuration.GetConnectionString("DefaultConnection"),
-        b => b.MigrationsAssembly("TravelBooking.Infrastructure")
-    ));
-*/
+var elasticUri = builder.Configuration["Elasticsearch:Uri"];
+
+// Configure Serilog
+Log.Logger = new LoggerConfiguration()
+    .Enrich.FromLogContext()
+    .Enrich.WithEnvironmentName()
+    .Enrich.WithMachineName()
+    .Enrich.WithThreadId()
+    .WriteTo.Console()
+    .WriteTo.Elasticsearch(new ElasticsearchSinkOptions(new Uri(elasticUri))
+    {
+        AutoRegisterTemplate = true,
+        IndexFormat = "rooms-api-logs-{0:yyyy.MM.dd}"
+    })
+    .CreateLogger();
+
+// Use Serilog
+builder.Host.UseSerilog();
+
+
 var app = builder.Build();
+app.UseMiddleware<ExceptionHandlingMiddleware>();  // ExceptionHandlingMiddleware MUST be first
+app.UseMiddleware<RequestLoggingMiddleware>();
 
-// Configure middleware
-/*
 
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
-*/
 
-if (app.Environment.IsDevelopment() || app.Environment.IsEnvironment("Test"))
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
-app.MapControllers();
 app.UseHttpsRedirection();
-app.MapControllers();
 
-/*
-using (var scope = app.Services.CreateScope())
-{
-    var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-    await DatabaseSeeder.SeedAsync(db);
-}
-*/
 app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
 
-if (!app.Environment.IsDevelopment())
-{
-    app.UseHttpsRedirection();
-}
 
-app.MapControllers(); // only call once
-
-// Seed database\
-/*
-using (var scope = app.Services.CreateScope())
+app.UseSwagger();
+app.UseSwaggerUI(c =>
 {
-    var seeder = scope.ServiceProvider.GetRequiredService<ISeedService>();
-    await seeder.SeedAsync();
-}
-*/
+    c.SwaggerEndpoint("/swagger/v1/swagger.json", "TravelBooking API V1");  //works on http://localhost:5063/index.html
+    c.RoutePrefix = string.Empty;
+});
+
+app.MapControllers();
+
 app.Run();
 
 // Make the Program class public for WebApplicationFactory

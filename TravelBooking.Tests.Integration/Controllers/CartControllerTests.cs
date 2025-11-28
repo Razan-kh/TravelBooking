@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using TravelBooking.Api.Carts.Controllers;
-using TravelBooking.Application.AddingToCart.Commands;
+using TravelBooking.Application.Carts.Commands;
 using TravelBooking.Application.Carts.DTOs;
 using TravelBooking.Application.Shared.Results;
 using TravelBooking.Domain.Carts.Entities;
@@ -94,129 +94,129 @@ namespace TravelBooking.Tests.Integration.Controllers
                         i.Quantity == 2);
                 }
         */
-        /*  ///REMOVE THIS ------------------------------
+/*  ///REMOVE THIS ------------------------------
 
-        [Fact]
-        public async Task AddRoomToCart_CheckOutBeforeCheckIn_ReturnsBadRequest()
+[Fact]
+public async Task AddRoomToCart_CheckOutBeforeCheckIn_ReturnsBadRequest()
+{
+    // Arrange
+    var testUserId = Guid.NewGuid();
+
+    var command = new AddRoomToCartCommand(
+        Guid.NewGuid(),
+        DateOnly.FromDateTime(DateTime.UtcNow.AddDays(3)), // CheckIn later
+        DateOnly.FromDateTime(DateTime.UtcNow.AddDays(1)), // CheckOut earlier - invalid!
+        2
+    );
+
+    var client = _factory.CreateClientWithUser(testUserId, "user");
+
+    // Act
+    var response = await client.PostAsJsonAsync("/api/cart", command);
+
+    // Assert
+    response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+}
+
+[Fact]
+public async Task GetCart_WithItems_ReturnsOkWithCartItems()
+{
+    // Arrange
+    var testUserId = Guid.NewGuid();
+    var roomCategory = _fixture.CreateRoomCategoryMinimal();
+    var checkIn = DateOnly.FromDateTime(DateTime.UtcNow.AddDays(3)); // CheckIn later
+    var checkOut = DateOnly.FromDateTime(DateTime.UtcNow.AddDays(4));
+
+    var cartItems = _fixture.Build<CartItem>()
+                .With(x => x.Quantity, 3)
+                .With(x => x.RoomCategory, roomCategory)
+                .With(x => x.CheckIn, checkIn)
+                .With(x => x.CheckOut, checkOut)
+                .Without(x => x.Cart)
+                .With(x => x.RoomCategoryId, roomCategory.Id)
+                .Create();
+    // Seed cart
+    var cart = new Cart
+    {
+        UserId = testUserId,
+        Items = new List<CartItem>
         {
-            // Arrange
-            var testUserId = Guid.NewGuid();
-
-            var command = new AddRoomToCartCommand(
-                Guid.NewGuid(),
-                DateOnly.FromDateTime(DateTime.UtcNow.AddDays(3)), // CheckIn later
-                DateOnly.FromDateTime(DateTime.UtcNow.AddDays(1)), // CheckOut earlier - invalid!
-                2
-            );
-
-            var client = _factory.CreateClientWithUser(testUserId, "user");
-
-            // Act
-            var response = await client.PostAsJsonAsync("/api/cart", command);
-
-            // Assert
-            response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+            cartItems
         }
+    };
+    _dbContext.Carts.Add(cart);
+    await _dbContext.SaveChangesAsync();
 
-        [Fact]
-        public async Task GetCart_WithItems_ReturnsOkWithCartItems()
+    var client = _factory.CreateClientWithUser(testUserId, "user"); // Use same testUserId
+
+    // Act
+    var response = await client.GetAsync("/api/cart");
+
+    // Assert
+    response.StatusCode.Should().Be(HttpStatusCode.OK);
+    var result = await response.Content.ReadFromJsonAsync<Result<List<CartItemDto>>>();
+    result.Should().NotBeNull();
+    result!.Value.Should().HaveCount(1);
+}
+
+[Fact]
+public async Task RemoveItem_ExistingCartItem_ReturnsOk()
+{
+    // Arrange
+    var testUserId = Guid.NewGuid();
+    var cartItemId = Guid.NewGuid();
+
+    var cart = new Cart
+    {
+        UserId = testUserId,
+        Items = new List<CartItem>
         {
-            // Arrange
-            var testUserId = Guid.NewGuid();
-            var roomCategory = _fixture.CreateRoomCategoryMinimal();
-            var checkIn = DateOnly.FromDateTime(DateTime.UtcNow.AddDays(3)); // CheckIn later
-            var checkOut = DateOnly.FromDateTime(DateTime.UtcNow.AddDays(4));
-
-            var cartItems = _fixture.Build<CartItem>()
-                        .With(x => x.Quantity, 3)
-                        .With(x => x.RoomCategory, roomCategory)
-                        .With(x => x.CheckIn, checkIn)
-                        .With(x => x.CheckOut, checkOut)
-                        .Without(x => x.Cart)
-                        .With(x => x.RoomCategoryId, roomCategory.Id)
-                        .Create();
-            // Seed cart
-            var cart = new Cart
+            new CartItem
             {
-                UserId = testUserId,
-                Items = new List<CartItem>
-                {
-                    cartItems
-                }
-            };
-            _dbContext.Carts.Add(cart);
-            await _dbContext.SaveChangesAsync();
-
-            var client = _factory.CreateClientWithUser(testUserId, "user"); // Use same testUserId
-
-            // Act
-            var response = await client.GetAsync("/api/cart");
-
-            // Assert
-            response.StatusCode.Should().Be(HttpStatusCode.OK);
-            var result = await response.Content.ReadFromJsonAsync<Result<List<CartItemDto>>>();
-            result.Should().NotBeNull();
-            result!.Value.Should().HaveCount(1);
+                Id = cartItemId,
+                RoomCategoryId = Guid.NewGuid(),
+                Quantity = 1
+            }
         }
+    };
 
-        [Fact]
-        public async Task RemoveItem_ExistingCartItem_ReturnsOk()
-        {
-            // Arrange
-            var testUserId = Guid.NewGuid();
-            var cartItemId = Guid.NewGuid();
+    _dbContext.Carts.Add(cart);
+    await _dbContext.SaveChangesAsync();
 
-            var cart = new Cart
-            {
-                UserId = testUserId,
-                Items = new List<CartItem>
-                {
-                    new CartItem
-                    {
-                        Id = cartItemId,
-                        RoomCategoryId = Guid.NewGuid(),
-                        Quantity = 1
-                    }
-                }
-            };
+    var client = _factory.CreateClientWithUser(testUserId, "user");
 
-            _dbContext.Carts.Add(cart);
-            await _dbContext.SaveChangesAsync();
+    // Act
+    var response = await client.DeleteAsync($"/api/cart/{cartItemId}");
 
-            var client = _factory.CreateClientWithUser(testUserId, "user");
+    // Assert
+    response.StatusCode.Should().Be(HttpStatusCode.OK);
 
-            // Act
-            var response = await client.DeleteAsync($"/api/cart/{cartItemId}");
+    var updatedCart = await _dbContext.Carts
+        .Include(c => c.Items)
+        .FirstOrDefaultAsync(c => c.UserId == testUserId);
 
-            // Assert
-            response.StatusCode.Should().Be(HttpStatusCode.OK);
-
-            var updatedCart = await _dbContext.Carts
-                .Include(c => c.Items)
-                .FirstOrDefaultAsync(c => c.UserId == testUserId);
-
-            updatedCart!.Items.Should().BeEmpty();
-        }
+    updatedCart!.Items.Should().BeEmpty();
+}
 /*
-        [Fact]
-        public async Task RemoveItem_NonExistingCartItem_ReturnsNotFound()
-        {
-            // Arrange
-            var testUserId = Guid.NewGuid();
-            var nonExistingId = Guid.NewGuid();
+[Fact]
+public async Task RemoveItem_NonExistingCartItem_ReturnsNotFound()
+{
+    // Arrange
+    var testUserId = Guid.NewGuid();
+    var nonExistingId = Guid.NewGuid();
 
-            var client = _factory.CreateClientWithUser(testUserId, "user");
+    var client = _factory.CreateClientWithUser(testUserId, "user");
 
-            // Act
-            var response = await client.DeleteAsync($"/api/cart/{nonExistingId}");
+    // Act
+    var response = await client.DeleteAsync($"/api/cart/{nonExistingId}");
 
-            // Assert
-            response.StatusCode.Should().Be(HttpStatusCode.NotFound);
-        }
-        */
-        /*  ///REMOVE THIS ------------------------------
+    // Assert
+    response.StatusCode.Should().Be(HttpStatusCode.NotFound);
+}
+*/
+/*  ///REMOVE THIS ------------------------------
 
-    }
+}
 }
 */ /*  ///REMOVE THIS ------------------------------
 

@@ -1,8 +1,8 @@
 using AutoFixture;
 using Moq;
-using TravelBooking.Application.AddingToCart.Handlers;
-using TravelBooking.Application.AddingToCart.Queries;
-using TravelBooking.Application.AddingToCart.Services.Interfaces;
+using TravelBooking.Application.Carts.Handlers;
+using TravelBooking.Application.Carts.Queries;
+using TravelBooking.Application.Carts.Services.Interfaces;
 using TravelBooking.Tests.AddingToCart.TestHelpers;
 using TravelBooking.Application.Carts.DTOs;
 using TravelBooking.Application.Shared.Results;
@@ -35,7 +35,7 @@ public class GetCartQueryHandlerTests
 
         var query = new GetCartQuery
         {
-            UserId = userId   
+            UserId = userId
         };
 
         // Act

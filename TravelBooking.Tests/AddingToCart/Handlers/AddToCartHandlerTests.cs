@@ -1,9 +1,9 @@
 using AutoFixture;
 using Moq;
 using Xunit;
-using TravelBooking.Application.AddingToCart.Handlers;
-using TravelBooking.Application.AddingToCart.Commands;
-using TravelBooking.Application.AddingToCart.Services.Interfaces;
+using TravelBooking.Application.Carts.Handlers;
+using TravelBooking.Application.Carts.Commands;
+using TravelBooking.Application.Carts.Services.Interfaces;
 using TravelBooking.Tests.AddingToCart.TestHelpers;
 using TravelBooking.Application.Shared.Results;
 using AutoFixture;
@@ -22,9 +22,9 @@ public class AddToCartHandlerTests
     public AddToCartHandlerTests()
     {
         _fixture = new Fixture().Customize(new AutoMoqCustomization
-{
-    ConfigureMembers = false, // turn off automatic property setup
-});
+        {
+            ConfigureMembers = false, // turn off automatic property setup
+        });
         _fixture = FixtureFactory.Create();
         _cartServiceMock = _fixture.Freeze<Mock<ICartService>>();
         _handler = new AddToCartHandler(_cartServiceMock.Object);

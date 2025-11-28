@@ -1,9 +1,9 @@
 using AutoFixture;
 using Moq;
-using TravelBooking.Application.AddingToCart.Services.Implementations;
-using TravelBooking.Application.AddingToCart.Services.Interfaces;
+using TravelBooking.Application.Carts.Services.Implementations;
+using TravelBooking.Application.Carts.Services.Interfaces;
 using TravelBooking.Tests.AddingToCart.TestHelpers;
-using TravelBooking.Application.AddingToCart.Mappers;
+using TravelBooking.Application.Carts.Mappers;
 using TravelBooking.Domain.Carts.Entities;
 using TravelBooking.Domain.Carts.Repositories;
 using TravelBooking.Application.Shared.Interfaces;

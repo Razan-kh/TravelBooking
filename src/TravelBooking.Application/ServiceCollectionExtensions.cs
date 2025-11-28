@@ -8,6 +8,10 @@ using TravelBooking.Application.Mappers.Interfaces;
 using TravelBooking.Application.Mappers;
 using TravelBooking.Application.Cities.Interfaces.Servicies;
 using TravelBooking.Application.Rooms.Services.Interfaces;
+using FluentValidation;
+using TravelBooking.Application.Users.Validators;
+using TravelBooking.Application.Searching.Validators;
+using TravelBooking.Application.Cities.Servicies.Implementations;
 
 namespace TravelBooking.Application;
 
@@ -32,6 +36,8 @@ public static class ServiceCollectionExtensions
         services.AddScoped<IHotelMapper, HotelMapper>();
         services.AddScoped<IRoomMapper, RoomMapper>();
         services.AddScoped<ISieveProcessor, SieveProcessor>();
+
+
 
         return services;
     }

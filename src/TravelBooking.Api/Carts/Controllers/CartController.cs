@@ -1,8 +1,8 @@
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using TravelBooking.Application.Shared.Results;
-using TravelBooking.Application.AddingToCart.Commands;
-using TravelBooking.Application.AddingToCart.Queries;
+using TravelBooking.Application.Carts.Commands;
+using TravelBooking.Application.Carts.Queries;
 using Microsoft.AspNetCore.Authorization;
 
 namespace TravelBooking.Api.Carts.Controllers;
