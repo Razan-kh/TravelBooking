@@ -1,6 +1,5 @@
 using System.Net;
 using System.Net.Http.Json;
-using System.Text.Json;
 using AutoFixture;
 using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
@@ -30,8 +29,8 @@ namespace TravelBooking.Tests.Integration.Controllers
             _fixture = new Fixture();
 
             // AutoFixture: avoid recursion on navigations
-        _fixture.Behaviors.Remove(_fixture.Behaviors.OfType<ThrowingRecursionBehavior>().Single());
-        _fixture.Behaviors.Add(new OmitOnRecursionBehavior());
+            _fixture.Behaviors.Remove(_fixture.Behaviors.OfType<ThrowingRecursionBehavior>().Single());
+            _fixture.Behaviors.Add(new OmitOnRecursionBehavior());
 
             // Don't populate nav props that cause cycles
             _fixture.Customize<Room>(c => c.Without(r => r.Gallery).Without(r => r.RoomCategory).Without(r => r.Bookings));

@@ -1,22 +1,15 @@
 using System.Net;
-using System.Net.Http.Headers;
-using System.Security.Claims;
 using System.Text;
 using System.Text.Json;
 using AutoFixture;
 using FluentAssertions;
 using Microsoft.AspNetCore.Mvc.Testing;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.IdentityModel.Tokens;
-using TravelBooking.Api;
 using TravelBooking.Application.Cities.Dtos;
 using TravelBooking.Domain.Cities.Entities;
 using TravelBooking.Infrastructure.Persistence;
 using Xunit;
 using TravelBooking.Tests.Integration.Helpers;
-using Microsoft.VisualStudio.TestPlatform.TestHost;
-using TravelBooking.Domain.Hotels.Entities;
 using System.Net.Http.Json;
 using TravelBooking.Tests.Integration.Factories;
 
@@ -30,36 +23,26 @@ public class CitiesIntegrationTests : IClassFixture<ApiTestFactory>
 
     public CitiesIntegrationTests(ApiTestFactory factory)
     {
-        _factory = factory; // ASSIGN THE FACTORY FIRST!
-        _client = _factory.CreateClient(); // Now use the assigned factory
+        _factory = factory;
+        _client = _factory.CreateClient();
         _fixture = new Fixture();
-        
+
         // Configure AutoFixture to handle circular references
         _fixture.Behaviors.OfType<ThrowingRecursionBehavior>().ToList()
             .ForEach(b => _fixture.Behaviors.Remove(b));
-        _fixture.Behaviors.Add(new OmitOnRecursionBehavior());   
+        _fixture.Behaviors.Add(new OmitOnRecursionBehavior());
 
         _fixture.Customize<City>(composer => composer
         .Without(x => x.Hotels));
-        /*
-         _fixture.Customize<Hotel>(composer => composer
-        .Without(x => x.City));
-        */
-                _fixture.Customize<Domain.Hotels.Entities.Hotel>(composer => composer
-    .Without(h => h.City)  // Don't populate the City navigation property
-    .Without(h => h.Bookings) 
-    .Without(h => h.Owner) 
-    .Without(h => h.RoomCategories) 
+
+        _fixture.Customize<Domain.Hotels.Entities.Hotel>(composer => composer
+    .Without(h => h.City)
+    .Without(h => h.Bookings)
+    .Without(h => h.Owner)
+    .Without(h => h.RoomCategories)
     .Without(h => h.Reviews));
 
     }
-    
-
-    #region Helpers
-
-
-
-    #endregion
 
     #region GET /cities
 
@@ -99,7 +82,7 @@ public class CitiesIntegrationTests : IClassFixture<ApiTestFactory>
     public async Task CreateCity_ShouldReturnCreated()
     {
         // Arrange
-           _client.AddAdminAuthHeader();;
+        _client.AddAdminAuthHeader(); ;
 
         var createDto = _fixture.Build<CreateCityDto>()
                                 .Create();
@@ -123,7 +106,7 @@ public class CitiesIntegrationTests : IClassFixture<ApiTestFactory>
     public async Task GetCity_ShouldReturnCity_WhenExists()
     {
         // Arrange
-           _client.AddAdminAuthHeader();;
+        _client.AddAdminAuthHeader(); ;
         var db = _factory.Services.GetRequiredService<AppDbContext>();
 
         var city = _fixture.Build<City>()
@@ -145,7 +128,7 @@ public class CitiesIntegrationTests : IClassFixture<ApiTestFactory>
     public async Task GetCity_ShouldReturnNotFound_WhenDoesNotExist()
     {
         // Arrange
-           _client.AddAdminAuthHeader();;
+        _client.AddAdminAuthHeader(); ;
         var nonExistingId = Guid.NewGuid();
 
         // Act
@@ -165,12 +148,11 @@ public class CitiesIntegrationTests : IClassFixture<ApiTestFactory>
     public async Task UpdateCity_ShouldReturnNoContent_WhenCityExists()
     {
         // Arrange
-           _client.AddAdminAuthHeader();;
+        _client.AddAdminAuthHeader(); ;
 
         City city;
         UpdateCityDto updateDto;
 
-        // ----- SCOPE 1: ARRANGE -----
         using (var setupScope = _factory.Services.CreateScope())
         {
             var db = setupScope.ServiceProvider.GetRequiredService<AppDbContext>();
@@ -197,7 +179,6 @@ public class CitiesIntegrationTests : IClassFixture<ApiTestFactory>
         response.StatusCode.Should().Be(HttpStatusCode.NoContent);
 
 
-        // ----- SCOPE 2: ASSERT AGAINST CLEAN CONTEXT -----
         using (var assertScope = _factory.Services.CreateScope())
         {
             var db = assertScope.ServiceProvider.GetRequiredService<AppDbContext>();
@@ -212,7 +193,7 @@ public class CitiesIntegrationTests : IClassFixture<ApiTestFactory>
     public async Task UpdateCity_ShouldReturnBadRequest_WhenIdMismatch()
     {
         // Arrange
-           _client.AddAdminAuthHeader();;
+        _client.AddAdminAuthHeader(); ;
 
         var updateDto = _fixture.Build<UpdateCityDto>()
                                 .With(x => x.Id, Guid.NewGuid())
@@ -236,7 +217,7 @@ public class CitiesIntegrationTests : IClassFixture<ApiTestFactory>
     [Fact]
     public async Task DeleteCity_ShouldReturnNoContent_WhenCityExists()
     {
-           _client.AddAdminAuthHeader();;
+        _client.AddAdminAuthHeader(); ;
 
         Guid cityId;
 
@@ -269,7 +250,7 @@ public class CitiesIntegrationTests : IClassFixture<ApiTestFactory>
     public async Task DeleteCity_ShouldReturnNoContent_WhenCityDoesNotExist()
     {
         // Arrange
-           _client.AddAdminAuthHeader();;
+        _client.AddAdminAuthHeader(); ;
         var nonExistingId = Guid.NewGuid();
 
         // Act

@@ -1,7 +1,7 @@
 using TravelBooking.Application.Carts.Handlers;
 using TravelBooking.Application.Carts.Commands;
 using TravelBooking.Application.Carts.Services.Interfaces;
-using TravelBooking.Tests.AddingToCart.TestHelpers;
+using TravelBooking.Tests.Carts.TestHelpers;
 using TravelBooking.Application.Shared.Results;
 using System;
 using System.Collections.Generic;

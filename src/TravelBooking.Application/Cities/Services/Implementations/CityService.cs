@@ -2,6 +2,9 @@ using TravelBooking.Application.Cities.Dtos;
 using TravelBooking.Application.Cities.Interfaces.Servicies;
 using TravelBooking.Application.Cities.Mappers.Interfaces;
 using TravelBooking.Application.Mappers.Interfaces;
+using TravelBooking.Application.Shared.Results;
+using TravelBooking.Application.TrendingCities.Dtos;
+using TravelBooking.Application.TrendingCities.Mappers;
 using TravelBooking.Domain.Cities;
 
 namespace TravelBooking.Application.Cities.Servicies.Implementations;
@@ -10,11 +13,14 @@ public class CityService : ICityService
 {
     private readonly ICityRepository _cityRepo;
     private readonly ICityMapper _mapper;
+    private readonly ITrendingCityMapper _trendingCityMapper;
 
-    public CityService(ICityRepository cityRepo, ICityMapper mapper)
+    public CityService(ICityRepository cityRepo, ICityMapper mapper, ITrendingCityMapper trendingCityMapper)
     {
         _cityRepo = cityRepo;
         _mapper = mapper;
+        _trendingCityMapper = trendingCityMapper;
+
     }
 
     public async Task<List<CityDto>> GetCitiesAsync(string? filter, int page, int pageSize, CancellationToken ct)
@@ -52,5 +58,12 @@ public class CityService : ICityService
         var city = await _cityRepo.GetByIdAsync(id, ct);
         if (city == null) return;
         await _cityRepo.DeleteAsync(city, ct);
+    }
+
+    public async Task<Result<List<TrendingCityDto>>> GetTrendingCitiesAsync(int count)
+    {
+        var cities = await _cityRepo.GetTrendingCitiesAsync(count);
+        var result = cities.Select(_trendingCityMapper.ToTrendingCityDto).ToList();
+        return Result.Success(result);
     }
 }

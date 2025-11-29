@@ -3,9 +3,7 @@ using FluentAssertions;
 using Microsoft.Extensions.DependencyInjection;
 using System.Net;
 using System.Net.Http.Json;
-using TravelBooking.Api.Controllers;
 using TravelBooking.Application.Users.DTOs;
-using TravelBooking.Domain.Users.Entities;
 using TravelBooking.Infrastructure.Persistence;
 using TravelBooking.Tests.Integration.Extensions;
 using Xunit;
@@ -25,35 +23,7 @@ public class AuthControllerIntegrationTests : IClassFixture<ApiTestFactory>
         _fixture = new Fixture();
         _client = _factory.CreateClient();
     }
-        /*
-    [Fact]
-    public async Task Login_ValidCredentials_ReturnsOkWithToken()
-    {
-        using var scope = _factory.Services.CreateScope();
-        var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
 
-        var user = _fixture.CreateUserMinimal(
-            email: "user2@example.com",
-            passwordHash: "hashedpass"
-        );
-
-        await db.Users.AddAsync(user);
-        await db.SaveChangesAsync();
-
-        var request = new LoginRequestDto
-        {
-            Email = "user2@example.com",
-            Password = "hashedpass"
-        };
-
-        var response = await _client.PostAsJsonAsync("/api/auth/login", request);
-
-        response.StatusCode.Should().Be(HttpStatusCode.OK);
-
-        var result = await response.Content.ReadFromJsonAsync<LoginResponseDto>();
-        result!.AccessToken.Should().Be("TestToken");
-    }
-*/
     [Fact]
     public async Task Login_InvalidPassword_ReturnsUnauthorized()
     {

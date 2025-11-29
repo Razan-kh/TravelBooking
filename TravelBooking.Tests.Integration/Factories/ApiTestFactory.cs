@@ -19,7 +19,6 @@ namespace TravelBooking.Tests.Integration.Factories;
 public class ApiTestFactory : WebApplicationFactory<Program>
 {
     private string _dbName = Guid.NewGuid().ToString();
-
     public void SetInMemoryDbName(string name) => _dbName = name;
 
     protected override void ConfigureWebHost(IWebHostBuilder builder)
@@ -56,13 +55,13 @@ public class ApiTestFactory : WebApplicationFactory<Program>
                 db.Database.EnsureCreated();
             }
         });
-                builder.ConfigureAppConfiguration((context, config) =>
+        builder.ConfigureAppConfiguration((context, config) =>
         {
             // Add test configuration for Cloudinary
             config.AddInMemoryCollection(new Dictionary<string, string>
             {
                 ["Cloudinary:CloudName"] = "test-cloud",
-                ["Cloudinary:ApiKey"] = "test-key", 
+                ["Cloudinary:ApiKey"] = "test-key",
                 ["Cloudinary:ApiSecret"] = "test-secret"
             });
         });
@@ -78,24 +77,24 @@ public class ApiTestFactory : WebApplicationFactory<Program>
     private void RemoveAndMockPasswordHasher(IServiceCollection services)
     {
         RemoveService<IPasswordHasher>(services);
-        
+
         var passwordHasherMock = new Mock<IPasswordHasher>();
         passwordHasherMock.Setup(ph => ph.Verify("hashedpass", "hashedpass"))
                         .Returns(true);
         passwordHasherMock.Setup(ph => ph.Verify(It.IsAny<string>(), It.IsAny<string>()))
                         .Returns(false);
-        
+
         services.AddScoped(_ => passwordHasherMock.Object);
     }
 
     private void RemoveAndMockJwtService(IServiceCollection services)
     {
         RemoveService<IJwtService>(services);
-        
+
         var jwtServiceMock = new Mock<IJwtService>();
         jwtServiceMock.Setup(jwt => jwt.CreateToken(It.IsAny<User>()))
                       .Returns("TestToken");
-        
+
         services.AddScoped(_ => jwtServiceMock.Object);
     }
 

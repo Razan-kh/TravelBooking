@@ -9,4 +9,5 @@ public interface ICityRepository
     Task UpdateAsync(City city, CancellationToken ct);
     Task DeleteAsync(City city, CancellationToken ct);
     Task<int> CountHotelsAsync(Guid cityId, CancellationToken ct);
+    Task<List<(City city, int visitCount)>> GetTrendingCitiesAsync(int count);
 }

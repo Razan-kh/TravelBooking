@@ -1,3 +1,4 @@
+/*
 using Microsoft.EntityFrameworkCore;
 using TravelBooking.Application.Interfaces;
 using TravelBooking.Domain.Amenities.Entities;
@@ -11,7 +12,7 @@ using TravelBooking.Domain.Rooms.Entities;
 using TravelBooking.Domain.Rooms.Enums;
 
 namespace TravelBooking.Infrastructure.Persistence;
-/*
+
 public class SeedService : ISeedService
 {
     private readonly AppDbContext _db;

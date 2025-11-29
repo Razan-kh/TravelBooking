@@ -9,7 +9,6 @@ using TravelBooking.Application.Hotels.Dtos;
 using TravelBooking.Domain.Cities.Entities;
 using TravelBooking.Domain.Hotels.Entities;
 using TravelBooking.Infrastructure.Persistence;
-using TravelBooking.Tests.Integration;
 using TravelBooking.Tests.Integration.Helpers;
 using Xunit;
 using TravelBooking.Tests.Integration.Factories;

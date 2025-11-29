@@ -37,7 +37,7 @@ builder.Services.AddInfrastructure(builder.Configuration);
 
 builder.Services.AddControllers();
 builder.Services.AddApplication();
-builder.Services.AddApplicationServices();
+//builder.Services.AddApplicationServices();
 
 var jwtSettings = new JwtSettings();
 builder.Configuration.GetSection("JwtSettings").Bind(jwtSettings);
