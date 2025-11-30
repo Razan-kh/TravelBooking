@@ -1,7 +1,7 @@
 using TravelBooking.Application.DTOs;
 using TravelBooking.Domain.Rooms.Entities;
 
-namespace TravelBooking.Application.ViewingHotels.Mappers;
+namespace TravelBooking.Application.Rooms.User.Mappers.Interfaces;
 
 public interface IRoomCategoryMapper
 {

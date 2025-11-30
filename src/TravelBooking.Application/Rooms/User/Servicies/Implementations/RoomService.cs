@@ -1,10 +1,9 @@
 using TravelBooking.Application.DTOs;
-using TravelBooking.Application.ViewingHotels.Mappers;
-using TravelBooking.Application.ViewingHotels.Services.Interfaces;
-using TravelBooking.Domain.Hotels.Entities;
+using TravelBooking.Application.Rooms.User.Mappers.Interfaces;
+using TravelBooking.Application.Rooms.User.Servicies.Interfaces;
 using TravelBooking.Domain.Rooms.Interfaces;
 
-namespace TravelBooking.Application.ViewingHotels.Services.Implementations;
+namespace TravelBooking.Application.Rooms.User.Servicies.Implementations;
 
 public class RoomService : IRoomService
 {

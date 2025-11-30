@@ -1,4 +1,5 @@
 using TravelBooking.Application.Hotels.Dtos;
+using TravelBooking.Application.Hotels.Mappers.Interfaces;
 using TravelBooking.Application.Mappers.Interfaces;
 using TravelBooking.Application.Shared.Results;
 using TravelBooking.Application.TrendingCities.Dtos;

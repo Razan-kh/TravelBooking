@@ -1,7 +1,7 @@
 using TravelBooking.Application.Carts.Services.Interfaces;
 using TravelBooking.Domain.Rooms.Interfaces;
 
-namespace TravelBooking.Application.ViewingHotels.Services.Implementations;
+namespace TravelBooking.Application.Rooms.User.Servicies.Implementations;
 
 public class RoomAvailabilityService : IRoomAvailabilityService
 {

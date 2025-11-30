@@ -1,5 +1,6 @@
 using Riok.Mapperly.Abstractions;
 using TravelBooking.Application.Hotels.Dtos;
+using TravelBooking.Application.Hotels.Mappers.Interfaces;
 using TravelBooking.Application.Mappers.Interfaces;
 using TravelBooking.Domain.Hotels.Entities;
 

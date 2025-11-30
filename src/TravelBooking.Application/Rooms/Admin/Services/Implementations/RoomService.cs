@@ -2,7 +2,6 @@ using TravelBooking.Application.Mappers;
 using TravelBooking.Application.Shared.Results;
 using TravelBooking.Domain.Rooms.Entities;
 using TravelBooking.Application.Rooms.Dtos;
-using TravelBooking.Application.Rooms.Services.Interfaces;
 using TravelBooking.Application.Mappers.Interfaces;
 using TravelBooking.Domain.Rooms.Interfaces;
 using Microsoft.AspNetCore.Http;
@@ -13,8 +12,9 @@ using TravelBooking.Application.Images.Servicies;
 using Microsoft.Extensions.Logging;
 using TravelBooking.Domain.Shared.Interfaces;
 using TravelBooking.Domain.Images.interfaces;
+using TravelBooking.Application.Rooms.Admin.Services.Interfaces;
 
-namespace TravelBooking.Application.Rooms.Services;
+namespace TravelBooking.Application.Rooms.Admin.Services.Implementations;
 
 public class RoomService : IRoomService
 {

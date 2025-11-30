@@ -1,6 +1,6 @@
 using TravelBooking.Application.DTOs;
 
-namespace TravelBooking.Application.ViewingHotels.Services.Interfaces;
+namespace TravelBooking.Application.Reviews.Services.Interfaces;
 
 public interface IReviewService
 {

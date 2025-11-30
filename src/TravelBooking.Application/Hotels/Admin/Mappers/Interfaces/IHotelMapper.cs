@@ -1,7 +1,7 @@
 using TravelBooking.Application.Hotels.Dtos;
 using TravelBooking.Domain.Hotels.Entities;
 
-namespace TravelBooking.Application.Mappers.Interfaces;
+namespace TravelBooking.Application.Hotels.Mappers.Interfaces;
 
 public interface IHotelMapper
 {

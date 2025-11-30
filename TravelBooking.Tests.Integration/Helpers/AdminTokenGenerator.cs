@@ -34,7 +34,7 @@ public static class TokenGenerator
         return client;
     }
 }
-
+/*
 public static class AdminTokenGenerator
 {
     private static string GenerateAdminToken()
@@ -63,3 +63,4 @@ public static class AdminTokenGenerator
     }
 
 }
+*/

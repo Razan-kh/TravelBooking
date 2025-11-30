@@ -1,7 +1,8 @@
 using TravelBooking.Application.Rooms.Dtos;
 using TravelBooking.Domain.Images.Dtos;
 
-namespace TravelBooking.Application.Rooms.Services.Interfaces;
+namespace TravelBooking.Application.Rooms.Admin.Services.Interfaces;
+
 public interface IRoomService
 {
     Task<List<RoomDto>> GetRoomsAsync(string? filter, int page, int pageSize, CancellationToken ct);

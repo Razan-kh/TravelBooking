@@ -4,8 +4,9 @@ using TravelBooking.Domain.Images.Entities;
 using TravelBooking.Domain.Reviews.Entities;
 using TravelBooking.Domain.Rooms.Entities;
 using Riok.Mapperly.Abstractions;
+using TravelBooking.Application.Hotels.User.ViewingHotels.Mappers.Interfaces;
 
-namespace TravelBooking.Application.ViewingHotels.Mappers;
+namespace TravelBooking.Application.Hotels.User.ViewingHotels.Mappers.Implementations;
 
 [Mapper]
 public partial class HotelMapper : IHotelMapper

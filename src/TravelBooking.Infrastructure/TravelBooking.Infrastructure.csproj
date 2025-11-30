@@ -26,7 +26,7 @@
     <PackageReference Include="Microsoft.IdentityModel.Tokens" Version="8.14.0" />
     <PackageReference Include="Microsoft.IdentityModel.JsonWebTokens" Version="8.14.0" />
     <PackageReference Include="Microsoft.IdentityModel.Logging" Version="8.14.0" />
-    
+    <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="7.0.0" />
     <PackageReference Include="QuestPDF" Version="2025.7.4" />
   </ItemGroup>
 
@@ -35,10 +35,7 @@
     <ProjectReference Include="..\TravelBooking.Domain\TravelBooking.Domain.csproj" />
   <PackageReference Include="Bogus" Version="35.6.5" />
   <PackageReference Include="MediatR" Version="13.1.0" />
-  <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.6" />
   <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.6" />
-  <ProjectReference Include="..\TravelBooking.Application\TravelBooking.Application.csproj" />
-  <ProjectReference Include="..\TravelBooking.Domain\TravelBooking.Domain.csproj" />
   <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.0" />
   </ItemGroup>
 

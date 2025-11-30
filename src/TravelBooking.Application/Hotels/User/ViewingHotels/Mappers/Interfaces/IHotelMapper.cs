@@ -6,7 +6,7 @@ using TravelBooking.Domain.Reviews.Entities;
 using TravelBooking.Domain.Rooms.Entities;
 using Riok.Mapperly.Abstractions;
 
-namespace TravelBooking.Application.ViewingHotels.Mappers;
+namespace TravelBooking.Application.Hotels.User.ViewingHotels.Mappers.Interfaces;
 
 public interface IHotelMapper
 {

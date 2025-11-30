@@ -13,7 +13,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TravelBooking.Domain", "src
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TravelBooking.Infrastructure", "src\TravelBooking.Infrastructure\TravelBooking.Infrastructure.csproj", "{44C16ACA-D476-49E5-8887-07DA0D4D1CE6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TravelBooking.Tests", "TravelBooking.Tests\TravelBooking.Tests.csproj", "{C5177DC1-7B04-4E0C-9BBF-032F77CBA6D0}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TravelBooking.Tests.Unit", "TravelBooking.Tests.Unit\TravelBooking.Tests.Unit.csproj", "{C5177DC1-7B04-4E0C-9BBF-032F77CBA6D0}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TravelBooking.Tests.Integration", "TravelBooking.Tests.Integration\TravelBooking.Tests.Integration.csproj", "{5763FCED-1456-4795-8538-D803EDA26B65}"
 EndProject

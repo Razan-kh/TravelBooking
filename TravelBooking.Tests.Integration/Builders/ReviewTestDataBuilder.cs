@@ -6,6 +6,7 @@ using TravelBooking.Domain.Users.Enums;
 using TravelBooking.Domain.Hotels.Enums;
 
 namespace TravelBooking.Tests.Integration.Builders;
+
 public class ReviewTestDataBuilder
 {
     private readonly IFixture _fixture;

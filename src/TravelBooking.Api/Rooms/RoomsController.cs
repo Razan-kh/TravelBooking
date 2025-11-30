@@ -57,7 +57,6 @@ public class RoomsController : ControllerBase
     }
 
     [HttpPost]
-    [Authorize(Roles = "Admin")]
     [RequestSizeLimit(10 * 1024 * 1024)] // 10MB
     [Route("api/rooms/{roomId:guid}/images")]
     public async Task<IActionResult> UploadRoomImage(

@@ -2,9 +2,11 @@ using Microsoft.AspNetCore.Mvc;
 using MediatR;
 using TravelBooking.Application.Bookings.Commands;
 using TravelBooking.Application.Cheackout.Commands;
+using Microsoft.AspNetCore.Authorization;
 
 namespace TravelBooking.Api.Cheackout.Controllers;
 
+[Authorize]
 [ApiController]
 [Route("api/[controller]")]
 public class CheckoutController : ControllerBase

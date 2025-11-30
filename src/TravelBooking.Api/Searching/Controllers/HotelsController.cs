@@ -1,14 +1,12 @@
 using Microsoft.AspNetCore.Mvc;
 using MediatR;
-using System.Threading.Tasks;
-using System.Threading;
 using Sieve.Models;
-using System;
-using TravelBooking.Domain.Rooms.Entities;
 using TravelBooking.Domain.Rooms.Enums;
+using Microsoft.AspNetCore.Authorization;
 
 namespace TravelBooking.Api.Controllers;
 
+[Authorize]
 [ApiController]
 [Route("api/[controller]")]
 public class HotelsController : ControllerBase

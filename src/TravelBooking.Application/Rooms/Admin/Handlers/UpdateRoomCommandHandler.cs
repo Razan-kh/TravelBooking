@@ -1,9 +1,9 @@
 using MediatR;
 using TravelBooking.Application.Mappers.Interfaces;
+using TravelBooking.Application.Rooms.Admin.Services.Interfaces;
 using TravelBooking.Application.Rooms.Commands;
 using TravelBooking.Application.Rooms.Dtos;
 using TravelBooking.Application.Rooms.Queries;
-using TravelBooking.Application.Rooms.Services.Interfaces;
 using TravelBooking.Application.Shared.Results;
 using TravelBooking.Domain.Rooms.Entities;
 
