@@ -11,6 +11,7 @@ using TravelBooking.Application.ViewingHotels.Services.Implementations;
 using TravelBooking.Application.ViewingHotels.Mappers;
 using TravelBooking.Domain.Cities.Entities;
 using TravelBooking.Tests.Shared;
+using TravelBooking.Application.Hotels.User.ViewingHotels.Mappers.Interfaces;
 
 namespace TravelBooking.Tests.Application.RecentlyVisited;
 

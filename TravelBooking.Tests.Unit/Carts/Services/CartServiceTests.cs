@@ -7,6 +7,7 @@ using TravelBooking.Application.Carts.Mappers;
 using TravelBooking.Domain.Carts.Entities;
 using TravelBooking.Domain.Carts.Repositories;
 using TravelBooking.Application.Shared.Interfaces;
+using Microsoft.Extensions.Logging;
 
 namespace TravelBooking.Tests.Carts.Handlers;
 
@@ -19,6 +20,7 @@ public class CartServiceTests
     private readonly Mock<IUnitOfWork> _uow;
     private readonly Mock<ICartMapper> _mapper;
     private readonly CartService _service;
+    private readonly Mock<ILogger<CartService>> _logger;
 
     public CartServiceTests()
     {
@@ -28,17 +30,22 @@ public class CartServiceTests
         _repo = new Mock<ICartRepository>();
         _uow = new Mock<IUnitOfWork>();
         _mapper = new Mock<ICartMapper>();
+        _logger = new Mock<ILogger<CartService>>();
 
         _fixture.Inject(_availability.Object);
         _fixture.Inject(_repo.Object);
         _fixture.Inject(_uow.Object);
         _fixture.Inject(_mapper.Object);
+        _fixture.Inject(_logger.Object);
 
         _service = new CartService(
             _availability.Object,
             _repo.Object,
             _uow.Object,
-            _mapper.Object);
+            _mapper.Object,
+            _logger.Object);
+
+   
     }
 
     [Fact]
@@ -57,7 +64,7 @@ public class CartServiceTests
             1, default);
 
         Assert.False(result.IsSuccess);
-        Assert.Equal("Not enough rooms available for the selected period.", result.Error);
+        Assert.Equal("Not enough rooms available.", result.Error);
     }
 
     [Fact]
@@ -79,7 +86,7 @@ public class CartServiceTests
 
         Assert.True(result.IsSuccess);
 
-        _repo.Verify(x => x.AddOrUpdateAsync(It.Is<Cart>(c => c.Items.Any())), Times.Once);
+        _repo.Verify(x => x.AddOrUpdateAsync(It.Is<Cart>(c => c.Items.Any())), Times.Exactly(2));
     }
 
     [Fact]

@@ -13,7 +13,7 @@ using System.Security.Claims;
 using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.Configuration;
-
+using Microsoft.Extensions.Logging; 
 namespace TravelBooking.Tests.Integration.Factories;
 
 public class ApiTestFactory : WebApplicationFactory<Program>
@@ -24,7 +24,14 @@ public class ApiTestFactory : WebApplicationFactory<Program>
     protected override void ConfigureWebHost(IWebHostBuilder builder)
     {
         builder.UseEnvironment("Test");
-
+        builder.ConfigureLogging(logging =>
+        {
+            logging.ClearProviders();
+            // Add console logging that works in tests
+            logging.AddConsole();
+            logging.AddDebug();
+            logging.SetMinimumLevel(LogLevel.Trace);
+        });
         builder.ConfigureServices(services =>
         {
             // Remove ALL existing DbContext registrations more aggressively

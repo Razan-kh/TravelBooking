@@ -30,7 +30,12 @@ public class CartRepository : ICartRepository
 
     public void RemoveItem(CartItem item)
     {
+        if (item.Cart != null)
+        {
+            item.Cart.Items.Remove(item);
+        }
         _context.CartItems.Remove(item);
+        
     }
 
     public async Task ClearUserCartAsync(Guid userId, CancellationToken ct)
@@ -46,19 +51,40 @@ public class CartRepository : ICartRepository
         await _context.Carts.AddAsync(cart);
     }
 
-    public async Task AddOrUpdateAsync(Cart cart)
+    public async Task UpdateOne(Cart cart)
     {
-        // If cart is new, attach it
-        if (cart.Id == Guid.Empty)
+        var existing = await _context.Carts
+            .Include(c => c.Items)
+            .FirstOrDefaultAsync(c => c.Id == cart.Id);
+        if (existing != null)
         {
-            cart.Id = Guid.NewGuid();
-            await _context.Carts.AddAsync(cart);
+            _context.Entry(existing).CurrentValues.SetValues(cart);
+            // Update items list
+            existing.Items = cart.Items;
         }
-        else
-        {
-            _context.Carts.Update(cart);
-        }
+            }
+
+public async Task AddOrUpdateAsync(Cart cart)
+{
+    var existing = await _context.Carts
+        .Include(c => c.Items)
+        .FirstOrDefaultAsync(c => c.Id == cart.Id);
+
+    if (existing == null)
+    {
+        // NEW CART → Add it
+        await _context.Carts.AddAsync(cart);
     }
+    else
+    {
+        // EXISTING CART → Update Items
+        _context.Entry(existing).CurrentValues.SetValues(cart);
+
+        // Update items list
+        existing.Items = cart.Items;
+    }
+}
+
 
     public async Task ClearCartAsync(Guid userId, CancellationToken ct)
     {
@@ -74,5 +100,9 @@ public class CartRepository : ICartRepository
         cart.Items.Clear();
 
         await _context.SaveChangesAsync(ct);
+    }
+    public async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
+    {
+        return await _context.SaveChangesAsync(cancellationToken);
     }
 }

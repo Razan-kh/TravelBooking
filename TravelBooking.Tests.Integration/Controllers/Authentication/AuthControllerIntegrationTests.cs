@@ -43,9 +43,9 @@ public class AuthControllerIntegrationTests : IClassFixture<ApiTestFactory>
             .ForEach(b => _fixture.Behaviors.Remove(b));
         _fixture.Behaviors.Add(new OmitOnRecursionBehavior());
     }
-/*
-    #region Successful Login Tests
 
+    #region Successful Login Tests
+/*
     [Fact]
     public async Task Login_ValidCredentials_ReturnsOkWithTokens()
     {
@@ -74,9 +74,9 @@ public class AuthControllerIntegrationTests : IClassFixture<ApiTestFactory>
         responseContent.Should().NotBeNull();
         responseContent!.AccessToken.Should().NotBeNullOrEmpty();
     }
-
-    #endregion
 */
+    #endregion
+
 
     #region Failed Login Tests
 

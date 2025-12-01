@@ -5,6 +5,8 @@ using TravelBooking.Application.Shared.Interfaces;
 using TravelBooking.Application.Shared.Results;
 using TravelBooking.Domain.Carts.Entities;
 using TravelBooking.Domain.Carts.Repositories;
+using Microsoft.Extensions.Logging;
+using TravelBooking.Domain.Users.Entities;
 
 namespace TravelBooking.Application.Carts.Services.Implementations;
 
@@ -14,48 +16,51 @@ public class CartService : ICartService
     private readonly ICartRepository _cartRepository;
     private readonly IUnitOfWork _uow;
     private readonly ICartMapper _mapper;
-
+    private readonly ILogger<CartService> _logger;
     public CartService(
         IRoomAvailabilityService roomAvailabilityService,
         ICartRepository cartRepository,
         IUnitOfWork uow,
-        ICartMapper mapper)
+        ICartMapper mapper,
+        ILogger<CartService> logger)
     {
         _roomAvailabilityService = roomAvailabilityService;
         _cartRepository = cartRepository;
         _uow = uow;
         _mapper = mapper;
+        _logger = logger;
     }
 
-    public async Task<Result> AddRoomToCartAsync(
-        Guid userId,
-        Guid roomCategoryId,
-        DateOnly checkIn,
-        DateOnly checkOut,
-        int quantity,
-        CancellationToken ct)
+public async Task<Result> AddRoomToCartAsync(
+    Guid userId,
+    Guid roomCategoryId,
+    DateOnly checkIn,
+    DateOnly checkOut,
+    int quantity,
+    CancellationToken ct)
+{
+    if (!await _roomAvailabilityService
+        .HasAvailableRoomsAsync(roomCategoryId, checkIn, checkOut, quantity, ct))
     {
-        // Check availability through dedicated service
-        bool available = await _roomAvailabilityService
-            .HasAvailableRoomsAsync(roomCategoryId, checkIn, checkOut, quantity, ct);
-
-        if (!available)
-        {
-            return Result.Failure("Not enough rooms available for the selected period.");
-        }
-
-        // Load or create cart
-        var cart = await _cartRepository.GetUserCartAsync(userId, ct)
-                   ?? new Cart { UserId = userId };
-
-        AddOrMergeCartItem(cart, roomCategoryId, checkIn, checkOut, quantity);
-
-        // Persist changes
-        await _cartRepository.AddOrUpdateAsync(cart);
-        await _uow.SaveChangesAsync(ct);
-
-        return Result.Success();
+        return Result.Failure("Not enough rooms available.");
     }
+
+    var cart = await _cartRepository.GetUserCartAsync(userId, ct);
+
+    if (cart == null)
+    {
+        cart = new Cart { UserId = userId };
+        await _cartRepository.AddOrUpdateAsync(cart);
+    }
+
+    AddOrMergeCartItem(cart, roomCategoryId, checkIn, checkOut, quantity);
+
+    await _cartRepository.AddOrUpdateAsync(cart);
+    await _uow.SaveChangesAsync(ct);
+
+    return Result.Success();
+}
+
 
     private void AddOrMergeCartItem(
         Cart cart,
@@ -74,25 +79,29 @@ public class CartService : ICartService
             existing.Quantity += quantity;
             return;
         }
-
-        cart.Items.Add(new CartItem
-        {
-            RoomCategoryId = roomCategoryId,
-            CheckIn = checkIn,
-            CheckOut = checkOut,
-            Quantity = quantity
-        });
+        CancellationToken ct = new CancellationToken();
+    cart.Items.Add(new CartItem
+    {
+        RoomCategoryId = roomCategoryId,
+        CheckIn = checkIn,
+        CheckOut = checkOut,
+        Quantity = quantity,
+        Cart = cart,            // important
+        CartId = cart.Id        // important
+    });
     }
 
     public async Task<Result<List<CartItemDto>>> GetCartAsync(Guid userId, CancellationToken ct)
     {
         var cart = await _cartRepository.GetUserCartAsync(userId, ct);
+
         if (cart == null)
             return Result.Failure<List<CartItemDto>>("Cart not found.");
 
         var itemsDto = _mapper.Map(cart.Items.ToList());
         return Result.Success(itemsDto);
     }
+
 
     public async Task<Result> RemoveItemAsync(Guid cartItemId, CancellationToken ct)
     {

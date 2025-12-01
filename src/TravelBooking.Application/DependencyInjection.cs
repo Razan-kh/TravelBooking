@@ -58,7 +58,7 @@ public static class DependencyInjection
           typeof(UserPipelineBehavior<,>)
           );
 
-        services.AddScoped<IRoomService, RoomService>();
+       // services.AddScoped<IRoomService, RoomService>();
         services.AddScoped<TravelBooking.Application.Hotels.Servicies.IHotelService, TravelBooking.Application.Hotels.Servicies.HotelService>();
         services.AddScoped<ICityService, CityService>();
         
@@ -79,7 +79,7 @@ public static class DependencyInjection
         // Register Mapperly mappers
         services.AddScoped<ICityMapper, CityMapper>();
         services.AddScoped<IHotelMapper, HotelMapper>();
-        services.AddScoped<IRoomMapper, RoomMapper>();
+       // services.AddScoped<IRoomMapper, RoomMapper>();
         services.AddScoped<ISieveProcessor, SieveProcessor>();
 
         services.AddScoped<IAuthService, AuthService>();

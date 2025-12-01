@@ -12,7 +12,6 @@ namespace TravelBooking.Api.Controllers;
 public class AuthController(IMediator mediator) : ControllerBase
 {
     private readonly IMediator _mediator = mediator;
-    [AllowAnonymous] 
     [HttpPost("login")]
     public async Task<ActionResult<LoginResponseDto>> Login([FromBody] LoginRequestDto request)
     {

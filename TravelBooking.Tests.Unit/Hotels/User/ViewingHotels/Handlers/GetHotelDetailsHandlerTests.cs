@@ -6,6 +6,8 @@ using TravelBooking.Application.ViewingHotels.Queries;
 using TravelBooking.Application.ViewingHotels.Services.Interfaces;
 using TravelBooking.Application.ViewingHotels.Handlers;
 using TravelBooking.Application.DTOs;
+using TravelBooking.Application.Rooms.User.Servicies.Interfaces;
+using TravelBooking.Application.Reviews.Services.Interfaces;
 
 namespace TravelBooking.Tests.Handlers;
 

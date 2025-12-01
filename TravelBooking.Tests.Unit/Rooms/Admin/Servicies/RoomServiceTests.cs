@@ -8,8 +8,8 @@ using TravelBooking.Domain.Rooms.Entities;
 using TravelBooking.Domain.Rooms.Interfaces;
 using TravelBooking.Application.Images.Servicies;
 using Microsoft.Extensions.Logging;
-using TravelBooking.Application.Rooms.Services;
 using TravelBooking.Tests.Shared;
+using TravelBooking.Application.Rooms.Admin.Services.Implementations;
 
 namespace TravelBooking.Tests.Rooms.Admin.Handlers;
 

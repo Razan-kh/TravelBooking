@@ -7,6 +7,8 @@ using TravelBooking.Application.ViewingHotels.Mappers;
 using TravelBooking.Domain.Reviews.Repositories;
 using TravelBooking.Application.DTOs;
 using TravelBooking.Tests.Carts.TestHelpers;
+using TravelBooking.Application.Reviews.Services.Implementations;
+using TravelBooking.Application.Hotels.User.ViewingHotels.Mappers.Interfaces;
 
 namespace TravelBooking.Tests.Services;
 

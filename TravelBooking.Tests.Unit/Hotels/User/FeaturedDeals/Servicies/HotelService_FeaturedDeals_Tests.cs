@@ -10,6 +10,7 @@ using TravelBooking.Domain.Hotels.Entities;
 using TravelBooking.Domain.Hotels.Interfaces.Repositories;
 using TravelBooking.Application.ViewingHotels.Mappers;
 using TravelBooking.Domain.Cities.Entities;
+using TravelBooking.Application.Hotels.User.ViewingHotels.Mappers.Interfaces;
 
 namespace TravelBooking.Tests.FeaturedDeals;
 

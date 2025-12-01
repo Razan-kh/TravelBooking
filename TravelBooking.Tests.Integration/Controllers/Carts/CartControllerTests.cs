@@ -13,252 +13,78 @@ using TravelBooking.Domain.Carts.Entities;
 using TravelBooking.Domain.Rooms.Entities;
 using TravelBooking.Infrastructure.Persistence;
 using TravelBooking.Tests.Integration.Extensions;
+using TravelBooking.Tests.Integration.Factories;
 using TravelBooking.Tests.Integration.Helpers;
 using Xunit;
-/*  ///REMOVE THIS ------------------------------
+///REMOVE THIS ------------------------------
 namespace TravelBooking.Tests.Integration.Controllers
 {
-    public class CartControllerTests : IClassFixture<WebApplicationFactory<Program>>
+    public class CartControllerTests : IClassFixture<ApiTestFactory>, IDisposable
     {
-                private readonly DbContextOptions<AppDbContext> _dbContextOptions;
+        private readonly DbContextOptions<AppDbContext> _dbContextOptions;
 
-        private  AppDbContext _dbContext;
+        private AppDbContext _dbContext;
         private readonly Fixture _fixture;
         private readonly WebApplicationFactory<Program> _factory;
+        private readonly string _role = "User";
+        private readonly Guid _userId = Guid.NewGuid();
+        private HttpClient _client;
 
-        public CartControllerTests(WebApplicationFactory<Program> factory)
+        public CartControllerTests(ApiTestFactory factory)
         {
             _fixture = new Fixture();
             _factory = factory;
+            _client = _factory.CreateClient();
             _fixture.Behaviors.OfType<ThrowingRecursionBehavior>().ToList()
                 .ForEach(b => _fixture.Behaviors.Remove(b));
             _fixture.Behaviors.Add(new OmitOnRecursionBehavior());
 
             // Get the DbContext from the test server
             var scope = factory.Services.CreateScope();
-                _dbContextOptions = new DbContextOptionsBuilder<AppDbContext>()
-            .UseInMemoryDatabase(databaseName: $"TestDatabase_{Guid.NewGuid()}") // Unique name for each test
-            .Options;
-
-        _dbContext = new AppDbContext(_dbContextOptions);
-        //    _dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-//          _dbContext = _factory.Services.GetRequiredService<AppDbContext>();
-
-        }
-        /*
-        public async Task InitializeAsync()
-        {
-            var options = new DbContextOptionsBuilder<AppDbContext>()
-                .UseSqlServer("YourTestConnectionString")
-                .Options;
-
-            _dbContext = new AppDbContext(options);
-
-            // Ensure database is created and migrations applied
-            await _dbContext.Database.EnsureDeletedAsync(); // Clean start
-            await _dbContext.Database.EnsureCreatedAsync();
-        }
-        /*
-                [Fact]
-                public async Task AddRoomToCart_ValidRequest_ReturnsOk()
-                {
-                    // Arrange
-                    var testUserId = Guid.NewGuid();
-                    var roomCategoryId = Guid.NewGuid();
-
-                    var command = new AddRoomToCartCommand(
-                        roomCategoryId, 
-                        DateOnly.FromDateTime(DateTime.UtcNow.AddDays(1)),
-                        DateOnly.FromDateTime(DateTime.UtcNow.AddDays(3)),
-                        2)
-                    {
-                        UserId = testUserId
-                    };
-
-                    var client = _factory.CreateClientWithUser(testUserId, "user"); // Use testUserId consistently
-
-                    // Act
-                    var response = await client.PostAsJsonAsync("/api/cart", command);
-
-                    // Assert
-                    response.StatusCode.Should().Be(HttpStatusCode.OK);
-
-                    // Verify cart item is persisted - include Items and use proper query
-                    var cart = await _dbContext.Carts
-                        .Include(c => c.Items) // Important: include related data
-                        .FirstOrDefaultAsync(c => c.UserId == testUserId); // Use FirstOrDefaultAsync instead of FindAsync
-
-                    cart.Should().NotBeNull();
-                    cart!.Items.Should().ContainSingle(i =>
-                        i.RoomCategoryId == roomCategoryId &&
-                        i.Quantity == 2);
-                }
-        */
-/*  ///REMOVE THIS ------------------------------
-
-[Fact]
-public async Task AddRoomToCart_CheckOutBeforeCheckIn_ReturnsBadRequest()
-{
-    // Arrange
-    var testUserId = Guid.NewGuid();
-
-    var command = new AddRoomToCartCommand(
-        Guid.NewGuid(),
-        DateOnly.FromDateTime(DateTime.UtcNow.AddDays(3)), // CheckIn later
-        DateOnly.FromDateTime(DateTime.UtcNow.AddDays(1)), // CheckOut earlier - invalid!
-        2
-    );
-
-    var client = _factory.CreateClientWithUser(testUserId, "user");
-
-    // Act
-    var response = await client.PostAsJsonAsync("/api/cart", command);
-
-    // Assert
-    response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
-}
-
-[Fact]
-public async Task GetCart_WithItems_ReturnsOkWithCartItems()
-{
-    // Arrange
-    var testUserId = Guid.NewGuid();
-    var roomCategory = _fixture.CreateRoomCategoryMinimal();
-    var checkIn = DateOnly.FromDateTime(DateTime.UtcNow.AddDays(3)); // CheckIn later
-    var checkOut = DateOnly.FromDateTime(DateTime.UtcNow.AddDays(4));
-
-    var cartItems = _fixture.Build<CartItem>()
-                .With(x => x.Quantity, 3)
-                .With(x => x.RoomCategory, roomCategory)
-                .With(x => x.CheckIn, checkIn)
-                .With(x => x.CheckOut, checkOut)
-                .Without(x => x.Cart)
-                .With(x => x.RoomCategoryId, roomCategory.Id)
-                .Create();
-    // Seed cart
-    var cart = new Cart
-    {
-        UserId = testUserId,
-        Items = new List<CartItem>
-        {
-            cartItems
-        }
-    };
-    _dbContext.Carts.Add(cart);
-    await _dbContext.SaveChangesAsync();
-
-    var client = _factory.CreateClientWithUser(testUserId, "user"); // Use same testUserId
-
-    // Act
-    var response = await client.GetAsync("/api/cart");
-
-    // Assert
-    response.StatusCode.Should().Be(HttpStatusCode.OK);
-    var result = await response.Content.ReadFromJsonAsync<Result<List<CartItemDto>>>();
-    result.Should().NotBeNull();
-    result!.Value.Should().HaveCount(1);
-}
-
-[Fact]
-public async Task RemoveItem_ExistingCartItem_ReturnsOk()
-{
-    // Arrange
-    var testUserId = Guid.NewGuid();
-    var cartItemId = Guid.NewGuid();
-
-    var cart = new Cart
-    {
-        UserId = testUserId,
-        Items = new List<CartItem>
-        {
-            new CartItem
-            {
-                Id = cartItemId,
-                RoomCategoryId = Guid.NewGuid(),
-                Quantity = 1
-            }
-        }
-    };
-
-    _dbContext.Carts.Add(cart);
-    await _dbContext.SaveChangesAsync();
-
-    var client = _factory.CreateClientWithUser(testUserId, "user");
-
-    // Act
-    var response = await client.DeleteAsync($"/api/cart/{cartItemId}");
-
-    // Assert
-    response.StatusCode.Should().Be(HttpStatusCode.OK);
-
-    var updatedCart = await _dbContext.Carts
-        .Include(c => c.Items)
-        .FirstOrDefaultAsync(c => c.UserId == testUserId);
-
-    updatedCart!.Items.Should().BeEmpty();
-}
-/*
-[Fact]
-public async Task RemoveItem_NonExistingCartItem_ReturnsNotFound()
-{
-    // Arrange
-    var testUserId = Guid.NewGuid();
-    var nonExistingId = Guid.NewGuid();
-
-    var client = _factory.CreateClientWithUser(testUserId, "user");
-
-    // Act
-    var response = await client.DeleteAsync($"/api/cart/{nonExistingId}");
-
-    // Assert
-    response.StatusCode.Should().Be(HttpStatusCode.NotFound);
-}
-*/
-/*  ///REMOVE THIS ------------------------------
-
-}
-}
-*/ /*  ///REMOVE THIS ------------------------------
-
-//----------------------------------------------
-/*
-namespace TravelBooking.Tests.Integration.Controllers
-{
-    public class CartControllerTests : IClassFixture<ApiTestFactory>
-    {
-        private readonly HttpClient _client;
-        private readonly AppDbContext _dbContext;
-        private readonly Fixture _fixture;
-
-        public CartControllerTests(ApiTestFactory factory)
-        {
-          //  _client = factory.CreateClient();
-            _fixture = new Fixture();
-        _fixture.Behaviors.OfType<ThrowingRecursionBehavior>().ToList()
-            .ForEach(b => _fixture.Behaviors.Remove(b));
-        _fixture.Behaviors.Add(new OmitOnRecursionBehavior());
-
-            // Get the DbContext from the test server
-            var scope = factory.Services.CreateScope();
             _dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+            /*
+            _dbContextOptions = new DbContextOptionsBuilder<AppDbContext>()
+        .UseInMemoryDatabase(databaseName: $"TestDatabase_{Guid.NewGuid()}") // Unique name for each test
+        .Options;
+
+            _dbContext = new AppDbContext(_dbContextOptions);
+            */
+            //    _dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+            //          _dbContext = _factory.Services.GetRequiredService<AppDbContext>();
+
+        }
+
+        public void Dispose()
+        {
+            using var scope = _factory.Services.CreateScope();
+            var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+            dbContext.Database.EnsureDeleted();
         }
 
         [Fact]
         public async Task AddRoomToCart_ValidRequest_ReturnsOk()
         {
             // Arrange
+            //using var scope = _factory.Services.CreateScope();
+       // var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
             var testUserId = Guid.NewGuid();
-            var roomCategoryId = Guid.NewGuid();
-            var command = new AddRoomToCartCommand
-            (
-            Guid.NewGuid(),
+            //var roomCategoryId = Guid.NewGuid();
+            var roomCategory = _fixture.CreateRoomCategoryMinimal();
+
+            var room = _fixture.CreateRoomMinimal(roomCategory);
+            roomCategory.Rooms.Add(room);
+            _dbContext.RoomCategories.Add(roomCategory);
+
+            await _dbContext.SaveChangesAsync();
+           
+            var command = new AddRoomToCartCommand(
+                roomCategory.Id,
                 DateOnly.FromDateTime(DateTime.UtcNow.AddDays(1)),
                 DateOnly.FromDateTime(DateTime.UtcNow.AddDays(3)),
-                2
-            );
+                1);
 
-    //  _client.DefaultRequestHeaders.Add("Test-User", testUserId.ToString());
-        var client = _factory.CreateClientWithRole("user");
+
+            _client.AddAuthHeader(_role, testUserId);
 
             // Act
             var response = await _client.PostAsJsonAsync("/api/cart", command);
@@ -266,14 +92,16 @@ namespace TravelBooking.Tests.Integration.Controllers
             // Assert
             response.StatusCode.Should().Be(HttpStatusCode.OK);
 
-            // Verify cart item is persisted
+            // Verify cart item is persisted - include Items and use proper query
             var cart = await _dbContext.Carts
-                .FindAsync(testUserId);
+                .Include(c => c.Items)
+                .AsNoTracking() // Important: include related data
+                .FirstOrDefaultAsync(c => c.UserId == testUserId); // Use FirstOrDefaultAsync instead of FindAsync
 
             cart.Should().NotBeNull();
             cart!.Items.Should().ContainSingle(i =>
-                i.RoomCategoryId == roomCategoryId &&
-                i.Quantity == 2);
+                i.RoomCategoryId == roomCategory.Id &&
+                i.Quantity == 1);
         }
 
         [Fact]
@@ -283,12 +111,13 @@ namespace TravelBooking.Tests.Integration.Controllers
             var testUserId = Guid.NewGuid();
 
             var command = new AddRoomToCartCommand(
-            Guid.NewGuid(),
-                DateOnly.FromDateTime(DateTime.UtcNow.AddDays(1)),
-                DateOnly.FromDateTime(DateTime.UtcNow.AddDays(3)),
+                Guid.NewGuid(),
+                DateOnly.FromDateTime(DateTime.UtcNow.AddDays(3)), // CheckIn later
+                DateOnly.FromDateTime(DateTime.UtcNow.AddDays(1)), // CheckOut earlier - invalid!
                 2
             );
-            _client.DefaultRequestHeaders.Add("Test-User", testUserId.ToString());
+
+            _client.AddAuthHeader(_role, testUserId);
 
             // Act
             var response = await _client.PostAsJsonAsync("/api/cart", command);
@@ -302,32 +131,61 @@ namespace TravelBooking.Tests.Integration.Controllers
         {
             // Arrange
             var testUserId = Guid.NewGuid();
+            var roomCategory = _fixture.CreateRoomCategoryMinimal();
+            _dbContext.RoomCategories.Add(roomCategory);
+            await _dbContext.SaveChangesAsync();
+
+            var checkIn = DateOnly.FromDateTime(DateTime.UtcNow.AddDays(3)); // CheckIn later
+            var checkOut = DateOnly.FromDateTime(DateTime.UtcNow.AddDays(4));
+
+            var cartItems = _fixture.Build<CartItem>()
+                        .With(x => x.Quantity, 3)
+                        .With(x => x.RoomCategory, roomCategory)
+                        .With(x => x.CheckIn, checkIn)
+                        .With(x => x.CheckOut, checkOut)
+                        .Without(x => x.Cart)
+                        .With(x => x.RoomCategoryId, roomCategory.Id)
+                        .Create();
+            cartItems.RoomCategoryId = roomCategory.Id;
+            cartItems.RoomCategory = roomCategory;
 
             // Seed cart
             var cart = new Cart
             {
                 UserId = testUserId,
-                Items = new List<CartItem>
-                {
-                    _fixture.Build<CartItem>()
-                        .With(x => x.RoomCategoryId, Guid.NewGuid())
-                        .With(x => x.Quantity, 3)
-                        .Create()
-                }
+                Items =
+        [
+            cartItems
+        ]
             };
+            cartItems.Cart = cart;
+            cartItems.CartId = cart.Id;
             _dbContext.Carts.Add(cart);
             await _dbContext.SaveChangesAsync();
 
-            _client.DefaultRequestHeaders.Add("Test-User", testUserId.ToString());
+
+            _client.AddAuthHeader(_role, testUserId);
 
             // Act
             var response = await _client.GetAsync("/api/cart");
 
             // Assert
             response.StatusCode.Should().Be(HttpStatusCode.OK);
-            var result = await response.Content.ReadFromJsonAsync<Result<List<CartItemDto>>>();
-            result.Should().NotBeNull();
+            var json = await response.Content.ReadAsStringAsync();
+
+            // Use an anonymous type to read the JSON
+            var template = new
+            {
+                isSuccess = false,
+                error = "",
+                errorCode = "",
+                httpStatusCode = (int?)null,
+                Value = new List<CartItemDto>()
+            };
+
+            var result = Newtonsoft.Json.JsonConvert.DeserializeAnonymousType(json, template); result.Should().NotBeNull();
             result!.Value.Should().HaveCount(1);
+
         }
 
         [Fact]
@@ -335,37 +193,55 @@ namespace TravelBooking.Tests.Integration.Controllers
         {
             // Arrange
             var testUserId = Guid.NewGuid();
-            var cartItem = _fixture.Build<CartItem>()
-                                   .With(x => x.CartId, Guid.NewGuid())
-                                   .Create();
-
+            var cartItemId = Guid.NewGuid();
+            var cartId = Guid.NewGuid();
+            var roomCategory = _fixture.CreateRoomCategoryMinimal();
             var cart = new Cart
             {
+                Id = cartId,
                 UserId = testUserId,
-                Items = new List<CartItem> { cartItem }
+                Items =
+        [
+            new CartItem
+            {
+                Id = cartItemId,
+                RoomCategoryId = roomCategory.Id,
+                RoomCategory = roomCategory,
+                CheckIn = DateOnly.FromDateTime(DateTime.Now.AddDays(1)),
+                CheckOut = DateOnly.FromDateTime(DateTime.Now.AddDays(3)),
+                Quantity = 1,
+                CartId = cartId, 
+            }
+        ]
             };
+            cart.Items[0].Cart = cart;
+
+
             _dbContext.Carts.Add(cart);
             await _dbContext.SaveChangesAsync();
 
-            _client.DefaultRequestHeaders.Add("Test-User", testUserId.ToString());
+            _client.AddAuthHeader(_role, testUserId);
 
             // Act
-            var response = await _client.DeleteAsync($"/api/cart/{cartItem.Id}");
+            var response = await _client.DeleteAsync($"/api/cart/{cartItemId}");
 
             // Assert
             response.StatusCode.Should().Be(HttpStatusCode.OK);
-            var updatedCart = await _dbContext.Carts
-                .FindAsync(testUserId);
-            updatedCart!.Items.Should().BeEmpty();
-        }
 
+            // Assert
+            var deletedItem = await _dbContext.CartItems
+                .FirstOrDefaultAsync(c => c.Id == cartItemId);
+
+            deletedItem.Should().BeNull();
+        }
         [Fact]
         public async Task RemoveItem_NonExistingCartItem_ReturnsNotFound()
         {
             // Arrange
             var testUserId = Guid.NewGuid();
-            _client.DefaultRequestHeaders.Add("Test-User", testUserId.ToString());
             var nonExistingId = Guid.NewGuid();
+
+            _client.AddAuthHeader(_role, testUserId);
 
             // Act
             var response = await _client.DeleteAsync($"/api/cart/{nonExistingId}");
@@ -373,6 +249,6 @@ namespace TravelBooking.Tests.Integration.Controllers
             // Assert
             response.StatusCode.Should().Be(HttpStatusCode.NotFound);
         }
+
     }
 }
-*/

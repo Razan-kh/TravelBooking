@@ -22,9 +22,11 @@ using TravelBooking.Application.Hotels.User.ViewingHotels.Mappers.Interfaces;
 using TravelBooking.Application.Hotels.User.ViewingHotels.Mappers.Implementations;
 using TravelBooking.Application.Reviews.Services.Implementations;
 using TravelBooking.Application.Reviews.Services.Interfaces;
-using TravelBooking.Application.Rooms.User.Servicies.Interfaces;
-using TravelBooking.Application.Rooms.User.Servicies.Implementations;
-
+//using TravelBooking.Application.Rooms.User.Servicies.Interfaces;
+//using TravelBooking.Application.Rooms.User.Servicies.Implementations;
+using System.Text;
+using TravelBooking.Application.Rooms.Admin.Services.Interfaces;
+using TravelBooking.Application.Rooms.Admin.Services.Implementations;
 
 namespace TravelBooking.API;
 
@@ -46,7 +48,8 @@ public static class DependencyInjection
                 var jwt = config.GetSection("JwtSettings").Get<JwtSettings>()!;
 
                 options.TokenValidationParameters = new TokenValidationParameters
-                {
+                { 
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwt.Key)),
                     ValidateIssuerSigningKey = true,
                     ValidateIssuer = false,
                     ValidateAudience = false,
@@ -68,7 +71,12 @@ public static class DependencyInjection
         services.AddScoped<ImageAppService>();
         services.AddScoped<ICartService, CartService>();
         services.AddScoped<IBookingService, BookingService>();
-        services.AddScoped<IRoomService, RoomService>();
+        
+        services.AddScoped<TravelBooking.Application.Rooms.User.Servicies.Interfaces.IRoomService,
+         TravelBooking.Application.Rooms.User.Servicies.Implementations.RoomService>();
+
+        services.AddScoped<TravelBooking.Application.Rooms.Admin.Services.Interfaces.IRoomService,
+        TravelBooking.Application.Rooms.Admin.Services.Implementations.RoomService>();
         services.AddScoped<IReviewService, ReviewService>();
         services.AddScoped<ICartMapper, CartMapper>();
 
@@ -117,5 +125,4 @@ public static class DependencyInjection
 
         return app;
     }
-
 }
