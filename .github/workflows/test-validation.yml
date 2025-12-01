@@ -22,6 +22,13 @@ jobs:
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: 8.0.x
+          
+      - name: Show current working directory
+        run: |
+          echo "Current directory:"
+          pwd
+          echo "Files and folders in current directory:"
+          ls -la
 
       # Restore solution from root
       - name: Restore dependencies
