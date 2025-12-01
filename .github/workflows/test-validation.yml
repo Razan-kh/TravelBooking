@@ -1,0 +1,46 @@
+name: Test Validation
+
+on:
+  push:
+    branches:
+      - testing          # run on your testing branch
+      - main             # optional: will run when pushing to main
+      - develop          # optional: run on develop too
+      - 'feature/**'     # run on any feature branch
+  pull_request:
+    branches:
+      - main
+      - testing
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'   # change if needed
+
+      - name: Restore dependencies
+        run: dotnet restore
+
+      - name: Build solution
+        run: dotnet build --no-restore --configuration Release
+
+      # --- RUN UNIT TESTS ---
+      - name: Run Unit Tests
+        run: dotnet test ./TravelBooking.Tests.Unit \
+              --no-build \
+              --configuration Release \
+              --logger "trx;LogFileName=unit-tests.trx"
+
+      # --- RUN INTEGRATION TESTS ---
+      - name: Run Integration Tests
+        run: dotnet test ./TravelBooking.Tests.Integration \
+              --no-build \
+              --configuration Release \
+              --logger "trx;LogFileName=integration-tests.trx"
