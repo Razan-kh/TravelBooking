@@ -22,16 +22,15 @@ jobs:
       # Restore solution from root
       - name: Restore dependencies
         run: dotnet restore TravelBooking.sln
-        working-directory: ./TravelBooking
 
       # Build solution
       - name: Build solution
-        run: dotnet build ./TravelBooking.sln --no-restore --configuration Release
+        run: dotnet build TravelBooking.sln --no-restore --configuration Release
 
       # Run Unit Tests
       - name: Run Unit Tests
-        run: dotnet test ./TravelBooking.Tests.Unit/TravelBooking.Tests.Unit.csproj --no-build --configuration Release
+        run: dotnet test TravelBooking.Tests.Unit/TravelBooking.Tests.Unit.csproj --no-build --configuration Release
 
       # Run Integration Tests
       - name: Run Integration Tests
-        run: dotnet test ./TravelBooking.Tests.Integration/TravelBooking.Tests.Integration.csproj --no-build --configuration Release
+        run: dotnet test TravelBooking.Tests.Integration/TravelBooking.Tests.Integration.csproj --no-build --configuration Release
