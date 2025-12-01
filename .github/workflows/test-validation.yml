@@ -1,19 +1,13 @@
-name: Test Validation
+name: TravelBooking Tests
 
 on:
   push:
-    branches:
-      - testing          # run on your testing branch
-      - main             # optional: will run when pushing to main
-      - develop          # optional: run on develop too
-      - 'feature/**'     # run on any feature branch
+    branches: [ testing, main ]
   pull_request:
-    branches:
-      - main
-      - testing
+    branches: [ main ]
 
 jobs:
-  build-and-test:
+  build-test:
     runs-on: ubuntu-latest
 
     steps:
@@ -23,24 +17,20 @@ jobs:
       - name: Setup .NET
         uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: '8.0.x'   # change if needed
+          dotnet-version: 8.0.x
 
+      # Restore solution from root
       - name: Restore dependencies
-        run: dotnet restore
+        run: dotnet restore ./TravelBooking.sln
 
+      # Build solution
       - name: Build solution
-        run: dotnet build --no-restore --configuration Release
+        run: dotnet build ./TravelBooking.sln --no-restore --configuration Release
 
-      # --- RUN UNIT TESTS ---
+      # Run Unit Tests
       - name: Run Unit Tests
-        run: dotnet test ./TravelBooking.Tests.Unit \
-              --no-build \
-              --configuration Release \
-              --logger "trx;LogFileName=unit-tests.trx"
+        run: dotnet test ./TravelBooking.Tests.Unit/TravelBooking.Tests.Unit.csproj --no-build --configuration Release
 
-      # --- RUN INTEGRATION TESTS ---
+      # Run Integration Tests
       - name: Run Integration Tests
-        run: dotnet test ./TravelBooking.Tests.Integration \
-              --no-build \
-              --configuration Release \
-              --logger "trx;LogFileName=integration-tests.trx"
+        run: dotnet test ./TravelBooking.Tests.Integration/TravelBooking.Tests.Integration.csproj --no-build --configuration Release
