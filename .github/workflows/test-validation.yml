@@ -5,7 +5,11 @@ on:
     branches: [ testing, main ]
   pull_request:
     branches: [ main ]
-
+    paths:
+      - '**/*.cs'
+      - '**/*.csproj'
+      - '**/*.sln'
+      
 jobs:
   build-test:
     runs-on: ubuntu-latest
