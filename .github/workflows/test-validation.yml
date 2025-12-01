@@ -22,6 +22,7 @@ jobs:
       # Restore solution from root
       - name: Restore dependencies
         run: dotnet restore TravelBooking.sln
+        working-directory: ./TravelBooking
 
       # Build solution
       - name: Build solution
