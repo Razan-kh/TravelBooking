@@ -32,7 +32,7 @@ jobs:
 
       # Restore solution from root
       - name: Restore dependencies
-        run: dotnet restore ./src/TravelBooking.Api/TravelBooking.Api.csproj
+        run: dotnet restore src/TravelBooking.Api/TravelBooking.Api.csproj
 
       # Build solution
       - name: Build solution
