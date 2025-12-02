@@ -8,6 +8,7 @@ using TravelBooking.Application.Cheackout.Commands;
 using TravelBooking.Application.Cheackout.Servicies.Implementations;
 using TravelBooking.Domain.Bookings.Entities;
 using TravelBooking.Domain.Bookings.Repositories;
+using TravelBooking.Application.Cheackout.Servicies.Interfaces;
 
 namespace TravelBooking.Tests.Unit.Cheackout.Servicies;
 
@@ -15,6 +16,7 @@ public class BookingServiceTests
 {
     private readonly IFixture _fixture;
     private readonly Mock<IBookingRepository> _bookingRepoMock;
+    private readonly Mock<IDiscountService> _discountService;
     private readonly BookingService _sut;
 
     public BookingServiceTests()
@@ -26,7 +28,9 @@ public class BookingServiceTests
         _fixture.Behaviors.Add(new OmitOnRecursionBehavior());
 
         _bookingRepoMock = _fixture.Freeze<Mock<IBookingRepository>>();
-        _sut = new BookingService(_bookingRepoMock.Object);
+        _discountService = _fixture.Freeze<Mock<IDiscountService>>();
+
+        _sut = new BookingService(_bookingRepoMock.Object, _discountService.Object);
     }
 
     [Fact]

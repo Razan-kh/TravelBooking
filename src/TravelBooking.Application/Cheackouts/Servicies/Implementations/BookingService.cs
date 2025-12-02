@@ -13,11 +13,13 @@ namespace TravelBooking.Application.Cheackout.Servicies.Implementations;
 public class BookingService : IBookingService
 {
     private readonly IBookingRepository _bookingRepository;
+    private readonly IDiscountService _discountService;
 
     public BookingService(
-        IBookingRepository bookingRepository)
+        IBookingRepository bookingRepository, IDiscountService discountService)
     {
         _bookingRepository = bookingRepository;
+        _discountService = discountService;
     }
 
    public async Task<List<Booking>> CreateBookingsAsync(
@@ -34,7 +36,9 @@ public class BookingService : IBookingService
             var hotelId = hotelGroup.Key;
             var items = hotelGroup.ToList();
 
-            var booking = BuildBooking(hotelId, items, request);
+            decimal totalAmount = _discountService.CalculateTotal(items);
+
+            var booking = BuildBooking(hotelId, items, request, totalAmount);
 
             await _bookingRepository.AddAsync(booking, ct);
 
@@ -47,26 +51,13 @@ public class BookingService : IBookingService
     private static Booking BuildBooking(
         Guid hotelId,
         List<CartItem> items,
-        CheckoutCommand request)
+        CheckoutCommand request,
+        decimal totalAmount)
     {
         var rooms = new List<Room>();
-        decimal totalAmount = 0;
-        var checkIn = items.Min(i => i.CheckIn);
-        var checkOut = items.Max(i => i.CheckOut);
-
         foreach (var item in items)
         {
-            var roomCategory = item.RoomCategory;
-            var price = roomCategory.PricePerNight * item.Quantity;
-
-            var discount = roomCategory.Discounts.FirstOrDefault(d =>
-                d.StartDate <= item.CheckIn.ToDateTime(TimeOnly.MinValue) &&
-                d.EndDate >= item.CheckOut.ToDateTime(TimeOnly.MinValue));
-
-            if (discount != null)
-                price -= price * (discount.DiscountPercentage / 100m);
-
-            totalAmount += price;
+                var roomCategory = item.RoomCategory;
 
             rooms.Add(new Room
             {
@@ -80,8 +71,8 @@ public class BookingService : IBookingService
             UserId = request.UserId,
             HotelId = hotelId,
             BookingDate = DateTime.UtcNow,
-            CheckInDate = checkIn,
-            CheckOutDate = checkOut,
+            CheckInDate = items.Min(i => i.CheckIn),
+            CheckOutDate = items.Max(i => i.CheckOut),
             Rooms = rooms,
             PaymentDetails = new PaymentDetails
             {

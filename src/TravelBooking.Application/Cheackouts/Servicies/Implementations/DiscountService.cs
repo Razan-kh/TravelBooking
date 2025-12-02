@@ -10,7 +10,10 @@ public class DiscountService : IDiscountService
         decimal total = 0;
         foreach (var item in items)
         {
-            decimal price = item.RoomCategory.PricePerNight * item.Quantity;
+            int nights = (item.CheckOut.ToDateTime(TimeOnly.MinValue)
+                        - item.CheckIn.ToDateTime(TimeOnly.MinValue)).Days;
+
+            decimal price = item.RoomCategory.PricePerNight * item.Quantity * nights;
 
             var discount = item.RoomCategory.Discounts
                 .FirstOrDefault(d => d.StartDate <= item.CheckIn.ToDateTime(TimeOnly.MinValue)

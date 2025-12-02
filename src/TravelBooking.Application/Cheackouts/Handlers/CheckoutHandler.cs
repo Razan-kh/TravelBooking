@@ -1,7 +1,6 @@
 using MediatR;
 using TravelBooking.Application.Shared.Results;
 using TravelBooking.Application.Cheackout.Commands;
-using TravelBooking.Application.Cheackout.Servicies;
 using TravelBooking.Application.Carts.Services.Interfaces;
 using TravelBooking.Application.Cheackout.Servicies.Interfaces;
 using TravelBooking.Domain.Users.Repositories;
