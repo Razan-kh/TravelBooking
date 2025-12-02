@@ -10,7 +10,7 @@ on:
       - '**/*.csproj'
       - '**/*.sln'
 env:
-  DOTNET_VERSION: '8.0.100'
+  DOTNET_VERSION: '8.0.412'
   ASPNETCORE_ENVIRONMENT: Testing 
 
 jobs:
