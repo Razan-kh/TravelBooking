@@ -27,11 +27,10 @@ public class RoomsControllerIntegrationTests : IClassFixture<ApiTestFactory>
     public RoomsControllerIntegrationTests(ApiTestFactory factory)
     {
         _factory = factory;
-      git status  _factory.SetInMemoryDbName($"RoomsControllerTests_{Guid.NewGuid():N}");
+        _factory.SetInMemoryDbName($"RoomsControllerTests_{Guid.NewGuid():N}");
         _client = _factory.CreateClient();
         _fixture = new Fixture();
 
-        // AutoFixture: avoid recursion on navigations
         _fixture.Behaviors.OfType<ThrowingRecursionBehavior>().ToList()
             .ForEach(b => _fixture.Behaviors.Remove(b));
         _fixture.Behaviors.Add(new OmitOnRecursionBehavior());
