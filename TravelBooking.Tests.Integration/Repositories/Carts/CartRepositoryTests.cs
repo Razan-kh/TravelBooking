@@ -2,49 +2,47 @@ using TravelBooking.Domain.Rooms.Entities;
 using Xunit;
 using Microsoft.EntityFrameworkCore;
 using FluentAssertions;
-using Xunit;
 using TravelBooking.Infrastructure.Persistence;
 using TravelBooking.Infrastructure.Persistence.Repositories;
 using TravelBooking.Domain.Carts.Entities;
-using TravelBooking.Domain.Rooms.Entities;
 
 namespace TravelBooking.Tests.Integration.Repositories;
 
 public class CartRepositoryTests : IAsyncLifetime
 {
-        private readonly AppDbContext _dbContext;
-        private readonly CartRepository _repository;
+    private readonly AppDbContext _dbContext;
+    private readonly CartRepository _repository;
 
-        public CartRepositoryTests()
+    public CartRepositoryTests()
+    {
+        var options = new DbContextOptionsBuilder<AppDbContext>()
+            .UseInMemoryDatabase(databaseName: Guid.NewGuid().ToString())
+            .Options;
+
+        _dbContext = new AppDbContext(options);
+        _repository = new CartRepository(_dbContext);
+    }
+
+    public async Task InitializeAsync()
+    {
+        // Seed test data
+        await SeedTestDataAsync();
+    }
+
+    public Task DisposeAsync()
+    {
+        _dbContext?.Dispose();
+        return Task.CompletedTask;
+    }
+
+    private async Task SeedTestDataAsync()
+    {
+        var userId = Guid.NewGuid();
+        var cart = new Cart
         {
-            var options = new DbContextOptionsBuilder<AppDbContext>()
-                .UseInMemoryDatabase(databaseName: Guid.NewGuid().ToString())
-                .Options;
-
-            _dbContext = new AppDbContext(options);
-            _repository = new CartRepository(_dbContext);
-        }
-
-        public async Task InitializeAsync()
-        {
-            // Seed test data
-            await SeedTestDataAsync();
-        }
-
-        public Task DisposeAsync()
-        {
-            _dbContext?.Dispose();
-            return Task.CompletedTask;
-        }
-
-        private async Task SeedTestDataAsync()
-        {
-            var userId = Guid.NewGuid();
-            var cart = new Cart
-            {
-                Id = Guid.NewGuid(),
-                UserId = userId,
-                Items = new List<CartItem>
+            Id = Guid.NewGuid(),
+            UserId = userId,
+            Items = new List<CartItem>
                 {
                     new()
                     {
@@ -54,11 +52,11 @@ public class CartRepositoryTests : IAsyncLifetime
                         RoomCategory = new RoomCategory { Id = Guid.NewGuid(), Name = "Standard Room" }
                     }
                 }
-            };
+        };
 
-            await _dbContext.Carts.AddAsync(cart);
-            await _dbContext.SaveChangesAsync();
-        }
+        await _dbContext.Carts.AddAsync(cart);
+        await _dbContext.SaveChangesAsync();
+    }
 
     [Fact]
     public async Task GetUserCartAsync_ExistingUser_ReturnsCartWithItems()

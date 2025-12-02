@@ -4,11 +4,8 @@ using TravelBooking.Domain.Hotels.Entities;
 using TravelBooking.Domain.Cities.Entities;
 using TravelBooking.Domain.Rooms.Entities;
 using TravelBooking.Domain.Users.Entities;
-using TravelBooking.Domain.Reviews.Entities;
-
 using TravelBooking.Domain.Bookings.Entities;
 using AutoFixture;
-using AutoFixture.AutoMoq;
 
 namespace TravelBooking.Tests.Application.Checkout.Utils;
 

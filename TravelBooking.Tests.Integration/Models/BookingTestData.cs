@@ -4,6 +4,7 @@ using TravelBooking.Domain.Rooms.Entities;
 using TravelBooking.Domain.Hotels.Entities;
 
 namespace TravelBooking.Tests.Integration.Models;
+
 public class BookingTestData
 {
     public Guid UserId { get; set; }

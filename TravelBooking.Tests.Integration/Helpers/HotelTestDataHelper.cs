@@ -1,5 +1,3 @@
-using TravelBooking.Domain.Hotels.Entities;
-
 namespace TravelBooking.Tests.Integration.Admin.Helpers;
 
 public static class HotelTestDataHelper

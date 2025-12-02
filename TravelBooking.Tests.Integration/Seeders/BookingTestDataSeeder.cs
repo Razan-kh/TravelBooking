@@ -1,19 +1,5 @@
-using FluentAssertions;
-using Microsoft.EntityFrameworkCore;
 using TravelBooking.Domain.Bookings.Entities;
-using TravelBooking.Domain.Rooms.Entities;
 using TravelBooking.Infrastructure.Persistence;
-using TravelBooking.Infrastructure.Persistence.Repositories;
-using Xunit;
-using AutoFixture;
-using AutoFixture.Xunit2;
-using TravelBooking.Domain.Payments.Enums;
-using TravelBooking.Domain.Payments.Entities;
-using TravelBooking.Domain.Rooms.Enums;
-using TravelBooking.Domain.Hotels.Entities;
-using TravelBooking.Domain.Hotels.Enums;
-using TravelBooking.Domain.Users.Enums;
-using TravelBooking.Domain.Users.Entities;
 using TravelBooking.Tests.Integration.Builders;
 using TravelBooking.Tests.Integration.Models;
 

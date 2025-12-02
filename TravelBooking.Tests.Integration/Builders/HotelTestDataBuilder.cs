@@ -3,7 +3,6 @@ using TravelBooking.Application.Hotels.Commands;
 using TravelBooking.Application.Hotels.Dtos;
 using TravelBooking.Domain.Cities.Entities;
 using TravelBooking.Domain.Hotels.Entities;
-using TravelBooking.Domain.Hotels.Enums;
 using TravelBooking.Infrastructure.Persistence;
 
 namespace TravelBooking.Tests.Integration.Admin.Helpers;

@@ -80,7 +80,6 @@ public class AuthServiceTests
 
         // Assert
         result.IsSuccess.Should().BeFalse();
-        // FIX: Check for the actual error message your service returns
         result.Error.Should().Be("Invalid credentials");
 
         _jwtServiceMock.Verify(x => x.CreateToken(It.IsAny<User>()), Times.Never);
@@ -99,7 +98,6 @@ public class AuthServiceTests
         _userRepoMock.Setup(x => x.GetByEmailAsync(user.Email))
             .ReturnsAsync(user);
 
-        // FIX: Use correct method name and parameter order
         _passwordHasherMock.Setup(x => x.Verify(user.PasswordHash, password))
             .Returns(false);
 
@@ -108,7 +106,6 @@ public class AuthServiceTests
 
         // Assert
         result.IsSuccess.Should().BeFalse();
-        // FIX: Check for the actual error message your service returns
         result.Error.Should().Be("Invalid credentials");
 
         _jwtServiceMock.Verify(x => x.CreateToken(It.IsAny<User>()), Times.Never);

@@ -3,8 +3,6 @@ using AutoFixture.AutoMoq;
 using FluentAssertions;
 using Moq;
 using TravelBooking.Domain.Rooms.Entities;
-using TravelBooking.Application.ViewingHotels.Services.Implementations;
-using TravelBooking.Application.ViewingHotels.Mappers;
 using TravelBooking.Application.DTOs;
 using TravelBooking.Domain.Rooms.Interfaces;
 using TravelBooking.Application.Rooms.User.Mappers.Interfaces;

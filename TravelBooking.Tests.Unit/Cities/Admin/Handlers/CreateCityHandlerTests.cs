@@ -2,17 +2,10 @@ using AutoFixture;
 using AutoFixture.AutoMoq;
 using FluentAssertions;
 using Moq;
-using System;
-using System.Collections.Generic;
-using System.Threading;
-using System.Threading.Tasks;
 using TravelBooking.Application.Cities.Commands;
 using TravelBooking.Application.Cities.Dtos;
 using TravelBooking.Application.Cities.Handlers;
 using TravelBooking.Application.Cities.Interfaces.Servicies;
-using TravelBooking.Application.Cities.Servicies.Implementations;
-using TravelBooking.Application.Mappers;
-using Xunit;
 
 namespace TravelBooking.Tests.Cities.Admin.Handlers;
 

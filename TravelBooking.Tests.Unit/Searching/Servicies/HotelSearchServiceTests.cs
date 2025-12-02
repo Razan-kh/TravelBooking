@@ -65,7 +65,7 @@ public class HotelServiceTests
                  q.Take(take).ToList());
     }
 
-    //  Keyword filter
+    // Keyword filter
     [Fact]
     public async Task SearchAsync_Should_Filter_By_Keyword()
     {
@@ -90,9 +90,7 @@ public class HotelServiceTests
         result.Data.First().Name.Should().Be("Sunrise Hotel");
     }
 
-    // ----------------------------------------------------------------------
-    //  CITY FILTER
-    // ----------------------------------------------------------------------
+    //  City Filter
     [Fact]
     public async Task SearchAsync_Should_Filter_By_CityId()
     {
@@ -115,9 +113,8 @@ public class HotelServiceTests
         result.Data.Should().HaveCount(1);
         result.Data.First().City.Should().Be("Paris");
     }
-    // ----------------------------------------------------------------------
-    //  PRICE FILTER
-    // ----------------------------------------------------------------------
+
+    //  Price filter
     [Fact]
     public async Task SearchAsync_Should_Filter_By_Price_Range()
     {
@@ -154,9 +151,7 @@ public class HotelServiceTests
         result.Data.First().Name.Should().Be("Mid");
     }
 
-    // ----------------------------------------------------------------------
-    //  AMENITIES FILTER
-    // ----------------------------------------------------------------------
+    // Amenities filter
     [Fact]
     public async Task SearchAsync_Should_Filter_By_Amenities()
     {
@@ -195,9 +190,7 @@ public class HotelServiceTests
         result.Data.First().Name.Should().Be("H1");
     }
 
-    // ----------------------------------------------------------------------
-    //  ROOM AVAILABILITY
-    // ----------------------------------------------------------------------
+    // Room availability
     [Fact]
     public async Task SearchAsync_Should_Filter_By_Availability()
     {
@@ -234,9 +227,7 @@ public class HotelServiceTests
         result.Data.Should().HaveCount(1);
     }
 
-    // ----------------------------------------------------------------------
-    //  CURSOR PAGING RETURNS NEXT CURSOR
-    // ----------------------------------------------------------------------
+    // Curser paging
     [Fact]
     public async Task SearchAsync_Should_Return_NextCursor_When_More_Items_Exist()
     {
@@ -266,9 +257,7 @@ public class HotelServiceTests
         nextCursor.Should().NotBeNull();
     }
 
-    // ----------------------------------------------------------------------
-    //  SIEVE SHOULD BE CALLED
-    // ----------------------------------------------------------------------
+    // Sieve should be called
     [Fact]
     public async Task SearchAsync_Should_Call_SieveProcessor()
     {
@@ -291,6 +280,5 @@ public class HotelServiceTests
                 It.IsAny<object[]>(),
                 true, true, true),
             Times.Once);
-
     }
 }

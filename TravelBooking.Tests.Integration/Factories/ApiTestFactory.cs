@@ -14,6 +14,7 @@ using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging; 
+
 namespace TravelBooking.Tests.Integration.Factories;
 
 public class ApiTestFactory : WebApplicationFactory<Program>

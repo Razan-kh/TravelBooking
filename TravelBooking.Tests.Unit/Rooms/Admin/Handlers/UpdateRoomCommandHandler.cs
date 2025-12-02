@@ -4,7 +4,6 @@ using Moq;
 using TravelBooking.Application.Rooms.Admin.Services.Interfaces;
 using TravelBooking.Application.Rooms.Commands;
 using TravelBooking.Application.Rooms.Dtos;
-using TravelBooking.Tests.Rooms;
 
 namespace TravelBooking.Tests.Rooms.Admin.Handlers;
 

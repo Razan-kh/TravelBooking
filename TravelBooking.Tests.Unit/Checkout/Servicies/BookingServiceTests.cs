@@ -1,13 +1,5 @@
-using TravelBooking.Application.Carts.Handlers;
-using TravelBooking.Application.Carts.Commands;
-using TravelBooking.Application.Carts.Services.Interfaces;
+
 using TravelBooking.Tests.Carts.TestHelpers;
-using TravelBooking.Application.Shared.Results;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 using AutoFixture;
 using AutoFixture.AutoMoq;
 using FluentAssertions;
@@ -15,11 +7,9 @@ using Moq;
 using TravelBooking.Application.Cheackout.Commands;
 using TravelBooking.Application.Cheackout.Servicies.Implementations;
 using TravelBooking.Domain.Bookings.Entities;
-using Xunit;
-using TravelBooking.Domain.Rooms.Entities;
-using TravelBooking.Domain.Discounts.Entities;
-using TravelBooking.Domain.Carts.Entities;
 using TravelBooking.Domain.Bookings.Repositories;
+
+namespace TravelBooking.Tests.Unit.Cheackout.Servicies;
 
 public class BookingServiceTests
 {
@@ -29,13 +19,12 @@ public class BookingServiceTests
 
     public BookingServiceTests()
     {
-        //  _fixture = new Fixture().Customize(new AutoMoqCustomization { ConfigureMembers = true });
         _fixture = new Fixture().Customize(new AutoMoqCustomization { ConfigureMembers = true });
 
-        // Add this to handle circular references
         _fixture.Behaviors.OfType<ThrowingRecursionBehavior>().ToList()
                 .ForEach(b => _fixture.Behaviors.Remove(b));
         _fixture.Behaviors.Add(new OmitOnRecursionBehavior());
+
         _bookingRepoMock = _fixture.Freeze<Mock<IBookingRepository>>();
         _sut = new BookingService(_bookingRepoMock.Object);
     }

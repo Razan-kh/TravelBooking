@@ -1,25 +1,11 @@
-using TravelBooking.Application.Carts.Handlers;
-using TravelBooking.Application.Carts.Commands;
-using TravelBooking.Application.Carts.Services.Interfaces;
 using TravelBooking.Tests.Carts.TestHelpers;
-using TravelBooking.Application.Shared.Results;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 using AutoFixture;
 using AutoFixture.AutoMoq;
 using FluentAssertions;
-using Moq;
-using TravelBooking.Application.Bookings.Commands;
 using TravelBooking.Application.Cheackout.Servicies.Implementations;
-using TravelBooking.Domain.Rooms.Entities;
-using TravelBooking.Domain.Discounts.Entities;
 using TravelBooking.Domain.Carts.Entities;
 
-
-using Xunit;
+namespace TravelBooking.Tests.Unit.Cheackout.Servicies;
 
 public class DiscountServiceTests
 {

@@ -1,7 +1,6 @@
 using AutoFixture;
 using FluentAssertions;
 using Moq;
-using TravelBooking.Application.Hotels.Commands;
 using TravelBooking.Application.Hotels.Dtos;
 using TravelBooking.Application.Hotels.Handlers;
 using TravelBooking.Application.Hotels.Queries;

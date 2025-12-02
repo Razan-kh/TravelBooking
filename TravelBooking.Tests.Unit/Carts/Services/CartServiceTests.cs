@@ -44,8 +44,6 @@ public class CartServiceTests
             _uow.Object,
             _mapper.Object,
             _logger.Object);
-
-   
     }
 
     [Fact]

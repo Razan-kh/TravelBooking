@@ -6,7 +6,6 @@ using Moq;
 using TravelBooking.Application.Bookings.Commands;
 using TravelBooking.Application.Cheackout.Commands;
 using TravelBooking.Domain.Carts.Entities;
-using TravelBooking.Domain.Users.Entities;
 using TravelBooking.Domain.Bookings.Entities;
 using TravelBooking.Application.Carts.Services.Interfaces;
 using TravelBooking.Application.Shared.Results;
@@ -31,16 +30,12 @@ public class CheckoutHandlerTests
 
     public CheckoutHandlerTests()
     {
-        //  _fixture = new Fixture().Customize(new AutoMoqCustomization { ConfigureMembers = true });
-
         _fixture = new Fixture().Customize(new AutoMoqCustomization { ConfigureMembers = true });
 
-        // Add this to handle circular references
+        // Handle circular references
         _fixture.Behaviors.OfType<ThrowingRecursionBehavior>().ToList()
                 .ForEach(b => _fixture.Behaviors.Remove(b));
         _fixture.Behaviors.Add(new OmitOnRecursionBehavior());
-
-        // Rest of your setup...
 
         _cartServiceMock = _fixture.Freeze<Mock<ICartService>>();
         _paymentServiceMock = _fixture.Freeze<Mock<IPaymentService>>();

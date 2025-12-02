@@ -4,25 +4,12 @@ using AutoFixture;
 using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using TravelBooking.Application.Hotels.Commands;
 using TravelBooking.Application.Hotels.Dtos;
-using TravelBooking.Domain.Cities.Entities;
-using TravelBooking.Domain.Hotels.Entities;
 using TravelBooking.Infrastructure.Persistence;
 using TravelBooking.Tests.Integration.Helpers;
 using Xunit;
 using TravelBooking.Tests.Integration.Factories;
-
-using AutoFixture;
-using FluentAssertions;
 using global::TravelBooking.Tests.Integration.Admin.Helpers;
-using Microsoft.AspNetCore.Mvc.Testing;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
-using System.Net;
-using System.Net.Http.Json;
-
-using Xunit;
 
 namespace TravelBooking.Tests.Integration.Admin.Controllers;
 
@@ -45,7 +32,7 @@ public class HotelControllerIntegrationTests : IClassFixture<ApiTestFactory>, ID
         _fixture = new Fixture();
 
         _fixture.Behaviors.OfType<ThrowingRecursionBehavior>().ToList()
-    .ForEach(b => _fixture.Behaviors.Remove(b));
+        .ForEach(b => _fixture.Behaviors.Remove(b));
         _fixture.Behaviors.Add(new OmitOnRecursionBehavior());
 
         var scope = _factory.Services.CreateScope();

@@ -8,7 +8,6 @@ using TravelBooking.Application.FeaturedDeals.Mappers;
 using TravelBooking.Domain.Hotels.Entities;
 using TravelBooking.Application.RecentlyVisited.Dtos;
 using TravelBooking.Application.ViewingHotels.Services.Implementations;
-using TravelBooking.Application.ViewingHotels.Mappers;
 using TravelBooking.Domain.Cities.Entities;
 using TravelBooking.Tests.Shared;
 using TravelBooking.Application.Hotels.User.ViewingHotels.Mappers.Interfaces;

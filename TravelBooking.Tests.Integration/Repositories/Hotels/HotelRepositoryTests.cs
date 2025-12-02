@@ -1,14 +1,9 @@
-using System;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 using AutoFixture;
 using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using TravelBooking.Domain.Hotels.Entities;
 using TravelBooking.Infrastructure.Persistence;
-using TravelBooking.Tests.Integration;
 using Xunit;
 using TravelBooking.Tests.Integration.Factories;
 

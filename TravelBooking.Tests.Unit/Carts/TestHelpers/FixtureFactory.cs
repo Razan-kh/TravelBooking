@@ -1,26 +1,13 @@
 using AutoFixture;
 using AutoFixture.AutoMoq;
-using AutoFixture.Kernel;
-using TravelBooking.Application.Carts.Handlers;
 using TravelBooking.Domain.Carts.Entities;
-using TravelBooking.Domain.Cities.Entities;
 using TravelBooking.Domain.Rooms.Entities;
 using TravelBooking.Domain.Users.Entities;
 using TravelBooking.Domain.Hotels.Entities;
-using TravelBooking.Domain.Carts.Entities;
 using TravelBooking.Domain.Reviews.Entities;
-using TravelBooking.Domain.Carts.Entities;
 using TravelBooking.Domain.Discounts.Entities;
-
 using TravelBooking.Domain.Bookings.Entities;
 using TravelBooking.Application.Carts.Commands;
-using TravelBooking.Application.Carts.Services.Interfaces;
-using AutoFixture;
-using AutoFixture.AutoMoq;
-
-
-using AutoFixture;
-using AutoFixture.AutoMoq;
 using global::TravelBooking.Domain.Payments.Entities;
 using global::TravelBooking.Domain.Payments.Enums;
 using TravelBooking.Domain.Rooms.Enums;
@@ -36,7 +23,7 @@ public static class FixtureFactory
     {
         var fixture = new Fixture();
 
-        // Configure AutoMoq first
+        // Configure AutoMoq 
         fixture.Customize(new AutoMoqCustomization { ConfigureMembers = true });
 
         // Handle circular references
@@ -44,7 +31,7 @@ public static class FixtureFactory
                 .ForEach(b => fixture.Behaviors.Remove(b));
         fixture.Behaviors.Add(new OmitOnRecursionBehavior());
 
-        // Fix DateOnly creation
+        // DateOnly creation
         fixture.Customize<DateOnly>(c => c.FromFactory<DateTime>(DateOnly.FromDateTime));
 
         // Configure all entities to avoid circular references
@@ -122,7 +109,6 @@ public static class FixtureFactory
             .With(u => u.LastName, "User"));
     }
 
-    // Helper method to create RoomCategory with discounts
     public static RoomCategory CreateRoomCategoryWithDiscount(this IFixture fixture, decimal pricePerNight = 100.0m)
     {
         return fixture.Build<RoomCategory>()
@@ -142,7 +128,6 @@ public static class FixtureFactory
             .Create();
     }
 
-    // Helper method to create RoomCategory without discounts
     public static RoomCategory CreateRoomCategoryWithoutDiscounts(this IFixture fixture, decimal pricePerNight = 100.0m)
     {
         return fixture.Build<RoomCategory>()
@@ -154,7 +139,6 @@ public static class FixtureFactory
             .Create();
     }
 
-    // Other helper methods
     public static AddRoomToCartCommand CreateAddRoomToCartCommand(this IFixture fixture)
     {
         return fixture.Build<AddRoomToCartCommand>()

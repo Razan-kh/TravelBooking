@@ -1,17 +1,13 @@
 using AutoFixture;
 using FluentAssertions;
 using Microsoft.AspNetCore.Mvc.Testing;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using System.Net;
 using System.Net.Http.Json;
-using TravelBooking.Domain.Cities.Entities;
-using TravelBooking.Domain.Hotels.Entities;
 using TravelBooking.Infrastructure.Persistence;
 using TravelBooking.Tests.Integration.Helpers;
 using Xunit;
 using TravelBooking.Tests.Integration.Factories;
-using TravelBooking.Tests.Integration.Seeders;
 
 namespace TravelBooking.Tests.Integration.Controllers;
 
@@ -19,7 +15,6 @@ public class HotelControllerTests : IClassFixture<ApiTestFactory>, IDisposable
 {
     private readonly WebApplicationFactory<Program> _factory;
     private readonly IFixture _fixture;
-    //  private  IServiceScope _serviceScope;
     private readonly Guid _testUserId;
     private HttpClient _client;
     private readonly string _role = "User";
@@ -31,10 +26,8 @@ public class HotelControllerTests : IClassFixture<ApiTestFactory>, IDisposable
         _fixture = new Fixture();
         _client = _factory.CreateClient();
 
-
         _testUserId = Guid.NewGuid();
         _fixture.ConfigureHomeControllerFixture();
-
     }
 
     public void Dispose()
@@ -48,7 +41,6 @@ public class HotelControllerTests : IClassFixture<ApiTestFactory>, IDisposable
     public async Task GetFeaturedDeals_ValidCount_ReturnsOkWithFeaturedDeals()
     {
         // Arrange
-        //  var client = CreateAuthenticatedClient();
         _client.AddAuthHeader(_role, _userId);
         using var scope = _factory.Services.CreateScope();
         var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
@@ -68,7 +60,6 @@ public class HotelControllerTests : IClassFixture<ApiTestFactory>, IDisposable
     public async Task GetRecentlyVisitedHotels_ValidUserWithHistory_ReturnsOkWithHotels()
     {
         // Arrange
-        //var client = CreateAuthenticatedClient();
         _client.AddAuthHeader(_role, _userId);
 
         using var scope = _factory.Services.CreateScope();
@@ -90,7 +81,6 @@ public class HotelControllerTests : IClassFixture<ApiTestFactory>, IDisposable
         _client.AddAuthHeader(_role, _userId);
         using var scope = _factory.Services.CreateScope();
         var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-
         var count = 1;
 
         // Act
@@ -111,6 +101,7 @@ public class HotelControllerTests : IClassFixture<ApiTestFactory>, IDisposable
         _client.AddAuthHeader(_role, userWithNoHistoryId);
         using var scope = _factory.Services.CreateScope();
         var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+        
         // Act
         var response = await _client.GetAsync($"/api/hotel/recently-visited/{userWithNoHistoryId}");
 

@@ -102,9 +102,8 @@ public class RoomsControllerIntegrationTests : IClassFixture<ApiTestFactory>
     {
         // Arrange
         _client.AddAuthHeader(_role, _adminId);
-      //  using var scope = _factory.Services.CreateScope();
-      //  var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-              var db = _factory.Services.GetRequiredService<AppDbContext>();
+
+        var db = _factory.Services.GetRequiredService<AppDbContext>();
 
         var roomCategory = _fixture.Build<RoomCategory>()
         .Without(r => r.Amenities)

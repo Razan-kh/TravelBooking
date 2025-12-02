@@ -1,5 +1,3 @@
-using System.Linq;
-using System.Threading;
 using AutoFixture;
 using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
