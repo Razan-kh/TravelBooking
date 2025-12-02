@@ -9,7 +9,10 @@ on:
       - '**/*.cs'
       - '**/*.csproj'
       - '**/*.sln'
-      
+env:
+  DOTNET_VERSION: '8.0.100'
+  ASPNETCORE_ENVIRONMENT: Testing 
+
 jobs:
   build-test:
     runs-on: ubuntu-latest
