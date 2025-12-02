@@ -27,7 +27,7 @@ public class RoomsControllerIntegrationTests : IClassFixture<ApiTestFactory>
     public RoomsControllerIntegrationTests(ApiTestFactory factory)
     {
         _factory = factory;
-        _factory.SetInMemoryDbName($"RoomsControllerTests_{Guid.NewGuid():N}");
+      git status  _factory.SetInMemoryDbName($"RoomsControllerTests_{Guid.NewGuid():N}");
         _client = _factory.CreateClient();
         _fixture = new Fixture();
 

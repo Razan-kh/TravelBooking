@@ -43,7 +43,6 @@ public class CitiesIntegrationTests : IClassFixture<ApiTestFactory>
     .Without(h => h.Owner)
     .Without(h => h.RoomCategories)
     .Without(h => h.Reviews));
-
     }
 
     #region GET /cities
