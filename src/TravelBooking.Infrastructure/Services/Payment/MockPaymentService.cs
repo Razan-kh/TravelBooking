@@ -9,7 +9,7 @@ public class MockPaymentService : IPaymentService
     public Task<Result> ProcessPaymentAsync(Guid userId, PaymentMethod method, CancellationToken ct)
     {
         // Simulate a short delay for processing
-        Thread.Sleep(500);
+        //Thread.Sleep(500);
 
         // 90% chance of success
         bool success = Random.Shared.Next(1, 10) > 1;

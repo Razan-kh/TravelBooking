@@ -43,14 +43,13 @@ public class CheckoutHandler : IRequestHandler<CheckoutCommand, Result>
     public async Task<Result> Handle(CheckoutCommand request, CancellationToken ct)
     {
         var cart = await _cartService.GetUserCartAsync(request.UserId, ct);
-        _logger.LogInformation("after cart");
+
         if (cart == null || !cart.Items.Any())
             return Result.Failure("Cart is empty.", "EMPTY_CART", 400);
-        _logger.LogInformation("cart is not empty");
 
         var paymentResult = await _paymentService.ProcessPaymentAsync(
             request.UserId, request.PaymentMethod, ct);
-        _logger.LogInformation("after payment");
+
 
         if (!paymentResult.IsSuccess)
             return Result.Failure(paymentResult.Error, "PAYMENT_FAILED", 400);
@@ -70,12 +69,10 @@ public class CheckoutHandler : IRequestHandler<CheckoutCommand, Result>
                 user!.Email,
                 booking,
                 pdf
-            );
+            );   
         }
-        _logger.LogInformation("before clear");
 
         await _cartService.ClearCartAsync(request.UserId, ct);
-        _logger.LogInformation("after clear");
 
         return Result.Success();
     }

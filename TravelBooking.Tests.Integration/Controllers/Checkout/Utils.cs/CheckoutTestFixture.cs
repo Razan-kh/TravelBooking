@@ -1,35 +1,16 @@
-
-using System.Net;
-using System.Net.Http.Headers;
-using System.Net.Http.Json;
-using System.Text;
-using System.Text.Json;
-using FluentAssertions;
-using Microsoft.AspNetCore.Mvc.Testing;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using Moq;
-using TravelBooking.Application.Carts.Services.Interfaces;
-using TravelBooking.Application.Cheackout.Commands;
 using TravelBooking.Application.Cheackout.Servicies.Interfaces;
-using TravelBooking.Application.Shared.Results;
 using TravelBooking.Domain.Bookings.Entities;
 using TravelBooking.Domain.Carts.Entities;
 using TravelBooking.Domain.Discounts.Entities;
 using TravelBooking.Domain.Hotels.Entities;
-using TravelBooking.Domain.Payments.Enums;
 using TravelBooking.Domain.Rooms.Entities;
 using TravelBooking.Domain.Users.Entities;
 using TravelBooking.Infrastructure.Persistence;
 using TravelBooking.Tests.Integration.Factories;
-using TravelBooking.Tests.Integration.Helpers;
 using Xunit;
-using System.Data;
 using TravelBooking.Domain.Cities.Entities;
-using BookingSystem.IntegrationTests.Checkout.Utils;
-using TravelBooking.Domain.Users.Repositories;
 using TravelBooking.Application.Shared.Interfaces;
-using TravelBooking.Domain.Bookings.Repositories;
 
 namespace BookingSystem.IntegrationTests.Checkout.Utils;
 
@@ -40,81 +21,57 @@ public class CheckoutTestFixture : IAsyncLifetime
     public TestEmailService EmailService { get; private set; } = null!;
     public TestPaymentService PaymentService { get; private set; } = null!;
     public TestPdfService PdfService { get; private set; } = null!;
+    public InMemoryUnitOfWork InMemoryUow { get; private set; } = null!;
     public AppDbContext DbContext { get; private set; } = null!;
     public Guid TestUserId { get; private set; }
-
     private IServiceScope _scope = null!;
 
+    public CheckoutTestFixture()
+    {
+        // initialize HttpClient, DbContext, test data, etc.
+    }
     public async Task InitializeAsync()
     {
         Factory = new ApiTestFactory();
         Factory.SetInMemoryDbName($"CheckoutTests_{Guid.NewGuid()}");
 
+        EmailService = new TestEmailService();
+        PaymentService = new TestPaymentService();
+        PdfService = new TestPdfService();
+
         // Override external services with test implementations
         Factory.AddServiceConfiguration(services =>
         {
-            // Override services (don't remove, just override)
-            /*
-            services.AddSingleton<IEmailService>(new TestEmailService());
-            services.AddSingleton<IPaymentService>(new TestPaymentService());
-            services.AddSingleton<IPdfService>(new TestPdfService());
-                DebugServiceRegistrations(services);
-*/
-            
             // Remove external services
             RemoveService<IEmailService>(services);
             RemoveService<IPaymentService>(services);
             RemoveService<IPdfService>(services);
-
-            // Add test implementations
-            EmailService = new TestEmailService();
-            PaymentService = new TestPaymentService();
-            PdfService = new TestPdfService();
+            RemoveService<IUnitOfWork>(services);
 
             services.AddSingleton<IEmailService>(EmailService);
             services.AddSingleton<IPaymentService>(PaymentService);
             services.AddSingleton<IPdfService>(PdfService);
-            
+            //     services.AddSingleton<IUnitOfWork>(InMemoryUow);
+            services.AddScoped<IUnitOfWork>(provider =>
+            {
+                var context = provider.GetRequiredService<AppDbContext>();
+                var uow = new InMemoryUnitOfWork(context);
+                return uow;
+            });
+
         });
+
+        _scope = Factory.Services.CreateScope();
+        DbContext = _scope.ServiceProvider.GetRequiredService<AppDbContext>();
 
         Client = Factory.CreateClient();
         TestUserId = Guid.NewGuid();
-
-        // Create service scope
-        _scope = Factory.Services.CreateScope();
-        DbContext = _scope.ServiceProvider.GetRequiredService<AppDbContext>();
+        InMemoryUow = (InMemoryUnitOfWork)_scope.ServiceProvider.GetRequiredService<IUnitOfWork>();
 
         // Seed initial test data
         await SeedTestDataAsync();
     }
-private void DebugServiceRegistrations(IServiceCollection services)
-{
-    Console.WriteLine("=== Service Registrations ===");
     
-    var serviceTypes = new[]
-    {
-        typeof(ICartService),
-        typeof(IPaymentService),
-        typeof(IBookingService),
-        typeof(IPdfService),
-        typeof(IEmailService),
-        typeof(IUserRepository),
-        typeof(IUnitOfWork),
-        typeof(IDiscountService),
-        typeof(IRoomAvailabilityService),
-        typeof(IBookingRepository)
-    };
-    
-    foreach (var serviceType in serviceTypes)
-    {
-        var registrations = services.Where(s => s.ServiceType == serviceType).ToList();
-        Console.WriteLine($"{serviceType.Name}: {registrations.Count} registrations");
-        foreach (var reg in registrations)
-        {
-            Console.WriteLine($"  - Lifetime: {reg.Lifetime}, Implementation: {reg.ImplementationType?.Name ?? "Instance"}");
-        }
-    }
-}
     private async Task SeedTestDataAsync()
     {
         // Create test user
@@ -166,8 +123,18 @@ private void DebugServiceRegistrations(IServiceCollection services)
             Hotel = hotel
         };
 
+        var room = new Room
+        {
+            Id = Guid.NewGuid(),
+            RoomCategory = roomCategory,
+            RoomCategoryId = roomCategory.Id,
+            RoomNumber = "123"
+        };
+
         await DbContext.Hotels.AddAsync(hotel);
         await DbContext.RoomCategories.AddAsync(roomCategory);
+        await DbContext.Rooms.AddAsync(room);
+
 
         var cart = new Cart
         {
@@ -183,7 +150,7 @@ private void DebugServiceRegistrations(IServiceCollection services)
                 RoomCategory = roomCategory,
                 CheckIn = checkIn.Value,
                 CheckOut = checkOut.Value,
-                Quantity = 1 + i % 2 // Alternate between 1 and 2
+                Quantity = 1
             });
         }
 
@@ -234,7 +201,21 @@ private void DebugServiceRegistrations(IServiceCollection services)
             PricePerNight = 350.00m,
             Hotel = hotel2
         };
-
+        var room1 = new Room
+        {
+            Id = Guid.NewGuid(),
+            RoomCategory = roomCat1,
+            RoomCategoryId = roomCat1.Id,
+            RoomNumber = "1234"
+        };
+        var room2 = new Room
+        {
+            Id = Guid.NewGuid(),
+            RoomCategory = roomCat2,
+            RoomCategoryId = roomCat2.Id,
+            RoomNumber = "123"
+        };
+        await DbContext.Rooms.AddRangeAsync(room1, room2);
         await DbContext.Hotels.AddRangeAsync(hotel1, hotel2);
         await DbContext.RoomCategories.AddRangeAsync(roomCat1, roomCat2);
 
@@ -249,7 +230,7 @@ private void DebugServiceRegistrations(IServiceCollection services)
                         RoomCategory = roomCat1,
                         CheckIn = DateOnly.FromDateTime(DateTime.UtcNow.AddDays(10)),
                         CheckOut = DateOnly.FromDateTime(DateTime.UtcNow.AddDays(12)),
-                        Quantity = 2
+                        Quantity = 1
                     },
                     new()
                     {
@@ -275,6 +256,13 @@ private void DebugServiceRegistrations(IServiceCollection services)
             Id = Guid.NewGuid(),
             Name = "Discount Hotel"
         };
+        var discount = new Discount
+        {
+            DiscountPercentage = 20,
+            StartDate = DateTime.UtcNow.AddDays(-1),
+            EndDate = DateTime.UtcNow.AddDays(30),
+        };
+
 
         var roomCategory = new RoomCategory
         {
@@ -283,18 +271,20 @@ private void DebugServiceRegistrations(IServiceCollection services)
             Name = "Standard Room",
             PricePerNight = 200.00m,
             Hotel = hotel,
-            Discounts = new List<Discount>
-                {
-                    new()
-                    {
-                        DiscountPercentage = 20,
-                        StartDate = DateTime.UtcNow.AddDays(-1),
-                        EndDate = DateTime.UtcNow.AddDays(30),
-
-                    }
-                }
+            Discounts = [discount]
+        };
+        discount.RoomCategory = roomCategory;
+        discount.RoomCategoryId = roomCategory.Id;
+        var room = new Room
+        {
+            Id = Guid.NewGuid(),
+            RoomCategory = roomCategory,
+            RoomCategoryId = roomCategory.Id,
+            RoomNumber = "123"
         };
 
+        await DbContext.Discounts.AddAsync(discount);
+        await DbContext.Rooms.AddAsync(room);
         await DbContext.Hotels.AddAsync(hotel);
         await DbContext.RoomCategories.AddAsync(roomCategory);
 

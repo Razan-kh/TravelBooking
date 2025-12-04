@@ -29,13 +29,8 @@ public class CartController : ControllerBase
 
     [HttpGet]
     public async Task<IActionResult> GetCart(CancellationToken ct)
-    {
-        _logger.LogInformation("GetCart endpoint called by user");
-        
+    {        
         var result = await _mediator.Send(new GetCartQuery(), ct);
-        
-        _logger.LogInformation("GetCart completed with status: {StatusCode}", 
-            result.HttpStatusCode ?? 200);
             
         return StatusCode(result.HttpStatusCode ?? 200, result);
     }

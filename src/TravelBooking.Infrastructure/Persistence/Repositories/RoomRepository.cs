@@ -1,19 +1,13 @@
 using Microsoft.EntityFrameworkCore;
 using TravelBooking.Domain.Rooms.Entities;
 using TravelBooking.Domain.Rooms.Interfaces;
-using TravelBooking.Infrastructure.Persistence;
-using Microsoft.EntityFrameworkCore;
-using TravelBooking.Infrastructure.Persistence;
-using TravelBooking.Domain.Hotels.Entities;
-using TravelBooking.Domain.Cities;
-using TravelBooking.Domain.Hotels;
-using TravelBooking.Domain.Cities.Entities;
+using Microsoft.Extensions.Logging;
 
 namespace TravelBooking.Infrastructure.Persistence.Repositories;
 
 public class RoomRepository : IRoomRepository
 {
-    private readonly AppDbContext _context; // Your EF DbContext
+    private readonly AppDbContext _context; 
 
     public RoomRepository(AppDbContext context)
     {
@@ -66,6 +60,7 @@ public class RoomRepository : IRoomRepository
     public async Task<int> CountAvailableRoomsAsync(Guid roomCategoryId, DateOnly checkIn, DateOnly checkOut, CancellationToken ct = default)
     {
         var allRooms = await _context.Rooms.Where(r => r.RoomCategoryId == roomCategoryId).ToListAsync(ct);
+
         var bookedRoomIds = await _context.Bookings
             .Where(b => b.CheckInDate < checkOut && b.CheckOutDate > checkIn)
             .SelectMany(b => b.Rooms)

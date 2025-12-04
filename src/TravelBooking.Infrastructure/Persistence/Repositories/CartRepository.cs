@@ -19,6 +19,7 @@ public class CartRepository : ICartRepository
         return await _context.Carts
             .Include(c => c.Items)
             .ThenInclude(i => i.RoomCategory)
+            .ThenInclude(rc => rc.Discounts)
             .FirstOrDefaultAsync(c => c.UserId == userId);
     }
 
@@ -64,27 +65,26 @@ public class CartRepository : ICartRepository
         }
             }
 
-public async Task AddOrUpdateAsync(Cart cart)
-{
-    var existing = await _context.Carts
-        .Include(c => c.Items)
-        .FirstOrDefaultAsync(c => c.Id == cart.Id);
-
-    if (existing == null)
+    public async Task AddOrUpdateAsync(Cart cart)
     {
-        // NEW CART → Add it
-        await _context.Carts.AddAsync(cart);
-    }
-    else
-    {
-        // EXISTING CART → Update Items
-        _context.Entry(existing).CurrentValues.SetValues(cart);
+        var existing = await _context.Carts
+            .Include(c => c.Items)
+            .FirstOrDefaultAsync(c => c.Id == cart.Id);
 
-        // Update items list
-        existing.Items = cart.Items;
-    }
-}
+        if (existing == null)
+        {
+            // NEW CART → Add it
+            await _context.Carts.AddAsync(cart);
+        }
+        else
+        {
+            // Existing cart → Update Items
+            _context.Entry(existing).CurrentValues.SetValues(cart);
 
+            // Update items list
+            existing.Items = cart.Items;
+        }
+    }
 
     public async Task ClearCartAsync(Guid userId, CancellationToken ct)
     {

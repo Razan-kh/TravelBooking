@@ -146,7 +146,6 @@ public class CartControllerTests : IClassFixture<ApiTestFactory>, IDisposable
         _dbContext.Carts.Add(cart);
         await _dbContext.SaveChangesAsync();
 
-
         _client.AddAuthHeader(_role, testUserId);
 
         // Act
