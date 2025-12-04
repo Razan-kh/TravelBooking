@@ -22,11 +22,7 @@ using TravelBooking.Application.Hotels.User.ViewingHotels.Mappers.Interfaces;
 using TravelBooking.Application.Hotels.User.ViewingHotels.Mappers.Implementations;
 using TravelBooking.Application.Reviews.Services.Implementations;
 using TravelBooking.Application.Reviews.Services.Interfaces;
-//using TravelBooking.Application.Rooms.User.Servicies.Interfaces;
-//using TravelBooking.Application.Rooms.User.Servicies.Implementations;
 using System.Text;
-using TravelBooking.Application.Rooms.Admin.Services.Interfaces;
-using TravelBooking.Application.Rooms.Admin.Services.Implementations;
 
 namespace TravelBooking.API;
 

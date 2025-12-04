@@ -20,66 +20,17 @@ using TravelBooking.Application.Shared.Results;
 using TravelBooking.Domain.Carts.Entities;
 using TravelBooking.Domain.Bookings.Entities;
 using TravelBooking.Domain.Payments.Enums;
-using Microsoft.Data.Sqlite;
-using Microsoft.EntityFrameworkCore;
 
 namespace TravelBooking.Tests.Integration.Factories;
 
-public class ApiTestFactory : WebApplicationFactory<Program>
+public class CheckoutTestFactory : WebApplicationFactory<Program>
 {
     private string _dbName = Guid.NewGuid().ToString();
     public Mock<IPaymentService> PaymentServiceMock { get; } = new();
     public Mock<IEmailService> EmailServiceMock { get; } = new();
     public Mock<ICartService> CartServiceMock { get; } = new();
-
+    
     public void SetInMemoryDbName(string name) => _dbName = name;
-
-    private readonly List<Action<IServiceCollection>> _serviceConfigurations = new();
-
-    public void AddServiceConfiguration(Action<IServiceCollection> configureServices)
-    {
-        _serviceConfigurations.Add(configureServices);
-    }
-    /*
-    protected override void ConfigureWebHost(IWebHostBuilder builder)
-{
-    builder.UseEnvironment("Test");
-
-    builder.ConfigureServices(services =>
-    {
-        // Remove prior DbContext
-        var descriptor = services.SingleOrDefault(d =>
-            d.ServiceType == typeof(DbContextOptions<AppDbContext>)
-        );
-        if (descriptor != null)
-            services.Remove(descriptor);
-
-        // Create ONE shared connection
-        var connection = new SqliteConnection("DataSource=:memory:");
-        connection.Open();
-
-        services.AddSingleton(connection);
-
-        // Register SQLite
-        services.AddDbContext<AppDbContext>(options =>
-        {
-            options.UseSqlite(connection);
-            options.EnableSensitiveDataLogging();
-            options.EnableDetailedErrors();
-        });
-
-        // Apply DB creation on actual provider
-        using var scope = services.BuildServiceProvider().CreateScope();
-        var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-        db.Database.EnsureCreated();
-
-        // Your mock removals here...
-        RemoveAndMockPasswordHasher(services);
-        RemoveAndMockJwtService(services);
-        ConfigureTestAuthentication(services);
-    });
-}
-*/
 
     protected override void ConfigureWebHost(IWebHostBuilder builder)
     {
@@ -99,11 +50,18 @@ public class ApiTestFactory : WebApplicationFactory<Program>
             RemoveService<DbContextOptions>(services);
             RemoveService<AppDbContext>(services);
 
-            // Remove existing services
+  // Remove existing services
+  
+            RemoveService<IPaymentService>(services);
+            RemoveService<IEmailService>(services);
+            RemoveService<ICartService>(services);
 
-          
+            // Register mocks
+            services.AddSingleton(PaymentServiceMock.Object);
+            services.AddSingleton(EmailServiceMock.Object);
+            services.AddSingleton(CartServiceMock.Object);
+
             // Add InMemory database with proper configuration
-
             services.AddDbContext<AppDbContext>(options =>
             {
                 options.UseInMemoryDatabase(_dbName);
@@ -111,19 +69,13 @@ public class ApiTestFactory : WebApplicationFactory<Program>
                 options.EnableDetailedErrors();
             });
 
-
-            foreach (var configure in _serviceConfigurations)
-            {
-                configure(services);
-            }
-
             // Remove and mock other services
             RemoveAndMockPasswordHasher(services);
             RemoveAndMockJwtService(services);
 
             // Configure authentication
             ConfigureTestAuthentication(services);
-            //    ConfigureDefaultMocks();
+        //    ConfigureDefaultMocks();
 
             // Build the service provider to ensure database is created
             var sp = services.BuildServiceProvider();
@@ -212,9 +164,9 @@ public class ApiTestFactory : WebApplicationFactory<Program>
         });
     }
 
-    private void ConfigureDefaultMocks()
+     private void ConfigureDefaultMocks()
     {
-
+        
         PaymentServiceMock
             .Setup(x => x.ProcessPaymentAsync(It.IsAny<Guid>(), It.IsAny<PaymentMethod>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(Result.Success());

@@ -7,6 +7,10 @@ using TravelBooking.Domain.Payments.Entities;
 using TravelBooking.Domain.Rooms.Entities;
 using TravelBooking.Application.Cheackout.Servicies;
 using TravelBooking.Domain.Payments.Enums;
+using TravelBooking.Application.Carts.Services.Interfaces;
+using TravelBooking.Application.Shared.Interfaces;
+using System.Data;
+using TravelBooking.Application.Rooms.User.Servicies.Implementations;
 
 namespace TravelBooking.Application.Cheackout.Servicies.Implementations;
 
@@ -14,38 +18,70 @@ public class BookingService : IBookingService
 {
     private readonly IBookingRepository _bookingRepository;
     private readonly IDiscountService _discountService;
-
+    private readonly IRoomAvailabilityService _availabilityService;
+    private readonly IUnitOfWork _unitOfWork;
+    
     public BookingService(
-        IBookingRepository bookingRepository, IDiscountService discountService)
+        IBookingRepository bookingRepository,
+        IDiscountService discountService,
+        IRoomAvailabilityService availabilityService,
+        IUnitOfWork unitOfWork)
     {
         _bookingRepository = bookingRepository;
         _discountService = discountService;
+        _availabilityService = availabilityService;
+        _unitOfWork = unitOfWork;
     }
 
-   public async Task<List<Booking>> CreateBookingsAsync(
-        Cart cart,
-        CheckoutCommand request,
-        CancellationToken ct)
+    public async Task<List<Booking>> CreateBookingsAsync(
+         Cart cart,
+         CheckoutCommand request,
+         CancellationToken ct)
     {
         var result = new List<Booking>();
 
         var itemsByHotel = cart.Items.GroupBy(i => i.RoomCategory.HotelId);
 
-        foreach (var hotelGroup in itemsByHotel)
+        await _unitOfWork.BeginTransactionAsync(IsolationLevel.Serializable, ct);
+        try
         {
-            var hotelId = hotelGroup.Key;
-            var items = hotelGroup.ToList();
+            foreach (var hotelGroup in itemsByHotel)
+            {
+                var hotelId = hotelGroup.Key;
+                var items = hotelGroup.ToList();
 
-            decimal totalAmount = _discountService.CalculateTotal(items);
+                foreach (var item in items)
+                {
+                    bool available = await _availabilityService.HasAvailableRoomsAsync(
+                        item.RoomCategoryId,
+                        item.CheckIn,
+                        item.CheckOut,
+                        item.Quantity,
+                        ct);
 
-            var booking = BuildBooking(hotelId, items, request, totalAmount);
+                    if (!available)
+                    {
+                        throw new Exception(
+                            $"Room category '{item.RoomCategory.Name}' is fully booked for your dates.");
+                    }
+                }
 
-            await _bookingRepository.AddAsync(booking, ct);
+                decimal totalAmount = _discountService.CalculateTotal(items);
 
-            result.Add(booking);
+                var booking = BuildBooking(hotelId, items, request, totalAmount);
+
+                await _bookingRepository.AddAsync(booking, ct);
+
+                result.Add(booking);
+            }
+
+            return result;
         }
-
-        return result;
+        catch
+        {
+            await _unitOfWork.RollbackAsync(ct);
+            throw;
+        }
     }
 
     private static Booking BuildBooking(
@@ -54,17 +90,13 @@ public class BookingService : IBookingService
         CheckoutCommand request,
         decimal totalAmount)
     {
-        var rooms = new List<Room>();
-        foreach (var item in items)
-        {
-                var roomCategory = item.RoomCategory;
-
-            rooms.Add(new Room
+        var rooms = items.SelectMany(item =>
+            Enumerable.Repeat(new Room
             {
-                RoomCategoryId = roomCategory.Id,
-                RoomCategory = roomCategory,
-            });
-        }
+                RoomCategoryId = item.RoomCategoryId,
+                RoomCategory = item.RoomCategory
+            }, item.Quantity)
+        ).ToList();
 
         return new Booking
         {

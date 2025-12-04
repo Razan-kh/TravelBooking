@@ -5,6 +5,7 @@ using TravelBooking.Application.Carts.Services.Interfaces;
 using TravelBooking.Application.Cheackout.Servicies.Interfaces;
 using TravelBooking.Domain.Users.Repositories;
 using TravelBooking.Application.Shared.Interfaces;
+using Microsoft.Extensions.Logging;
 
 namespace TravelBooking.Application.Bookings.Commands;
 
@@ -17,6 +18,7 @@ public class CheckoutHandler : IRequestHandler<CheckoutCommand, Result>
     private readonly IEmailService _emailService;
     private readonly IUserRepository _userRepository;
     private readonly IUnitOfWork _unitOfWork;
+    private readonly ILogger <CheckoutHandler> _logger;
 
     public CheckoutHandler(
         ICartService cartService,
@@ -25,7 +27,8 @@ public class CheckoutHandler : IRequestHandler<CheckoutCommand, Result>
         IPdfService pdfService,
         IEmailService emailService,
         IUserRepository userRepository,
-        IUnitOfWork unitOfWork)
+        IUnitOfWork unitOfWork,
+        ILogger<CheckoutHandler> logger)
     {
         _cartService = cartService;
         _paymentService = paymentService;
@@ -34,16 +37,20 @@ public class CheckoutHandler : IRequestHandler<CheckoutCommand, Result>
         _emailService = emailService;
         _userRepository = userRepository;
         _unitOfWork = unitOfWork;
+        _logger = logger;
     }
 
     public async Task<Result> Handle(CheckoutCommand request, CancellationToken ct)
     {
         var cart = await _cartService.GetUserCartAsync(request.UserId, ct);
+        _logger.LogInformation("after cart");
         if (cart == null || !cart.Items.Any())
             return Result.Failure("Cart is empty.", "EMPTY_CART", 400);
+        _logger.LogInformation("cart is not empty");
 
         var paymentResult = await _paymentService.ProcessPaymentAsync(
             request.UserId, request.PaymentMethod, ct);
+        _logger.LogInformation("after payment");
 
         if (!paymentResult.IsSuccess)
             return Result.Failure(paymentResult.Error, "PAYMENT_FAILED", 400);
@@ -51,6 +58,7 @@ public class CheckoutHandler : IRequestHandler<CheckoutCommand, Result>
         var bookings = await _bookingService.CreateBookingsAsync(cart, request, ct);
 
         await _unitOfWork.SaveChangesAsync(ct);
+        _logger.LogInformation("after saving");
 
         var user = await _userRepository.GetByIdAsync(request.UserId, ct);
 
@@ -64,8 +72,10 @@ public class CheckoutHandler : IRequestHandler<CheckoutCommand, Result>
                 pdf
             );
         }
+        _logger.LogInformation("before clear");
 
         await _cartService.ClearCartAsync(request.UserId, ct);
+        _logger.LogInformation("after clear");
 
         return Result.Success();
     }

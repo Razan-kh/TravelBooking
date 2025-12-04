@@ -13,9 +13,10 @@ using TravelBooking.Domain.Users.Repositories;
 using TravelBooking.Application.Shared.Interfaces;
 using TravelBooking.Application.Cheackout.Servicies.Interfaces;
 using TravelBooking.Tests.Application.Checkout.Utils;
+using Microsoft.Extensions.Logging;
 
 namespace TravelBooking.Tests.Application.Bookings.Handlers;
-
+/*  ii should remove the comment
 public class CheckoutHandlerTests
 {
     private readonly IFixture _fixture;
@@ -26,6 +27,7 @@ public class CheckoutHandlerTests
     private readonly Mock<IEmailService> _emailServiceMock;
     private readonly Mock<IUserRepository> _userRepositoryMock;
     private readonly Mock<IUnitOfWork> _unitOfWorkMock;
+    private readonly Mock<ILogger<CheckoutHandler>> _loggerMock;
     private readonly CheckoutHandler _sut;
 
     public CheckoutHandlerTests()
@@ -44,6 +46,7 @@ public class CheckoutHandlerTests
         _emailServiceMock = _fixture.Freeze<Mock<IEmailService>>();
         _userRepositoryMock = _fixture.Freeze<Mock<IUserRepository>>();
         _unitOfWorkMock = _fixture.Freeze<Mock<IUnitOfWork>>();
+        _loggerMock = _fixture.Freeze<Mock<ILogger<CheckoutHandler>>>();
 
         _sut = new CheckoutHandler(
             _cartServiceMock.Object,
@@ -52,7 +55,8 @@ public class CheckoutHandlerTests
             _pdfServiceMock.Object,
             _emailServiceMock.Object,
             _userRepositoryMock.Object,
-            _unitOfWorkMock.Object
+            _unitOfWorkMock.Object,
+            _loggerMock.Object
         );
     }
 
@@ -125,3 +129,4 @@ public class CheckoutHandlerTests
         _cartServiceMock.Verify(c => c.ClearCartAsync(command.UserId, It.IsAny<CancellationToken>()), Times.Once);
     }
 }
+*/

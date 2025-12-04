@@ -24,7 +24,6 @@ public class UserPipelineBehavior<TRequest, TResponse>
         RequestHandlerDelegate<TResponse> next,
         CancellationToken cancellationToken)
     {
-        _logger.LogInformation("inside userpipeline behaviour");
         if (request is IUserRequest userRequest)
         {
             var httpUser = _httpContextAccessor.HttpContext?.User;
@@ -32,12 +31,23 @@ public class UserPipelineBehavior<TRequest, TResponse>
             if (httpUser?.Identity?.IsAuthenticated == true)
             {
                 var userId = httpUser.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-                _logger.LogInformation("${userId}", userId);
+                _logger.LogInformation("Found user ID claim: {UserId}", userId);
+
                 if (Guid.TryParse(userId, out var guid))
                 {
                     userRequest.UserId = guid; // Inject UserId
+                    _logger.LogInformation("Successfully set UserId: {UserId} on request", guid);
+
+                }
+                else
+                {
+                    _logger.LogWarning("Failed to parse user ID: {UserId}", userId);
                 }
             }
+        }
+        else
+        {
+            _logger.LogDebug("Request {RequestType} does not implement IUserRequest", typeof(TRequest).Name);
         }
 
         return await next();

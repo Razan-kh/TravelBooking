@@ -64,6 +64,7 @@ public static class DependencyInjection
         
         services.AddScoped<ICartService, CartService>();
         services.AddScoped<IBookingService, BookingService>();
+        services.AddScoped<IDiscountService, DiscountService>();
 
 
      //   services.AddScoped<TravelBooking.Application.Rooms.User.Servicies.Interfaces.IRoomService, TravelBooking.Application.Rooms.User.Servicies.Implementations.RoomService>();

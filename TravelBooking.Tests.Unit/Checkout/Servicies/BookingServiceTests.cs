@@ -9,6 +9,8 @@ using TravelBooking.Application.Cheackout.Servicies.Implementations;
 using TravelBooking.Domain.Bookings.Entities;
 using TravelBooking.Domain.Bookings.Repositories;
 using TravelBooking.Application.Cheackout.Servicies.Interfaces;
+using TravelBooking.Application.Carts.Services.Interfaces;
+using TravelBooking.Application.Shared.Interfaces;
 
 namespace TravelBooking.Tests.Unit.Cheackout.Servicies;
 
@@ -17,6 +19,8 @@ public class BookingServiceTests
     private readonly IFixture _fixture;
     private readonly Mock<IBookingRepository> _bookingRepoMock;
     private readonly Mock<IDiscountService> _discountService;
+    private readonly Mock<IRoomAvailabilityService> _roomAvailabilityService;
+    private readonly Mock<IUnitOfWork> _unitOfWork;
     private readonly BookingService _sut;
 
     public BookingServiceTests()
@@ -29,8 +33,10 @@ public class BookingServiceTests
 
         _bookingRepoMock = _fixture.Freeze<Mock<IBookingRepository>>();
         _discountService = _fixture.Freeze<Mock<IDiscountService>>();
+        _roomAvailabilityService = _fixture.Freeze<Mock<IRoomAvailabilityService>>();
+        _unitOfWork = _fixture.Freeze<Mock<IUnitOfWork>>();
 
-        _sut = new BookingService(_bookingRepoMock.Object, _discountService.Object);
+        _sut = new BookingService(_bookingRepoMock.Object, _discountService.Object, _roomAvailabilityService.Object, _unitOfWork.Object);
     }
 
     [Fact]
