@@ -16,10 +16,16 @@ using TravelBooking.Tests.Integration.Factories;
 
 namespace TravelBooking.Tests.Integration.Controllers;
 
+[CollectionDefinition("RoomsControllerTests", DisableParallelization = true)]
+public class RoomsControllerTestCollection : ICollectionFixture<ApiTestFactory>
+{
+}
+
+[Collection("RoomsControllerTests")]
 public class RoomsControllerIntegrationTests : IClassFixture<ApiTestFactory>, IAsyncLifetime
 {
     private readonly ApiTestFactory _factory;
-    private readonly HttpClient _client;
+    private HttpClient _client;
     private readonly IFixture _fixture;
     private readonly string _role = "Admin";
     private readonly Guid _adminId = Guid.NewGuid();
@@ -48,12 +54,8 @@ public class RoomsControllerIntegrationTests : IClassFixture<ApiTestFactory>, IA
         // Ensure clean database
         await _db.Database.EnsureDeletedAsync();
         await _db.Database.EnsureCreatedAsync();
-
-        // Clear any existing data
-        //    _dbContext.Rooms.RemoveRange(_dbContext.Rooms);
-        //    _dbContext.RoomCategories.RemoveRange(_dbContext.RoomCategories);
-        //    await _dbContext.SaveChangesAsync();
     }
+
     public async Task DisposeAsync()
     {
         // Cleanup
