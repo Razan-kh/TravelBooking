@@ -24,9 +24,9 @@ public class RoomsControllerTestCollection : ICollectionFixture<ApiTestFactory>
 [Collection("RoomsControllerTests")]
 public class RoomsControllerIntegrationTests : IClassFixture<ApiTestFactory>, IAsyncLifetime
 {
-    private readonly ApiTestFactory _factory;
+    private ApiTestFactory _factory;
     private HttpClient _client;
-    private readonly IFixture _fixture;
+    private IFixture _fixture;
     private readonly string _role = "Admin";
     private readonly Guid _adminId = Guid.NewGuid();
     private IServiceScope _scope;
@@ -35,8 +35,6 @@ public class RoomsControllerIntegrationTests : IClassFixture<ApiTestFactory>, IA
     public RoomsControllerIntegrationTests(ApiTestFactory factory)
     {
         _factory = factory;
-        _factory.SetInMemoryDbName($"RoomsControllerTests_{Guid.NewGuid():N}");
-        _client = _factory.CreateClient();
         _fixture = new Fixture();
 
         _fixture.Behaviors.OfType<ThrowingRecursionBehavior>().ToList()
@@ -48,6 +46,8 @@ public class RoomsControllerIntegrationTests : IClassFixture<ApiTestFactory>, IA
     }
     public async Task InitializeAsync()
     {
+        _factory.SetInMemoryDbName($"RoomsControllerTests_{Guid.NewGuid():N}");
+        _client = _factory.CreateClient();
         _scope = _factory.Services.CreateScope();
         _db = _scope.ServiceProvider.GetRequiredService<AppDbContext>();
 
@@ -241,8 +241,7 @@ public class RoomsControllerIntegrationTests : IClassFixture<ApiTestFactory>, IA
     {
         // Arrange
         _client.AddAuthHeader(_role, _adminId);
-      //  using var scope = _factory.Services.CreateScope();
-    //    var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+
         var roomCategory = _fixture.Build<RoomCategory>()
         .Without(r => r.Amenities)
         .Without(r => r.Hotel)
