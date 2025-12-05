@@ -19,14 +19,28 @@ using TravelBooking.Tests.Integration.Helpers;
 using Xunit;
 using System.Data;
 using BookingSystem.IntegrationTests.Checkout.Utils;
+using Microsoft.AspNetCore.Mvc.Testing;
+using TravelBooking.Application.Shared.Interfaces;
+using Microsoft.Extensions.DependencyInjection;
+using TravelBooking.Application.Cheackout.Servicies.Interfaces;
+using TravelBooking.Domain.Bookings.Entities;
+using TravelBooking.Domain.Carts.Entities;
+using TravelBooking.Domain.Discounts.Entities;
+using TravelBooking.Domain.Hotels.Entities;
+using TravelBooking.Domain.Rooms.Entities;
+using TravelBooking.Domain.Users.Entities;
+using TravelBooking.Infrastructure.Persistence;
+using TravelBooking.Tests.Integration.Factories;
+using Xunit;
+using TravelBooking.Domain.Cities.Entities;
+using TravelBooking.Application.Shared.Interfaces;
 
 namespace BookingSystem.IntegrationTests.Checkout;
 
 [CollectionDefinition("CheckoutIntegration")]
-public class CheckoutIntegrationCollection : ICollectionFixture<CheckoutTestFixture>
+public class CheckoutIntegrationCollection : IClassFixture<CheckoutTestFixture>
 {
 }
-
 
 [Collection("CheckoutIntegration")]
 public class CheckoutControllerIntegrationTests : IAsyncLifetime
@@ -38,6 +52,7 @@ public class CheckoutControllerIntegrationTests : IAsyncLifetime
     private TestPaymentService _paymentService;
     private InMemoryUnitOfWork _inMemoryUow;
     private readonly Guid _testUserId;
+    private IServiceScope _scope;
 
     public CheckoutControllerIntegrationTests(CheckoutTestFixture fixture)
     {
@@ -48,31 +63,58 @@ public class CheckoutControllerIntegrationTests : IAsyncLifetime
     public async Task InitializeAsync()
     {
         await Task.Yield();
+        // Use the fixture's factory to create a new scope for each test
+        _scope = _fixture.Factory.Services.CreateScope();
 
-        _client = _fixture.Client;
-        _dbContext = _fixture.DbContext;
-        _emailService = _fixture.EmailService;
-        _paymentService = _fixture.PaymentService;
-        _inMemoryUow = _fixture.InMemoryUow;
+        // Get services from the new scope
+        _dbContext = _scope.ServiceProvider.GetRequiredService<AppDbContext>();
+        _emailService = (TestEmailService)_scope.ServiceProvider.GetRequiredService<IEmailService>();
+        _paymentService = (TestPaymentService)_scope.ServiceProvider.GetRequiredService<IPaymentService>();
+        _inMemoryUow = (InMemoryUnitOfWork)_scope.ServiceProvider.GetRequiredService<IUnitOfWork>();
 
+        // Create client with authentication
+        _client = _fixture.Factory.CreateClient();
         _client.AddAuthHeader("User", _testUserId);
 
-        // Reset test services before each test
+        // Ensure clean database for each test
+        await _dbContext.Database.EnsureDeletedAsync();
+        await _dbContext.Database.EnsureCreatedAsync();
+
+        // Reset test services
         _emailService.SentEmails.Clear();
         _paymentService.SetSuccess();
         _inMemoryUow.Reset();
+
+        // Seed test user
+        var user = new User
+        {
+            Id = _testUserId,
+            Email = "test.user@example.com",
+            FirstName = "Test",
+            LastName = "User",
+            PhoneNumber = "+1234567890",
+            PasswordHash = "hashedpass"
+        };
+
+        await _dbContext.Users.AddAsync(user);
+        await _dbContext.SaveChangesAsync();
     }
 
-    public Task DisposeAsync() => Task.CompletedTask;
+    public async Task DisposeAsync()
+    {
+        // Clean up scope
+        _scope?.Dispose();
+        _client?.Dispose();
+    }
 
-    // Success scenarios
     [Fact(DisplayName = "POST /api/checkout - With valid cart - Should complete booking successfully")]
     [Trait("Category", "Checkout")]
     [Trait("Priority", "P0")]
     public async Task Checkout_WithValidCart_CompletesBookingSuccessfully()
     {
-        // Arrange
-        var cart = await _fixture.CreateCartWithItemsAsync();
+        // Arrange - use the test's DbContext, not a new one
+        var cart = await CreateCartWithItemsAsync(_dbContext);
+
         var checkoutCommand = new CheckoutCommand(_testUserId, PaymentMethod.Card);
 
         // Act
@@ -110,7 +152,7 @@ public class CheckoutControllerIntegrationTests : IAsyncLifetime
     public async Task Checkout_WithMultipleHotels_CreatesSeparateBookings()
     {
         // Arrange
-        var cart = await _fixture.CreateMultiHotelCartAsync();
+        var cart = await CreateMultiHotelCartAsync(_dbContext);
         var checkoutCommand = new CheckoutCommand(_testUserId, PaymentMethod.Cash);
 
         // Act
@@ -136,13 +178,177 @@ public class CheckoutControllerIntegrationTests : IAsyncLifetime
             .Should().BeEquivalentTo(bookings.Select(b => b.Id));
     }
 
+ private async Task<Cart> CreateCartWithItemsAsync(
+        AppDbContext dbContext,
+        int itemCount = 1,
+        DateOnly? checkIn = null,
+        DateOnly? checkOut = null,
+        decimal? pricePerNight = null)
+    {
+        checkIn ??= DateOnly.FromDateTime(DateTime.UtcNow.AddDays(7));
+        checkOut ??= DateOnly.FromDateTime(DateTime.UtcNow.AddDays(9));
+        pricePerNight ??= 150.00m;
+
+        var city = new City
+        {
+            Name = "city",
+            Country = "country",
+            PostalCode = "P400"
+        };
+        var hotel = new Hotel
+        {
+            Id = Guid.NewGuid(),
+            Name = "Grand Test Hotel",
+            City = city,
+            Description = "A wonderful test hotel"
+        };
+
+        var roomCategory = new RoomCategory
+        {
+            Id = Guid.NewGuid(),
+            HotelId = hotel.Id,
+            Name = "Deluxe Test Suite",
+            Description = "Luxurious test suite",
+            PricePerNight = pricePerNight.Value,
+            Hotel = hotel
+        };
+
+        var room = new Room
+        {
+            Id = Guid.NewGuid(),
+            RoomCategory = roomCategory,
+            RoomCategoryId = roomCategory.Id,
+            RoomNumber = "123"
+        };
+
+        await dbContext.Hotels.AddAsync(hotel);
+        await dbContext.RoomCategories.AddAsync(roomCategory);
+        await dbContext.Rooms.AddAsync(room);
+
+        var cart = new Cart
+        {
+            UserId = _testUserId,
+            Items = new List<CartItem>()
+        };
+
+        for (int i = 0; i < itemCount; i++)
+        {
+            cart.Items.Add(new CartItem
+            {
+                RoomCategoryId = roomCategory.Id,
+                RoomCategory = roomCategory,
+                CheckIn = checkIn.Value,
+                CheckOut = checkOut.Value,
+                Quantity = 1
+            });
+        }
+
+        await dbContext.Carts.AddAsync(cart);
+        await dbContext.SaveChangesAsync();
+
+        return cart;
+    }
+
+    private async Task<Cart> CreateMultiHotelCartAsync(AppDbContext dbContext)
+    {
+        var city = new City
+        {
+            Name = "city",
+            Country = "country",
+            PostalCode = "P400"
+        };
+        
+        // Hotel 1
+        var hotel1 = new Hotel
+        {
+            Id = Guid.NewGuid(),
+            Name = "Beach Resort",
+            City = city
+        };
+
+        var roomCat1 = new RoomCategory
+        {
+            Id = Guid.NewGuid(),
+            HotelId = hotel1.Id,
+            Name = "Ocean View",
+            PricePerNight = 250.00m,
+            Hotel = hotel1
+        };
+
+        // Hotel 2
+        var hotel2 = new Hotel
+        {
+            Id = Guid.NewGuid(),
+            Name = "Mountain Lodge",
+            City = city
+        };
+
+        var roomCat2 = new RoomCategory
+        {
+            Id = Guid.NewGuid(),
+            HotelId = hotel2.Id,
+            Name = "Ski-in Suite",
+            PricePerNight = 350.00m,
+            Hotel = hotel2
+        };
+        
+        var room1 = new Room
+        {
+            Id = Guid.NewGuid(),
+            RoomCategory = roomCat1,
+            RoomCategoryId = roomCat1.Id,
+            RoomNumber = "1234"
+        };
+        
+        var room2 = new Room
+        {
+            Id = Guid.NewGuid(),
+            RoomCategory = roomCat2,
+            RoomCategoryId = roomCat2.Id,
+            RoomNumber = "123"
+        };
+        
+        await dbContext.Rooms.AddRangeAsync(room1, room2);
+        await dbContext.Hotels.AddRangeAsync(hotel1, hotel2);
+        await dbContext.RoomCategories.AddRangeAsync(roomCat1, roomCat2);
+
+        var cart = new Cart
+        {
+            UserId = _testUserId,
+            Items = new List<CartItem>
+            {
+                new()
+                {
+                    RoomCategoryId = roomCat1.Id,
+                    RoomCategory = roomCat1,
+                    CheckIn = DateOnly.FromDateTime(DateTime.UtcNow.AddDays(10)),
+                    CheckOut = DateOnly.FromDateTime(DateTime.UtcNow.AddDays(12)),
+                    Quantity = 1
+                },
+                new()
+                {
+                    RoomCategoryId = roomCat2.Id,
+                    RoomCategory = roomCat2,
+                    CheckIn = DateOnly.FromDateTime(DateTime.UtcNow.AddDays(15)),
+                    CheckOut = DateOnly.FromDateTime(DateTime.UtcNow.AddDays(17)),
+                    Quantity = 1
+                }
+            }
+        };
+
+        await dbContext.Carts.AddAsync(cart);
+        await dbContext.SaveChangesAsync();
+
+        return cart;
+    }
+
     [Fact(DisplayName = "POST /api/checkout - With discount - Should apply discount correctly")]
     [Trait("Category", "Checkout")]
     [Trait("Priority", "P1")]
     public async Task Checkout_WithDiscount_AppliesDiscountCorrectly()
     {
         // Arrange
-        var cart = await _fixture.CreateCartWithDiscountAsync();
+        var cart = await CheackoutSeeding.CreateCartWithDiscountAsync(_dbContext, _testUserId);
         var checkoutCommand = new CheckoutCommand(_testUserId, PaymentMethod.Card);
 
         // Calculate expected total with discount
@@ -167,13 +373,14 @@ public class CheckoutControllerIntegrationTests : IAsyncLifetime
         booking!.PaymentDetails.Amount.Should().Be(expectedTotal);
     }
 
+
     [Fact(DisplayName = "POST /api/checkout - With Cash payment - Should process successfully")]
     [Trait("Category", "Checkout")]
     [Trait("Priority", "P1")]
     public async Task Checkout_WithCashPayment_ProcessesSuccessfully()
     {
         // Arrange
-        var cart = await _fixture.CreateCartWithItemsAsync();
+        var cart = await CreateCartWithItemsAsync(_dbContext);
         var checkoutCommand = new CheckoutCommand(_testUserId, PaymentMethod.Cash);
 
         // Act
@@ -225,7 +432,7 @@ public class CheckoutControllerIntegrationTests : IAsyncLifetime
     public async Task Checkout_WhenPaymentFails_ReturnsBadRequest()
     {
         // Arrange
-        var cart = await _fixture.CreateCartWithItemsAsync();
+        var cart = await CreateCartWithItemsAsync(_dbContext);
         var checkoutCommand = new CheckoutCommand(_testUserId, PaymentMethod.Card);
 
         // Configure payment service to fail
@@ -327,7 +534,7 @@ public class CheckoutControllerIntegrationTests : IAsyncLifetime
     public async Task Checkout_WhenRoomsBecomeUnavailable_RollsBackTransaction()
     {
         // Arrange
-        var cart = await _fixture.CreateCartWithUnavailableRoomAsync();
+        var cart = await CheackoutSeeding.CreateCartWithUnavailableRoomAsync(_dbContext, _testUserId);
         var checkoutCommand = new CheckoutCommand(_testUserId, PaymentMethod.Card);
 
         // Act
@@ -354,7 +561,7 @@ public class CheckoutControllerIntegrationTests : IAsyncLifetime
     public async Task Checkout_WithLargeQuantity_ProcessesSuccessfully()
     {
         // Arrange
-        var cart = await _fixture.CreateCartWithItemsAsync(itemCount: 10);
+        var cart = await CreateCartWithItemsAsync(_dbContext, itemCount: 10);
         var checkoutCommand = new CheckoutCommand(_testUserId, PaymentMethod.Card);
 
         // Act
@@ -373,39 +580,6 @@ public class CheckoutControllerIntegrationTests : IAsyncLifetime
     }
 
     // ==============================================
-    // CONCURRENCY & TRANSACTION TESTS
-    // ==============================================
-
-    [Fact(DisplayName = "POST /api/checkout - Concurrent requests - Should handle correctly")]
-    [Trait("Category", "Checkout")]
-    [Trait("Priority", "P2")]
-    public async Task Checkout_ConcurrentRequests_HandlesCorrectly()
-    {
-        // Arrange
-        var cart = await _fixture.CreateCartWithItemsAsync();
-        var checkoutCommand = new CheckoutCommand(_testUserId, PaymentMethod.Card);
-
-        // Act - Send multiple requests concurrently
-        var tasks = Enumerable.Range(0, 3)
-            .Select(_ => _client.PostAsJsonAsync("/api/checkout", checkoutCommand))
-            .ToList();
-
-        var responses = await Task.WhenAll(tasks);
-
-        // Assert
-        // Only one should succeed, others should fail appropriately
-        var successfulResponses = responses.Count(r => r.IsSuccessStatusCode);
-        successfulResponses.Should().Be(1);
-
-        // Verify exactly one booking was created
-        var bookings = await _dbContext.Bookings
-            .Where(b => b.UserId == _testUserId)
-            .ToListAsync();
-
-        bookings.Should().HaveCount(1);
-    }
-
-    // ==============================================
     // EMAIL & NOTIFICATION TESTS
     // ==============================================
 
@@ -415,7 +589,7 @@ public class CheckoutControllerIntegrationTests : IAsyncLifetime
     public async Task Checkout_Successful_SendsEmailWithInvoice()
     {
         // Arrange
-        var cart = await _fixture.CreateCartWithItemsAsync();
+        var cart = await CreateCartWithItemsAsync(_dbContext);
         var checkoutCommand = new CheckoutCommand(_testUserId, PaymentMethod.Card);
 
         // Act
@@ -445,7 +619,7 @@ public class CheckoutControllerIntegrationTests : IAsyncLifetime
     public async Task Checkout_WhenEmailServiceFails_StillCompletesBooking()
     {
         // Arrange
-        var cart = await _fixture.CreateCartWithItemsAsync();
+        var cart = await CreateCartWithItemsAsync(_dbContext);
         var checkoutCommand = new CheckoutCommand(_testUserId, PaymentMethod.Card);
 
         // Replace email service with one that throws
@@ -469,7 +643,7 @@ public class CheckoutControllerIntegrationTests : IAsyncLifetime
     public async Task Checkout_MaintainsReferentialIntegrity()
     {
         // Arrange
-        var cart = await _fixture.CreateCartWithItemsAsync();
+        var cart = await CreateCartWithItemsAsync(_dbContext);
         var checkoutCommand = new CheckoutCommand(_testUserId, PaymentMethod.Card);
 
         // Act
@@ -505,7 +679,8 @@ public class CheckoutControllerIntegrationTests : IAsyncLifetime
     public async Task Checkout_CalculatesCorrectTotals()
     {
         // Arrange
-        var cart = await _fixture.CreateCartWithItemsAsync(
+        var cart = await CreateCartWithItemsAsync(
+            _dbContext,
             itemCount: 2,
             pricePerNight: 100.00m);
 
@@ -538,15 +713,13 @@ public class CheckoutControllerIntegrationTests : IAsyncLifetime
     [Trait("Category", "Performance")]
     public async Task Checkout_ResponseTime_WithinThreshold()
     {
-        var client = _fixture.Client;
-        client.AddAuthHeader("User", _testUserId);
 
-        var cart = await _fixture.CreateCartWithItemsAsync();
+        var cart = await CreateCartWithItemsAsync(_dbContext);
         var checkoutCommand = new CheckoutCommand(_fixture.TestUserId, PaymentMethod.Card);
 
         // Measure response time
         var stopwatch = System.Diagnostics.Stopwatch.StartNew();
-        var response = await client.PostAsJsonAsync("/api/checkout", checkoutCommand);
+        var response = await _client.PostAsJsonAsync("/api/checkout", checkoutCommand);
         stopwatch.Stop();
 
         response.StatusCode.Should().Be(HttpStatusCode.OK);

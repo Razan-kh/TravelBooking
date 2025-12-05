@@ -13,7 +13,66 @@ using TravelBooking.Domain.Cities.Entities;
 using TravelBooking.Application.Shared.Interfaces;
 
 namespace BookingSystem.IntegrationTests.Checkout.Utils;
+public class CheckoutTestFixture : IAsyncLifetime
+{
+    public ApiTestFactory Factory { get; private set; }
+    public Guid TestUserId { get; private set; }
+    public TestEmailService EmailService { get; private set; } = null!;
+    public TestPaymentService PaymentService { get; private set; } = null!;
+    public TestPdfService PdfService { get; private set; } = null!;
+    public CheckoutTestFixture()
+    {
+        TestUserId = Guid.NewGuid();
+    }
 
+    public async Task InitializeAsync()
+    {
+        EmailService = new TestEmailService();
+        PaymentService = new TestPaymentService();
+        PdfService = new TestPdfService();
+
+        Factory = new ApiTestFactory();
+        Factory.SetInMemoryDbName($"CheckoutTests_{Guid.NewGuid()}");
+
+        // Override external services with test implementations
+        Factory.AddServiceConfiguration(services =>
+        {
+            // Remove existing registrations if they exist
+            var emailDescriptor = services.FirstOrDefault(d => d.ServiceType == typeof(IEmailService));
+            if (emailDescriptor != null) services.Remove(emailDescriptor);
+            
+            var paymentDescriptor = services.FirstOrDefault(d => d.ServiceType == typeof(IPaymentService));
+            if (paymentDescriptor != null) services.Remove(paymentDescriptor);
+            
+            var pdfDescriptor = services.FirstOrDefault(d => d.ServiceType == typeof(IPdfService));
+            if (pdfDescriptor != null) services.Remove(pdfDescriptor);
+
+            // Register test implementations
+            services.AddSingleton<IEmailService, TestEmailService>();
+            services.AddSingleton<IPaymentService, TestPaymentService>();
+            services.AddSingleton<IPdfService, TestPdfService>();
+            
+            // Register InMemoryUnitOfWork
+            services.AddScoped<IUnitOfWork>(provider =>
+            {
+                var context = provider.GetRequiredService<AppDbContext>();
+                return new InMemoryUnitOfWork(context);
+            });
+        });
+
+        // Initialize the factory
+        Factory.Initialize();
+    }
+
+    public async Task DisposeAsync()
+    {
+        if (Factory != null)
+        {
+            await Factory.DisposeAsync();
+        }
+    }
+}
+/*
 public class CheckoutTestFixture : IAsyncLifetime
 {
     public ApiTestFactory Factory { get; private set; } = null!;
@@ -48,9 +107,10 @@ public class CheckoutTestFixture : IAsyncLifetime
             RemoveService<IPdfService>(services);
             RemoveService<IUnitOfWork>(services);
 
-            services.AddSingleton<IEmailService>(EmailService);
-            services.AddSingleton<IPaymentService>(PaymentService);
-            services.AddSingleton<IPdfService>(PdfService);
+            services.AddScoped<IEmailService>(_ => new TestEmailService());
+            services.AddScoped<IPaymentService>(_ => new TestPaymentService());
+            services.AddScoped<IPdfService>(_ => new TestPdfService());
+
             //     services.AddSingleton<IUnitOfWork>(InMemoryUow);
             services.AddScoped<IUnitOfWork>(provider =>
             {
@@ -61,15 +121,15 @@ public class CheckoutTestFixture : IAsyncLifetime
 
         });
 
-        _scope = Factory.Services.CreateScope();
-        DbContext = _scope.ServiceProvider.GetRequiredService<AppDbContext>();
+      //  _scope = Factory.Services.CreateScope();
+     //   DbContext = _scope.ServiceProvider.GetRequiredService<AppDbContext>();
 
         Client = Factory.CreateClient();
         TestUserId = Guid.NewGuid();
-        InMemoryUow = (InMemoryUnitOfWork)_scope.ServiceProvider.GetRequiredService<IUnitOfWork>();
+       // InMemoryUow = (InMemoryUnitOfWork)_scope.ServiceProvider.GetRequiredService<IUnitOfWork>();
 
         // Seed initial test data
-        await SeedTestDataAsync();
+      //  await SeedTestDataAsync();
     }
     
     private async Task SeedTestDataAsync()
@@ -90,6 +150,7 @@ public class CheckoutTestFixture : IAsyncLifetime
     }
 
     public async Task<Cart> CreateCartWithItemsAsync(
+ AppDbContext dbContext,
         int itemCount = 1,
         DateOnly? checkIn = null,
         DateOnly? checkOut = null,
@@ -131,10 +192,9 @@ public class CheckoutTestFixture : IAsyncLifetime
             RoomNumber = "123"
         };
 
-        await DbContext.Hotels.AddAsync(hotel);
-        await DbContext.RoomCategories.AddAsync(roomCategory);
-        await DbContext.Rooms.AddAsync(room);
-
+        await dbContext.Hotels.AddAsync(hotel);
+        await dbContext.RoomCategories.AddAsync(roomCategory);
+     await dbContext.Rooms.AddAsync(room);
 
         var cart = new Cart
         {
@@ -154,8 +214,8 @@ public class CheckoutTestFixture : IAsyncLifetime
             });
         }
 
-        await DbContext.Carts.AddAsync(cart);
-        await DbContext.SaveChangesAsync();
+        await dbContext.Carts.AddAsync(cart);
+        await dbContext.SaveChangesAsync();
 
         return cart;
     }
@@ -389,3 +449,4 @@ public class CheckoutTestFixture : IAsyncLifetime
         }
     }
 }
+*/

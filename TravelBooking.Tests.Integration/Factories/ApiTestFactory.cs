@@ -101,7 +101,7 @@ public class ApiTestFactory : WebApplicationFactory<Program>
 
             // Remove existing services
 
-          
+
             // Add InMemory database with proper configuration
 
             services.AddDbContext<AppDbContext>(options =>
@@ -211,20 +211,10 @@ public class ApiTestFactory : WebApplicationFactory<Program>
             };
         });
     }
-
-    private void ConfigureDefaultMocks()
+        public void Initialize()
     {
-
-        PaymentServiceMock
-            .Setup(x => x.ProcessPaymentAsync(It.IsAny<Guid>(), It.IsAny<PaymentMethod>(), It.IsAny<CancellationToken>()))
-            .ReturnsAsync(Result.Success());
-
-        EmailServiceMock
-            .Setup(x => x.SendBookingConfirmationAsync(It.IsAny<string>(), It.IsAny<Booking>(), It.IsAny<byte[]>(), It.IsAny<CancellationToken>()))
-            .Returns(Task.CompletedTask);
-
-        CartServiceMock
-            .Setup(x => x.GetUserCartAsync(It.IsAny<Guid>(), It.IsAny<CancellationToken>()))
-            .ReturnsAsync((Cart?)null);
+        // This might be called automatically when you create the factory
+        // or you might need to call something like:
+        var _ = Services; // This triggers service provider creation
     }
 }
