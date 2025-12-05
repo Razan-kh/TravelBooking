@@ -16,13 +16,15 @@ using TravelBooking.Tests.Integration.Factories;
 
 namespace TravelBooking.Tests.Integration.Controllers;
 
-public class RoomsControllerIntegrationTests : IClassFixture<ApiTestFactory>
+public class RoomsControllerIntegrationTests : IClassFixture<ApiTestFactory>, IAsyncLifetime
 {
     private readonly ApiTestFactory _factory;
     private readonly HttpClient _client;
     private readonly IFixture _fixture;
     private readonly string _role = "Admin";
     private readonly Guid _adminId = Guid.NewGuid();
+    private IServiceScope _scope;
+    private AppDbContext _db;
 
     public RoomsControllerIntegrationTests(ApiTestFactory factory)
     {
@@ -38,15 +40,41 @@ public class RoomsControllerIntegrationTests : IClassFixture<ApiTestFactory>
         // Don't populate nav props that cause cycles
         _fixture.Customize<Room>(c => c.Without(r => r.Gallery).Without(r => r.RoomCategory).Without(r => r.Bookings));
     }
+    public async Task InitializeAsync()
+    {
+        _scope = _factory.Services.CreateScope();
+        _db = _scope.ServiceProvider.GetRequiredService<AppDbContext>();
 
+        // Ensure clean database
+        await _db.Database.EnsureDeletedAsync();
+        await _db.Database.EnsureCreatedAsync();
+
+        // Clear any existing data
+        //    _dbContext.Rooms.RemoveRange(_dbContext.Rooms);
+        //    _dbContext.RoomCategories.RemoveRange(_dbContext.RoomCategories);
+        //    await _dbContext.SaveChangesAsync();
+    }
+    public async Task DisposeAsync()
+    {
+        // Cleanup
+        if (_db != null)
+        {
+            await _db.Database.EnsureDeletedAsync();
+        }
+
+        _scope?.Dispose();
+        _client?.Dispose();
+       // await _factory.DisposeAsync();
+    }
+    
     // GET /api/rooms -> should return list
     [Fact]
     public async Task GetRooms_AdminAuthenticated_ReturnsOkWithData()
     {
         // Arrange
         _client.AddAuthHeader(_role, _adminId);
-        using var scope = _factory.Services.CreateScope();
-        var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+    //    using var scope = _factory.Services.CreateScope();
+    //    var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
         var roomCategory = _fixture.CreateRoomCategoryMinimal();
         var galleryImage = _fixture.CreateGalleryMinimal();
 
@@ -57,8 +85,8 @@ public class RoomsControllerIntegrationTests : IClassFixture<ApiTestFactory>
             .With(r => r.Gallery, new List<GalleryImage> { galleryImage })
             .Create();
 
-        await db.Rooms.AddAsync(room);
-        await db.SaveChangesAsync();
+        await _db.Rooms.AddAsync(room);
+        await _db.SaveChangesAsync();
 
         // Act
         var resp = await _client.GetAsync("/api/rooms");
@@ -84,7 +112,7 @@ public class RoomsControllerIntegrationTests : IClassFixture<ApiTestFactory>
     // GET /api/rooms/{id} - not found
     [Fact]
     public async Task GetRoomById_NotFound_ReturnsNotFound()
-    { 
+    {
         // Arrange
         _client.AddAuthHeader(_role, _adminId);
         var id = Guid.NewGuid();
@@ -102,7 +130,7 @@ public class RoomsControllerIntegrationTests : IClassFixture<ApiTestFactory>
         // Arrange
         _client.AddAuthHeader(_role, _adminId);
 
-        var db = _factory.Services.GetRequiredService<AppDbContext>();
+    //    var db = _factory.Services.GetRequiredService<AppDbContext>();
 
         var roomCategory = _fixture.Build<RoomCategory>()
         .Without(r => r.Amenities)
@@ -111,15 +139,15 @@ public class RoomsControllerIntegrationTests : IClassFixture<ApiTestFactory>
         .Without(r => r.Rooms)
         .Create();
 
-        db.RoomCategories.Add(roomCategory);
-        await db.SaveChangesAsync();
+        _db.RoomCategories.Add(roomCategory);
+        await _db.SaveChangesAsync();
 
         var room = _fixture.Build<Room>().With(r => r.RoomCategory, roomCategory)
                                         .Without(r => r.Bookings)
                                         .Without(r => r.Gallery)
                                         .Create();
-        await db.Rooms.AddAsync(room);
-        await db.SaveChangesAsync();
+        await _db.Rooms.AddAsync(room);
+        await _db.SaveChangesAsync();
 
         // Act
         var resp = await _client.GetAsync($"/api/rooms/{room.Id}");
@@ -136,8 +164,8 @@ public class RoomsControllerIntegrationTests : IClassFixture<ApiTestFactory>
     {
         // Arrange
         _client.AddAuthHeader(_role, _adminId);
-        using var scope = _factory.Services.CreateScope();
-        var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+     //   using var scope = _factory.Services.CreateScope();
+     //   var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
 
         // Create a minimal CreateRoomDto (adjust shape to your actual DTO)
         var createDto = new CreateRoomDto("201", Guid.NewGuid(), true);
@@ -152,7 +180,7 @@ public class RoomsControllerIntegrationTests : IClassFixture<ApiTestFactory>
         body.Should().NotBeNullOrEmpty();
 
         // Optionally verify DB contains a room with RoomNumber "201"
-        var exists = await db.Rooms.AnyAsync(r => r.RoomNumber == "201");
+        var exists = await _db.Rooms.AnyAsync(r => r.RoomNumber == "201");
         exists.Should().BeTrue();
     }
 
@@ -162,8 +190,8 @@ public class RoomsControllerIntegrationTests : IClassFixture<ApiTestFactory>
     {
         // Arrange
         _client.AddAuthHeader(_role, _adminId);
-        using var scope = _factory.Services.CreateScope();
-        var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+    //    using var scope = _factory.Services.CreateScope();
+    //    var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
 
         var roomCategory = _fixture.Build<RoomCategory>()
             .Without(r => r.Amenities)
@@ -191,8 +219,8 @@ public class RoomsControllerIntegrationTests : IClassFixture<ApiTestFactory>
             }
         };
             
-        db.Rooms.Add(room);
-        await db.SaveChangesAsync();
+        _db.Rooms.Add(room);
+        await _db.SaveChangesAsync();
         // Act
 
         var resp = await _client.PutAsJsonAsync($"/api/rooms/{room.Id}", updateCommand);
@@ -201,7 +229,7 @@ public class RoomsControllerIntegrationTests : IClassFixture<ApiTestFactory>
         resp.StatusCode.Should().Be(HttpStatusCode.NoContent);
 
         // Make sure DB has updated value (use AsNoTracking to avoid tracker issues)
-        var updated = await db.Rooms.AsNoTracking().FirstOrDefaultAsync(r => r.Id == room.Id);
+        var updated = await _db.Rooms.AsNoTracking().FirstOrDefaultAsync(r => r.Id == room.Id);
         updated!.RoomNumber.Should().Be("UpdatedNumber");
     }
 
@@ -211,8 +239,8 @@ public class RoomsControllerIntegrationTests : IClassFixture<ApiTestFactory>
     {
         // Arrange
         _client.AddAuthHeader(_role, _adminId);
-        using var scope = _factory.Services.CreateScope();
-        var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+      //  using var scope = _factory.Services.CreateScope();
+    //    var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
         var roomCategory = _fixture.Build<RoomCategory>()
         .Without(r => r.Amenities)
         .Without(r => r.Hotel)
@@ -220,8 +248,8 @@ public class RoomsControllerIntegrationTests : IClassFixture<ApiTestFactory>
         .Without(r => r.Rooms)
         .Create();
 
-        db.RoomCategories.Add(roomCategory);
-        await db.SaveChangesAsync();
+        _db.RoomCategories.Add(roomCategory);
+        await _db.SaveChangesAsync();
 
         var room = _fixture.Build<Room>().With(r => r.RoomCategory, roomCategory)
                                         .Without(r => r.Bookings)
@@ -229,8 +257,8 @@ public class RoomsControllerIntegrationTests : IClassFixture<ApiTestFactory>
                                         .Create();
 
 
-        db.Rooms.Add(room);
-        await db.SaveChangesAsync();
+        _db.Rooms.Add(room);
+        await _db.SaveChangesAsync();
 
         // Act
         var resp = await _client.DeleteAsync($"/api/rooms/{room.Id}");
@@ -238,7 +266,7 @@ public class RoomsControllerIntegrationTests : IClassFixture<ApiTestFactory>
         // Assert
         resp.StatusCode.Should().Be(HttpStatusCode.NoContent);
 
-        var exists = await db.Rooms
+        var exists = await _db.Rooms
             .AsNoTracking()
             .AnyAsync(r => r.Id == room.Id);
 

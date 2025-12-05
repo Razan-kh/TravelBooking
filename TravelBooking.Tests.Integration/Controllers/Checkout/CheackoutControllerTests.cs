@@ -14,26 +14,13 @@ using TravelBooking.Domain.Hotels.Entities;
 using TravelBooking.Domain.Payments.Enums;
 using TravelBooking.Domain.Rooms.Entities;
 using TravelBooking.Infrastructure.Persistence;
-using TravelBooking.Tests.Integration.Factories;
 using TravelBooking.Tests.Integration.Helpers;
 using Xunit;
 using System.Data;
 using BookingSystem.IntegrationTests.Checkout.Utils;
-using Microsoft.AspNetCore.Mvc.Testing;
 using TravelBooking.Application.Shared.Interfaces;
-using Microsoft.Extensions.DependencyInjection;
-using TravelBooking.Application.Cheackout.Servicies.Interfaces;
-using TravelBooking.Domain.Bookings.Entities;
-using TravelBooking.Domain.Carts.Entities;
-using TravelBooking.Domain.Discounts.Entities;
-using TravelBooking.Domain.Hotels.Entities;
-using TravelBooking.Domain.Rooms.Entities;
 using TravelBooking.Domain.Users.Entities;
-using TravelBooking.Infrastructure.Persistence;
-using TravelBooking.Tests.Integration.Factories;
-using Xunit;
 using TravelBooking.Domain.Cities.Entities;
-using TravelBooking.Application.Shared.Interfaces;
 
 namespace BookingSystem.IntegrationTests.Checkout;
 
