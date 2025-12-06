@@ -16,7 +16,7 @@ using TravelBooking.Tests.Application.Checkout.Utils;
 using Microsoft.Extensions.Logging;
 
 namespace TravelBooking.Tests.Application.Bookings.Handlers;
-/*  ii should remove the comment
+
 public class CheckoutHandlerTests
 {
     private readonly IFixture _fixture;
@@ -129,4 +129,3 @@ public class CheckoutHandlerTests
         _cartServiceMock.Verify(c => c.ClearCartAsync(command.UserId, It.IsAny<CancellationToken>()), Times.Once);
     }
 }
-*/

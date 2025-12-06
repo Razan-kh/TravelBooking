@@ -30,4 +30,8 @@
     <ProjectReference Include="..\TravelBooking.Domain\TravelBooking.Domain.csproj" />
   </ItemGroup>
 
+  <PropertyGroup>
+      <NoWarn>CS1591</NoWarn>
+  </PropertyGroup>
+
 </Project>

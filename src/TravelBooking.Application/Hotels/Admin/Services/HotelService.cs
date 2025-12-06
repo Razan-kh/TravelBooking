@@ -56,6 +56,4 @@ public class HotelService : IHotelService
         if (hotel == null) return;
         await _hotelRepo.DeleteAsync(hotel, ct);
     }
-
-
 }

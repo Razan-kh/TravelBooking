@@ -28,6 +28,7 @@ using TravelBooking.Application.Reviews.Services.Implementations;
 using TravelBooking.Application.Reviews.Services.Interfaces;
 using TravelBooking.Application.Rooms.Admin.Services.Interfaces;
 using TravelBooking.Application.Rooms.Admin.Services.Implementations;
+using TravelBooking.Application.Carts.Commands;
 
 namespace TravelBooking.Application;
 
@@ -76,6 +77,7 @@ public static class DependencyInjection
         services.AddScoped<IReviewService, ReviewService>();
         services.AddScoped<ICartMapper, CartMapper>();
 
+        services.AddScoped<IValidator<AddRoomToCartCommand>, AddRoomToCartCommandValidator>();
 
         // Register Mapperly mappers
         services.AddScoped<ICityMapper, CityMapper>();

@@ -38,7 +38,8 @@ public async Task<Result> AddRoomToCartAsync(
     DateOnly checkOut,
     int quantity,
     CancellationToken ct)
-{
+    {
+        _logger.LogInformation("here");
     if (!await _roomAvailabilityService
         .HasAvailableRoomsAsync(roomCategoryId, checkIn, checkOut, quantity, ct))
     {

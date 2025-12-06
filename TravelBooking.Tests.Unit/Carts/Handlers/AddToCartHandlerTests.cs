@@ -27,24 +27,6 @@ public class AddToCartHandlerTests
     }
 
     [Fact]
-    public async Task Handle_ShouldFail_WhenCheckOutIsBeforeCheckIn()
-    {
-        // Arrange
-        var cmd = new AddRoomToCartCommand(
-            Guid.NewGuid(),
-            DateOnly.FromDateTime(DateTime.Today),
-            DateOnly.FromDateTime(DateTime.Today), // invalid
-            1);
-
-        // Act
-        var result = await _handler.Handle(cmd, default);
-
-        // Assert
-        Assert.False(result.IsSuccess);
-        Assert.Equal("Check-out date must be after check-in date.", result.Error);
-    }
-
-    [Fact]
     public async Task Handle_ShouldCallService_WhenRequestIsValid()
     {
         // Arrange

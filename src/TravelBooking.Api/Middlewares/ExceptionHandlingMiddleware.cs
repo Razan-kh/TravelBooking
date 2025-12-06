@@ -18,6 +18,32 @@ public class ExceptionHandlingMiddleware
         {
             await _next(context);
         }
+        catch (FluentValidation.ValidationException ex)
+        {
+            // Handle validation exceptions
+            _logger.LogWarning(ex, "Validation failed");
+
+            context.Response.StatusCode = StatusCodes.Status400BadRequest;
+            context.Response.ContentType = "application/json";
+
+            var errors = ex.Errors
+                .Select(e => new
+                {
+                    Property = e.PropertyName,
+                    Message = e.ErrorMessage,
+                    ErrorCode = e.ErrorCode
+                })
+                .ToList();
+
+            var response = new
+            {
+                StatusCode = StatusCodes.Status400BadRequest,
+                Message = "Validation failed",
+                Errors = errors
+            };
+
+            await context.Response.WriteAsJsonAsync(response);
+        }
         catch (Exception ex)
         {
             // Log the exception

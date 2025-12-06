@@ -38,4 +38,8 @@
     <ProjectReference Include="..\src\TravelBooking.Api\TravelBooking.Api.csproj" />
   </ItemGroup>
 
+<PropertyGroup>
+    <NoWarn>CS1591</NoWarn>
+</PropertyGroup>
+
 </Project>

@@ -16,9 +16,6 @@ public class AddToCartHandler : IRequestHandler<AddRoomToCartCommand, Result>
 
     public async Task<Result> Handle(AddRoomToCartCommand request, CancellationToken ct)
     {
-        if (request.CheckOut <= request.CheckIn)
-            return Result.Failure("Check-out date must be after check-in date.");
-
         return await _cartService.AddRoomToCartAsync(
             request.UserId,
             request.RoomCategoryId,

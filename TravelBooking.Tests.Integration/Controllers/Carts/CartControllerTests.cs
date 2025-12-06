@@ -8,6 +8,8 @@ using Microsoft.Extensions.DependencyInjection;
 using TravelBooking.Application.Carts.Commands;
 using TravelBooking.Application.Carts.DTOs;
 using TravelBooking.Domain.Carts.Entities;
+using TravelBooking.Domain.Hotels.Entities;
+using TravelBooking.Domain.Rooms.Entities;
 using TravelBooking.Infrastructure.Persistence;
 using TravelBooking.Tests.Integration.Extensions;
 using TravelBooking.Tests.Integration.Factories;
@@ -92,7 +94,25 @@ public class CartControllerTests : IClassFixture<ApiTestFactory>, IDisposable
     {
         // Arrange
         var testUserId = Guid.NewGuid();
-
+    var hotel = new Hotel
+    {
+        Id = Guid.NewGuid(),
+        Name = "Test Hotel"
+    };
+    
+    // Create a REAL room category that exists in the database
+    var roomCategory = new RoomCategory
+    {
+        Id = Guid.NewGuid(),
+        HotelId = hotel.Id,
+        Name = "Test Room Category",
+        PricePerNight = 100.00m
+    };
+    
+    await _dbContext.Hotels.AddAsync(hotel);
+    await _dbContext.RoomCategories.AddAsync(roomCategory);
+        await _dbContext.SaveChangesAsync();
+    
         var command = new AddRoomToCartCommand(
             Guid.NewGuid(),
             DateOnly.FromDateTime(DateTime.UtcNow.AddDays(3)), // CheckIn later
