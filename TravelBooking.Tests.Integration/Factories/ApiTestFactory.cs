@@ -16,6 +16,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using TravelBooking.Application.Cheackout.Servicies.Interfaces;
 using TravelBooking.Application.Carts.Services.Interfaces;
+using Microsoft.AspNetCore.TestHost;
 
 namespace TravelBooking.Tests.Integration.Factories;
 
@@ -48,7 +49,7 @@ public class ApiTestFactory : WebApplicationFactory<Program>
             logging.SetMinimumLevel(LogLevel.Trace);
         });
 
-        builder.ConfigureServices(services =>
+        builder.ConfigureTestServices(services =>
         {
             // Remove existing DbContext registrations 
             RemoveService<DbContextOptions<AppDbContext>>(services);
@@ -108,11 +109,16 @@ public class ApiTestFactory : WebApplicationFactory<Program>
         RemoveService<IPasswordHasher>(services);
 
         var passwordHasherMock = new Mock<IPasswordHasher>();
-        passwordHasherMock.Setup(ph => ph.Verify("hashedpass", "hashedpass"))
-                        .Returns(true);
-        passwordHasherMock.Setup(ph => ph.Verify(It.IsAny<string>(), It.IsAny<string>()))
-                        .Returns(false);
 
+        passwordHasherMock.Setup(ph =>
+                ph.Verify(It.IsAny<string>(), It.IsAny<string>()))
+            .Returns(false);
+
+        passwordHasherMock.Setup(ph =>
+                ph.Verify(It.Is<string>(h => h == "hashedpass"),
+                        It.Is<string>(p => p == "hashedpass")))
+            .Returns(true);
+            
         services.AddScoped(_ => passwordHasherMock.Object);
     }
 
