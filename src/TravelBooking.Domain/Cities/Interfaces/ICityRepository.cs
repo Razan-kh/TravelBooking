@@ -1,5 +1,6 @@
-using TravelBooking.Domain.Cities;
 using TravelBooking.Domain.Cities.Entities;
+
+namespace TravelBooking.Domain.Cities.Interfaces;
 
 public interface ICityRepository
 {

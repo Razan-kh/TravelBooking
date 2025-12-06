@@ -9,8 +9,6 @@ using Xunit;
 using TravelBooking.Tests.Integration.Factories;
 using TravelBooking.Domain.Images.Entities;
 using TravelBooking.Tests.Integration.Extensions;
-using Microsoft.Extensions.Logging;
-using Moq;
 
 namespace TravelBooking.Tests.Integration.Repositories;
 
@@ -18,7 +16,6 @@ public class RoomRepositoryTests
 {
     private readonly ApiTestFactory _factory;
     private readonly IFixture _fixture;
-    private readonly ILogger<RoomRepository> _logger;
 
     public RoomRepositoryTests()
     {

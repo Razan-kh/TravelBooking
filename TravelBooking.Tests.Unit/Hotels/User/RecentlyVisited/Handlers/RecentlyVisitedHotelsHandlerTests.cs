@@ -2,11 +2,11 @@ using AutoFixture;
 using AutoFixture.AutoMoq;
 using FluentAssertions;
 using Moq;
+using TravelBooking.Application.Hotels.User.Services.Interfaces;
 using TravelBooking.Application.RecentlyVisited.Dtos;
 using TravelBooking.Application.RecentlyVisited.Handlers;
 using TravelBooking.Application.RecentlyVisited.Queries;
 using TravelBooking.Application.Shared.Results;
-using TravelBooking.Application.ViewingHotels.Services.Interfaces;
 
 namespace TravelBooking.Tests.RecentlyVisited;
 

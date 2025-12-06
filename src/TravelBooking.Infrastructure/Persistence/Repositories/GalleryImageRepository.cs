@@ -1,7 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using TravelBooking.Domain.Images.Entities;
 using TravelBooking.Domain.Images.interfaces;
-using TravelBooking.Infrastructure.Persistence;
 
 namespace TravelBooking.Infrastructure.Persistence.Repositories;
 
@@ -44,20 +43,4 @@ public class GalleryImageRepository : IGalleryImageRepository
         _context.GalleryImages.Remove(image);
         await _context.SaveChangesAsync(ct);
     }
-/*
-    public async Task SetPrimaryImageAsync(Guid roomId, Guid imageId, CancellationToken ct)
-    {
-        // Reset all images to non-primary
-        var roomImages = await _context.GalleryImages
-            .Where(img => img.RoomId == roomId)
-            .ToListAsync(ct);
-
-        foreach (var image in roomImages)
-        {
-            image.IsPrimary = image.Id == imageId;
-        }
-
-        await _context.SaveChangesAsync(ct);
-    }
-    */
 }

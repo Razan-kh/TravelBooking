@@ -3,11 +3,12 @@ using AutoFixture.AutoMoq;
 using FluentAssertions;
 using Moq;
 using TravelBooking.Application.ViewingHotels.Queries;
-using TravelBooking.Application.ViewingHotels.Services.Interfaces;
 using TravelBooking.Application.ViewingHotels.Handlers;
 using TravelBooking.Application.DTOs;
 using TravelBooking.Application.Rooms.User.Servicies.Interfaces;
 using TravelBooking.Application.Reviews.Services.Interfaces;
+using TravelBooking.Application.Hotels.User.Services.Interfaces;
+using TravelBooking.Application.Reviews.DTOs;
 
 namespace TravelBooking.Tests.Handlers;
 

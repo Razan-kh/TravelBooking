@@ -1,16 +1,13 @@
 using TravelBooking.Application.Cheackout.Commands;
 using TravelBooking.Application.Cheackout.Servicies.Interfaces;
 using TravelBooking.Domain.Bookings.Entities;
-using TravelBooking.Domain.Bookings.Repositories;
+using TravelBooking.Domain.Bookings.Interfaces;
 using TravelBooking.Domain.Carts.Entities;
 using TravelBooking.Domain.Payments.Entities;
 using TravelBooking.Domain.Rooms.Entities;
-using TravelBooking.Application.Cheackout.Servicies;
-using TravelBooking.Domain.Payments.Enums;
 using TravelBooking.Application.Carts.Services.Interfaces;
 using TravelBooking.Application.Shared.Interfaces;
 using System.Data;
-using TravelBooking.Application.Rooms.User.Servicies.Implementations;
 
 namespace TravelBooking.Application.Cheackout.Servicies.Implementations;
 
@@ -20,7 +17,7 @@ public class BookingService : IBookingService
     private readonly IDiscountService _discountService;
     private readonly IRoomAvailabilityService _availabilityService;
     private readonly IUnitOfWork _unitOfWork;
-    
+
     public BookingService(
         IBookingRepository bookingRepository,
         IDiscountService discountService,
@@ -52,7 +49,7 @@ public class BookingService : IBookingService
 
                 foreach (var item in items)
                 {
-                    bool available = await _availabilityService.HasAvailableRoomsAsync(
+                    var available = await _availabilityService.HasAvailableRoomsAsync(
                         item.RoomCategoryId,
                         item.CheckIn,
                         item.CheckOut,

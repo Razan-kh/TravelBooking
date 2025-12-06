@@ -1,5 +1,4 @@
 using TravelBooking.Application.DTOs;
-using TravelBooking.Domain.Hotels.Entities;
 
 namespace TravelBooking.Application.Rooms.User.Servicies.Interfaces;
 

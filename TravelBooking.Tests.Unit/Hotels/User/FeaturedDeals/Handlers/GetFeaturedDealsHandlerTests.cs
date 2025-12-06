@@ -5,7 +5,7 @@ using Moq;
 using TravelBooking.Application.FeaturedDeals.Dtos;
 using TravelBooking.Application.FeaturedDeals.Handlers;
 using TravelBooking.Application.FeaturedDeals.Queries;
-using TravelBooking.Application.ViewingHotels.Services.Interfaces;
+using TravelBooking.Application.Hotels.User.Services.Interfaces;
 using TravelBooking.Application.Shared.Results;
 
 namespace TravelBooking.Tests.FeaturedDeals;

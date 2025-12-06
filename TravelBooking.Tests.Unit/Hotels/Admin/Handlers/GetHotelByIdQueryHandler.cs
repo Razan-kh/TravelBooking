@@ -1,10 +1,10 @@
 using AutoFixture;
 using FluentAssertions;
 using Moq;
+using TravelBooking.Application.Hotels.Admin.Handlers;
+using TravelBooking.Application.Hotels.Admin.Servicies.Interfaces;
 using TravelBooking.Application.Hotels.Dtos;
-using TravelBooking.Application.Hotels.Handlers;
 using TravelBooking.Application.Hotels.Queries;
-using TravelBooking.Application.Hotels.Servicies;
 
 namespace TravelBooking.Tests.Hotels.Handlers;
 

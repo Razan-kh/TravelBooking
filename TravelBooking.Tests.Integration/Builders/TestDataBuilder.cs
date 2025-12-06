@@ -19,7 +19,6 @@ public class TestDataBuilder
     {
         _fixture = new Fixture();
         
-        // Remove throwing recursion behavior and add omit behavior
         _fixture.Behaviors.OfType<ThrowingRecursionBehavior>().ToList()
             .ForEach(b => _fixture.Behaviors.Remove(b));
         _fixture.Behaviors.Add(new OmitOnRecursionBehavior());

@@ -1,30 +1,15 @@
-using AutoFixture;
-using FluentAssertions;
-using Microsoft.Extensions.DependencyInjection;
-using System.Net;
 using System.Net.Http.Json;
 using TravelBooking.Application.Users.DTOs;
 using TravelBooking.Infrastructure.Persistence;
-using TravelBooking.Tests.Integration.Extensions;
-using Xunit;
 using TravelBooking.Tests.Integration.Factories;
-
-namespace TravelBooking.Tests.Integration.Controllers;
-
 using System.Net;
 using AutoFixture;
 using FluentAssertions;
-using global::TravelBooking.Domain.Users.Entities;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc.Testing;
-using Microsoft.EntityFrameworkCore;
+using TravelBooking.Domain.Users.Entities;
 using Microsoft.Extensions.DependencyInjection;
-using TravelBooking.Application.Interfaces.Security;
-using TravelBooking.Application.Users.Services.Interfaces;
-using TravelBooking.Domain.Users.Repositories;
 using Xunit;
 
-//namespace TravelBooking.IntegrationTests.Auth;
+namespace TravelBooking.Tests.Integration.Controllers.Authentication;
 
 public class AuthControllerIntegrationTests : IClassFixture<ApiTestFactory>
 {

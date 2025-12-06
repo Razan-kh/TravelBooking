@@ -3,7 +3,7 @@ using TravelBooking.Application.FeaturedDeals.Dtos;
 using TravelBooking.Application.RecentlyVisited.Dtos;
 using TravelBooking.Application.Shared.Results;
 
-namespace TravelBooking.Application.ViewingHotels.Services.Interfaces;
+namespace TravelBooking.Application.Hotels.User.Services.Interfaces;
 
 public interface IHotelService
 {

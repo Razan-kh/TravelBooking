@@ -1,11 +1,10 @@
 using TravelBooking.Application.Cities.Dtos;
 using TravelBooking.Application.Cities.Interfaces.Servicies;
 using TravelBooking.Application.Cities.Mappers.Interfaces;
-using TravelBooking.Application.Mappers.Interfaces;
 using TravelBooking.Application.Shared.Results;
 using TravelBooking.Application.TrendingCities.Dtos;
 using TravelBooking.Application.TrendingCities.Mappers;
-using TravelBooking.Domain.Cities;
+using TravelBooking.Domain.Cities.Interfaces;
 
 namespace TravelBooking.Application.Cities.Servicies.Implementations;
 

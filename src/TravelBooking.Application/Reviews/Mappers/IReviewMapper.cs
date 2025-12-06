@@ -1,6 +1,5 @@
-using TravelBooking.Application.DTOs;
+using TravelBooking.Application.Reviews.DTOs;
 using TravelBooking.Domain.Reviews.Entities;
-using Riok.Mapperly.Abstractions;
 
 namespace TravelBooking.Application.ViewingHotels.Mappers;
 

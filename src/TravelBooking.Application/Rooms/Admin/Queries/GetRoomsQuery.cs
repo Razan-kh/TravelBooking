@@ -1,5 +1,4 @@
 using MediatR;
-using TravelBooking.Application.Cities.Dtos;
 using TravelBooking.Application.Rooms.Dtos;
 using TravelBooking.Application.Shared.Results;
 

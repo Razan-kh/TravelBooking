@@ -1,6 +1,8 @@
 using FluentValidation;
 using TravelBooking.Application.Hotels.Commands;
 
+namespace TravelBooking.Application.Hotels.Validators;
+
 public class CreateHotelCommandValidator : AbstractValidator<CreateHotelCommand>
 {
     public CreateHotelCommandValidator()

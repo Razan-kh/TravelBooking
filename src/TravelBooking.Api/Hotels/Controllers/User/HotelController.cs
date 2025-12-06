@@ -19,8 +19,7 @@ public class HotelController : ControllerBase
     public async Task<IActionResult> GetHotelDetails(Guid id, DateOnly? checkIn, DateOnly? checkOut)
     {
         var res = await _mediator.Send(new GetHotelDetailsQuery(id, checkIn, checkOut));
-        if (!res.IsSuccess) return StatusCode(res.HttpStatusCode ?? 400, res.Error);
-        return Ok(res.Value);
+        return !res.IsSuccess ? StatusCode(res.HttpStatusCode ?? 400, res.Error) : (IActionResult)Ok(res.Value);
     }
 
     [HttpGet("recently-visited/{userId}")]

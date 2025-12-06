@@ -1,7 +1,4 @@
-using System;
-using System.Collections.Generic;
-
-namespace TravelBooking.Application.DTOs;
+namespace TravelBooking.Application.Hotels.DTOs;
 
 public class HotelCardDto
 {

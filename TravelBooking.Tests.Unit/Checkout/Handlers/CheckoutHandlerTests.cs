@@ -3,17 +3,17 @@ using AutoFixture;
 using AutoFixture.AutoMoq;
 using FluentAssertions;
 using Moq;
-using TravelBooking.Application.Bookings.Commands;
 using TravelBooking.Application.Cheackout.Commands;
 using TravelBooking.Domain.Carts.Entities;
 using TravelBooking.Domain.Bookings.Entities;
 using TravelBooking.Application.Carts.Services.Interfaces;
 using TravelBooking.Application.Shared.Results;
-using TravelBooking.Domain.Users.Repositories;
+using TravelBooking.Domain.Users.Interfaces;
 using TravelBooking.Application.Shared.Interfaces;
 using TravelBooking.Application.Cheackout.Servicies.Interfaces;
 using TravelBooking.Tests.Application.Checkout.Utils;
 using Microsoft.Extensions.Logging;
+using TravelBooking.Application.Cheackouts.Handlers;
 
 namespace TravelBooking.Tests.Application.Bookings.Handlers;
 

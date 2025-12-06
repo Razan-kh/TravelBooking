@@ -1,9 +1,8 @@
-using Microsoft.EntityFrameworkCore;
 using Sieve.Services;
+using TravelBooking.Application.Hotels.Admin.DTOs;
 using TravelBooking.Application.Queries;
 using TravelBooking.Application.Searching.Servicies.Interfaces;
 using TravelBooking.Application.Utils;
-using TravelBooking.Domain.Hotels;
 using TravelBooking.Domain.Hotels.Entities;
 using TravelBooking.Domain.Hotels.Interfaces.Repositories;
 using TravelBooking.Domain.Searching.Entities;

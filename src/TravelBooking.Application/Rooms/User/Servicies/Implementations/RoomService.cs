@@ -36,7 +36,6 @@ public class RoomService : IRoomService
             }
             else
             {
-                // CASE 2: Dates provided → calculate availability
                 dto.AvailableRooms = await _repo.CountAvailableRoomsAsync(
                     rc.Id,
                     checkIn.Value,

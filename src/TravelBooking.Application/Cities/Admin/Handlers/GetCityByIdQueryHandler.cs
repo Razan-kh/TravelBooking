@@ -1,11 +1,9 @@
 using MediatR;
-using TravelBooking.Application.Cities.Commands;
 using TravelBooking.Application.Cities.Dtos;
 using TravelBooking.Application.Cities.Interfaces.Servicies;
 using TravelBooking.Application.Cities.Mappers.Interfaces;
-using TravelBooking.Application.Cities.Servicies.Implementations;
-using TravelBooking.Application.Mappers.Interfaces;
 using TravelBooking.Application.Shared.Results;
+using TravelBooking.Application.Cities.Admin.Queries;
 
 namespace TravelBooking.Application.Cities.Handlers;
 

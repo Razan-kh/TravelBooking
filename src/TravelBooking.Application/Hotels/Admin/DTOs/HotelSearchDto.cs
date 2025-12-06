@@ -1,3 +1,5 @@
+namespace TravelBooking.Application.Hotels.Admin.DTOs;
+
 public class HotelCardDto
 {
     public Guid Id { get; set; }

@@ -1,9 +1,9 @@
 using MediatR;
+using TravelBooking.Application.Hotels.Admin.Servicies.Interfaces;
 using TravelBooking.Application.Hotels.Commands;
-using TravelBooking.Application.Hotels.Servicies;
 using TravelBooking.Application.Shared.Results;
 
-namespace TravelBooking.Application.Hotels.Handlers;
+namespace TravelBooking.Application.Hotels.Admin.Handlers;
 
 public class DeleteHotelCommandHandler : IRequestHandler<DeleteHotelCommand, Result>
 {

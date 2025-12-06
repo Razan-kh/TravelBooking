@@ -1,3 +1,4 @@
+using TravelBooking.Application.Images.DTOs;
 using TravelBooking.Domain.Rooms.Enums;
 
 namespace TravelBooking.Application.DTOs;

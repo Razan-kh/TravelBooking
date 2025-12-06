@@ -1,6 +1,8 @@
 using FluentValidation;
 using TravelBooking.Application.Cities.Dtos;
 
+namespace TravelBooking.Application.Cities.Validators;
+
 public class UpdateCityDtoValidator : AbstractValidator<UpdateCityDto>
 {
     public UpdateCityDtoValidator()

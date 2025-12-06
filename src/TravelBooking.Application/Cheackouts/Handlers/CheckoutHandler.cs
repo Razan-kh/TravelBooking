@@ -3,11 +3,11 @@ using TravelBooking.Application.Shared.Results;
 using TravelBooking.Application.Cheackout.Commands;
 using TravelBooking.Application.Carts.Services.Interfaces;
 using TravelBooking.Application.Cheackout.Servicies.Interfaces;
-using TravelBooking.Domain.Users.Repositories;
+using TravelBooking.Domain.Users.Interfaces;
 using TravelBooking.Application.Shared.Interfaces;
 using Microsoft.Extensions.Logging;
 
-namespace TravelBooking.Application.Bookings.Commands;
+namespace TravelBooking.Application.Cheackouts.Handlers;
 
 public class CheckoutHandler : IRequestHandler<CheckoutCommand, Result>
 {
@@ -18,7 +18,7 @@ public class CheckoutHandler : IRequestHandler<CheckoutCommand, Result>
     private readonly IEmailService _emailService;
     private readonly IUserRepository _userRepository;
     private readonly IUnitOfWork _unitOfWork;
-    private readonly ILogger <CheckoutHandler> _logger;
+    private readonly ILogger<CheckoutHandler> _logger;
 
     public CheckoutHandler(
         ICartService cartService,
@@ -68,8 +68,9 @@ public class CheckoutHandler : IRequestHandler<CheckoutCommand, Result>
             await _emailService.SendBookingConfirmationAsync(
                 user!.Email,
                 booking,
-                pdf
-            );   
+                pdf,
+                ct
+            );
         }
 
         await _cartService.ClearCartAsync(request.UserId, ct);

@@ -7,6 +7,7 @@ using TravelBooking.Application.Cities.Interfaces.Servicies;
 using TravelBooking.Domain.Cities.Entities;
 using TravelBooking.Application.Cities.Mappers.Interfaces;
 using TravelBooking.Tests.Shared;
+using TravelBooking.Application.Cities.Admin.Queries;
 
 namespace TravelBooking.Tests.Cities.Admin.Handlers;
 

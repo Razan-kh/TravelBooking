@@ -566,10 +566,6 @@ public class CheckoutControllerIntegrationTests : IAsyncLifetime
         booking!.Rooms.Should().HaveCount(totalRooms);
     }
 
-    // ==============================================
-    // EMAIL & NOTIFICATION TESTS
-    // ==============================================
-
     [Fact(DisplayName = "POST /api/checkout - Successful - Should send email with invoice")]
     [Trait("Category", "Checkout")]
     [Trait("Priority", "P1")]
@@ -711,7 +707,7 @@ public class CheckoutControllerIntegrationTests : IAsyncLifetime
 
         response.StatusCode.Should().Be(HttpStatusCode.OK);
 
-        // Assert response time is reasonable (adjust threshold as needed)
+        // Assert response time is reasonable 
         stopwatch.ElapsedMilliseconds.Should().BeLessThan(2000); // 2 seconds
     }
 }

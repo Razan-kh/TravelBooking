@@ -1,9 +1,6 @@
-using System;
-using System.Threading.Tasks;
-using TravelBooking.Domain.Users.Entities;
 using TravelBooking.Domain.Users.Entities;
 
-namespace TravelBooking.Domain.Users.Repositories;
+namespace TravelBooking.Domain.Users.Interfaces;
 
 public interface IUserRepository
 {

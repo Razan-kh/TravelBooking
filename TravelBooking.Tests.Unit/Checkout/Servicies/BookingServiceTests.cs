@@ -7,7 +7,7 @@ using Moq;
 using TravelBooking.Application.Cheackout.Commands;
 using TravelBooking.Application.Cheackout.Servicies.Implementations;
 using TravelBooking.Domain.Bookings.Entities;
-using TravelBooking.Domain.Bookings.Repositories;
+using TravelBooking.Domain.Bookings.Interfaces;
 using TravelBooking.Application.Cheackout.Servicies.Interfaces;
 using TravelBooking.Application.Carts.Services.Interfaces;
 using TravelBooking.Application.Shared.Interfaces;

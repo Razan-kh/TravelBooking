@@ -1,5 +1,4 @@
-   using Microsoft.AspNetCore.Http;
-using  TravelBooking.Domain.Shared.Interfaces;
+using Microsoft.AspNetCore.Http;
 
 namespace TravelBooking.Application.Images.Servicies;
 

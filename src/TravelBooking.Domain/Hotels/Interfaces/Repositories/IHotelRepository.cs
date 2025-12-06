@@ -1,5 +1,3 @@
-using TravelBooking.Domain.Cities.Entities;
-using TravelBooking.Domain.Hotels;
 using TravelBooking.Domain.Hotels.Entities;
 
 namespace TravelBooking.Domain.Hotels.Interfaces.Repositories;

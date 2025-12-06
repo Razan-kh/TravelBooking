@@ -20,13 +20,10 @@ namespace TravelBooking.Tests.Integration.Controllers;
 
 public class CartControllerTests : IClassFixture<ApiTestFactory>, IDisposable
 {
-    private readonly DbContextOptions<AppDbContext> _dbContextOptions;
-
     private AppDbContext _dbContext;
     private readonly Fixture _fixture;
     private readonly WebApplicationFactory<Program> _factory;
     private readonly string _role = "User";
-    private readonly Guid _userId = Guid.NewGuid();
     private HttpClient _client;
 
     public CartControllerTests(ApiTestFactory factory)

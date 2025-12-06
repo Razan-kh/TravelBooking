@@ -1,3 +1,6 @@
+using TravelBooking.Application.Images.DTOs;
+using TravelBooking.Application.Reviews.DTOs;
+
 namespace TravelBooking.Application.DTOs;
 
 public class HotelDetailsDto

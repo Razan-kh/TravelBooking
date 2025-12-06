@@ -1,4 +1,4 @@
-namespace TravelBooking.Domain.Images.Dtos;
+namespace TravelBooking.Application.Images.Dtos;
 
 public record ImageResponseDto(
     Guid Id,

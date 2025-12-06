@@ -1,7 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
 using MediatR;
-using TravelBooking.Application.Cities.Commands;
-using TravelBooking.Application.Cities.Dtos;
 using Microsoft.AspNetCore.Authorization;
 using TravelBooking.Application.TrendingCities.Queries;
 

@@ -3,8 +3,7 @@ using MediatR;
 using TravelBooking.Application.Rooms.Queries;
 using TravelBooking.Application.Rooms.Commands;
 using Microsoft.AspNetCore.Authorization;
-using TravelBooking.Application.Rooms.Commands;
-using TravelBooking.Domain.Images.Dtos;
+using TravelBooking.Application.Images.Dtos;
 
 namespace TravelBooking.Api.Rooms.Controllers;
 

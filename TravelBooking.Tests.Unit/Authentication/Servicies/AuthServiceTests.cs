@@ -3,7 +3,7 @@ using AutoFixture.AutoMoq;
 using FluentAssertions;
 using Moq;
 using TravelBooking.Application.Users.Services.Implementations;
-using TravelBooking.Domain.Users.Repositories;
+using TravelBooking.Domain.Users.Interfaces;
 using TravelBooking.Domain.Users.Entities;
 using TravelBooking.Application.Interfaces.Security;
 
@@ -126,6 +126,7 @@ public class AuthServiceTests
 
         // Assert
         result.IsSuccess.Should().BeFalse();
-        result.Error.Should().Be("Invalid credentials");
+        result.ErrorCode.Should().Be("SYSTEM_ERROR");
+        result.Error.Should().Be("System error");
     }
 }

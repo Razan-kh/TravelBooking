@@ -3,10 +3,10 @@ using FluentAssertions;
 using Moq;
 using TravelBooking.Domain.Reviews.Entities;
 using TravelBooking.Domain.Reviews.Repositories;
-using TravelBooking.Application.DTOs;
 using TravelBooking.Tests.Carts.TestHelpers;
 using TravelBooking.Application.Reviews.Services.Implementations;
 using TravelBooking.Application.Hotels.User.ViewingHotels.Mappers.Interfaces;
+using TravelBooking.Application.Reviews.DTOs;
 
 namespace TravelBooking.Tests.Services;
 

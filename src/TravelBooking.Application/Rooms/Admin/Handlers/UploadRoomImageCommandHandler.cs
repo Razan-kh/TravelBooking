@@ -1,10 +1,9 @@
 using MediatR;
 using Microsoft.Extensions.Logging;
+using TravelBooking.Application.Images.Dtos;
 using TravelBooking.Application.Rooms.Admin.Services.Interfaces;
 using TravelBooking.Application.Rooms.Commands;
 using TravelBooking.Application.Shared.Results;
-using TravelBooking.Domain.Images.Dtos;
-using TravelBooking.Domain.Rooms.Entities;
 
 namespace TravelBooking.Application.Rooms.Handlers;
 

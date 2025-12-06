@@ -1,5 +1,5 @@
 using TravelBooking.Application.DTOs;
-using TravelBooking.Application.ViewingHotels.Services.Interfaces;
+using TravelBooking.Application.Hotels.User.Services.Interfaces;
 using TravelBooking.Domain.Hotels.Interfaces.Repositories;
 using TravelBooking.Application.FeaturedDeals.Dtos;
 using TravelBooking.Application.FeaturedDeals.Mappers;
@@ -8,7 +8,7 @@ using TravelBooking.Application.RecentlyVisited.Mappers;
 using TravelBooking.Application.Shared.Results;
 using TravelBooking.Application.Hotels.User.ViewingHotels.Mappers.Interfaces;
 
-namespace TravelBooking.Application.ViewingHotels.Services.Implementations;
+namespace TravelBooking.Application.Hotels.User.Services.Implementations;
 
 public class HotelService : IHotelService
 {

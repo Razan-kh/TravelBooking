@@ -7,6 +7,7 @@ using TravelBooking.Application.TrendingCities.Dtos;
 using TravelBooking.Application.TrendingCities.Mappers;
 using TravelBooking.Domain.Cities.Entities;
 using TravelBooking.Application.Cities.Mappers.Interfaces;
+using TravelBooking.Domain.Cities.Interfaces;
 
 namespace TravelBooking.Tests.TrendingCities;
 

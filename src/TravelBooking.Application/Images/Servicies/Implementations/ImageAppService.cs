@@ -1,7 +1,7 @@
-using Microsoft.AspNetCore.Http;
+using TravelBooking.Application.Images.Servicies.Interfaces;
 using  TravelBooking.Domain.Shared.Interfaces;
 
-namespace TravelBooking.Application.Images.Servicies;
+namespace TravelBooking.Application.Images.Servicies.Implementations;
 
 public class ImageAppService : IImageAppService
 {

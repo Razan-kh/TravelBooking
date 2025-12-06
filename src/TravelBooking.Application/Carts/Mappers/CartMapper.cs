@@ -4,7 +4,7 @@ using TravelBooking.Domain.Carts.Entities;
 
 namespace TravelBooking.Application.Carts.Mappers;
 
-[Mapper]
+[Mapper(RequiredMappingStrategy = RequiredMappingStrategy.None)]
 public partial class CartMapper : ICartMapper
 {
     public partial CartItemDto Map(CartItem cartItem);

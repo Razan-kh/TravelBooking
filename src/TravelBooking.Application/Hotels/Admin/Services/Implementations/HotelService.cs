@@ -1,13 +1,9 @@
+using TravelBooking.Application.Hotels.Admin.Servicies.Interfaces;
 using TravelBooking.Application.Hotels.Dtos;
 using TravelBooking.Application.Hotels.Mappers.Interfaces;
-using TravelBooking.Application.Mappers.Interfaces;
-using TravelBooking.Application.Shared.Results;
-using TravelBooking.Application.TrendingCities.Dtos;
-using TravelBooking.Application.TrendingCities.Mappers;
-using TravelBooking.Domain.Hotels.Entities;
 using TravelBooking.Domain.Hotels.Interfaces.Repositories;
 
-namespace TravelBooking.Application.Hotels.Servicies;
+namespace TravelBooking.Application.Hotels.Admin.Servicies.Implementations;
 
 public class HotelService : IHotelService
 {

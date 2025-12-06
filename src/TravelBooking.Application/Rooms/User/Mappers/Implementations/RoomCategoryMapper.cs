@@ -5,7 +5,7 @@ using TravelBooking.Domain.Rooms.Entities;
 
 namespace TravelBooking.Application.Rooms.User.Mappers.Implementations;
 
-[Mapper]
+[Mapper(RequiredMappingStrategy = RequiredMappingStrategy.None)]
 public partial class RoomCategoryMapper : IRoomCategoryMapper
 {
     public partial RoomCategoryDto Map(RoomCategory category);

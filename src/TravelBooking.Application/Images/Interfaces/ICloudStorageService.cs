@@ -1,5 +1,3 @@
-using Microsoft.AspNetCore.Http;
-
 namespace TravelBooking.Domain.Shared.Interfaces;
 
 public interface ICloudStorageService

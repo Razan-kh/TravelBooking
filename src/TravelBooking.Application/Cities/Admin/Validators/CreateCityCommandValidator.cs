@@ -1,6 +1,7 @@
 using FluentValidation;
 using TravelBooking.Application.Cities.Commands;
 
+namespace TravelBooking.Application.Cities.Validators;
 
 public class CreateCityCommandValidator : AbstractValidator<CreateCityCommand>
 {

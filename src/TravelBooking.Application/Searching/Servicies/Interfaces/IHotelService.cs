@@ -1,3 +1,4 @@
+using TravelBooking.Application.Hotels.Admin.DTOs;
 using TravelBooking.Application.Queries;
 
 namespace TravelBooking.Application.Searching.Servicies.Interfaces;

@@ -1,4 +1,4 @@
-using TravelBooking.Application.DTOs;
+using TravelBooking.Application.Reviews.DTOs;
 
 namespace TravelBooking.Application.Reviews.Services.Interfaces;
 

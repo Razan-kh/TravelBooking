@@ -43,19 +43,16 @@ public class ReviewTestDataBuilder
 
     private void ConfigureDateOnlySupport()
     {
-        // Fix for DateOnly issue - register a custom generator for DateOnly
         _fixture.Customize<DateOnly>(composer => composer
             .FromFactory<DateTime>(dt => DateOnly.FromDateTime(dt))
             .OmitAutoProperties());
         
-        // Ensure DateTime creates valid dates
         _fixture.Customize<DateTime>(composer => composer
             .FromFactory(() => DateTime.Now.Date));
     }
 
     public Hotel CreateHotel(Guid? id = null, string name = "Test Hotel", int starRating = 4)
     {
-        // Use explicit creation instead of AutoFixture for complex entities
         var hotel = new Hotel
         {
             Id = id ?? Guid.NewGuid(),
@@ -124,7 +121,6 @@ public class ReviewTestDataBuilder
         return reviews;
     }
 
-    // Helper method for creating entities with AutoFixture when needed
     public T CreateSimple<T>() where T : class
     {
         return _fixture.Create<T>();

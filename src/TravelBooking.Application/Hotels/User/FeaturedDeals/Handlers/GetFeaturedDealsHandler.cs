@@ -1,8 +1,8 @@
 using MediatR;
 using TravelBooking.Application.FeaturedDeals.Dtos;
 using TravelBooking.Application.FeaturedDeals.Queries;
+using TravelBooking.Application.Hotels.User.Services.Interfaces;
 using TravelBooking.Application.Shared.Results;
-using TravelBooking.Application.ViewingHotels.Services.Interfaces;
 
 namespace TravelBooking.Application.FeaturedDeals.Handlers;
 

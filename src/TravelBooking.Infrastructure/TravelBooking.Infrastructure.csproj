@@ -20,21 +20,16 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
-    
-    <!-- Updated JWT packages to 8.14.0 to resolve version conflict -->
     <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="8.14.0" />
     <PackageReference Include="Microsoft.IdentityModel.Tokens" Version="8.14.0" />
     <PackageReference Include="Microsoft.IdentityModel.JsonWebTokens" Version="8.14.0" />
     <PackageReference Include="Microsoft.IdentityModel.Logging" Version="8.14.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="7.0.0" />
     <PackageReference Include="QuestPDF" Version="2025.7.4" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\TravelBooking.Application\TravelBooking.Application.csproj" />
     <ProjectReference Include="..\TravelBooking.Domain\TravelBooking.Domain.csproj" />
-  <PackageReference Include="Bogus" Version="35.6.5" />
-  <PackageReference Include="MediatR" Version="13.1.0" />
+    <PackageReference Include="Bogus" Version="35.6.5" />
+    <PackageReference Include="MediatR" Version="13.1.0" />
   </ItemGroup>
 
   <PropertyGroup>

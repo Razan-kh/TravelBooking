@@ -1,6 +1,6 @@
 using TravelBooking.Application.Hotels.Dtos;
 
-namespace TravelBooking.Application.Hotels.Servicies;
+namespace TravelBooking.Application.Hotels.Admin.Servicies.Interfaces;
  
 public interface IHotelService
 {

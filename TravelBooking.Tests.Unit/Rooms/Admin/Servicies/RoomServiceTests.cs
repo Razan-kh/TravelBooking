@@ -6,10 +6,10 @@ using TravelBooking.Application.Rooms.Dtos;
 using TravelBooking.Domain.Images.interfaces;
 using TravelBooking.Domain.Rooms.Entities;
 using TravelBooking.Domain.Rooms.Interfaces;
-using TravelBooking.Application.Images.Servicies;
 using Microsoft.Extensions.Logging;
 using TravelBooking.Tests.Shared;
 using TravelBooking.Application.Rooms.Admin.Services.Implementations;
+using TravelBooking.Application.Images.Servicies.Interfaces;
 
 namespace TravelBooking.Tests.Rooms.Admin.Handlers;
 

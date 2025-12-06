@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Mvc;
 using TravelBooking.Application.Users.Commands;
 using TravelBooking.Application.Users.DTOs;
 using TravelBooking.Api.Extensions;
-using Microsoft.AspNetCore.Authorization;
 
 namespace TravelBooking.Api.Controllers;
 

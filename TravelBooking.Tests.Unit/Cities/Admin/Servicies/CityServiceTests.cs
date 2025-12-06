@@ -8,6 +8,7 @@ using TravelBooking.Application.Cities.Mappers.Interfaces;
 using TravelBooking.Application.TrendingCities.Mappers;
 using TravelBooking.Application.TrendingCities.Dtos;
 using TravelBooking.Tests.Shared;
+using TravelBooking.Domain.Cities.Interfaces;
 
 namespace TravelBooking.Tests.Services;
 

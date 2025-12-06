@@ -1,6 +1,8 @@
 using System.Net;
 using System.Text.Json;
 
+namespace TravelBooking.Api.MiddleWares;
+
 public class ExceptionHandlingMiddleware
 {
     private readonly RequestDelegate _next;
@@ -40,6 +42,22 @@ public class ExceptionHandlingMiddleware
                 StatusCode = StatusCodes.Status400BadRequest,
                 Message = "Validation failed",
                 Errors = errors
+            };
+
+            await context.Response.WriteAsJsonAsync(response);
+        }
+        catch (InvalidOperationException ex)
+        {
+            // Handle invalid operations
+            _logger.LogWarning(ex, "Invalid operation");
+
+            context.Response.StatusCode = StatusCodes.Status400BadRequest;
+            context.Response.ContentType = "application/json";
+
+            var response = new
+            {
+                StatusCode = StatusCodes.Status400BadRequest,
+                Message = ex.Message
             };
 
             await context.Response.WriteAsJsonAsync(response);

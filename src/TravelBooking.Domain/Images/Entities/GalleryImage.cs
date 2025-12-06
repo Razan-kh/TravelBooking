@@ -1,4 +1,3 @@
-using TravelBooking.Domain.Rooms.Entities;
 using TravelBooking.Domain.Shared.Entities;
 
 namespace TravelBooking.Domain.Images.Entities;

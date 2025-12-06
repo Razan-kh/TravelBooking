@@ -8,10 +8,8 @@ using TravelBooking.Application.Carts.Services.Interfaces;
 using TravelBooking.Application.Carts.Services.Implementations;
 using TravelBooking.Application.Cheackout.Servicies.Implementations;
 using TravelBooking.Application.Cheackout.Servicies.Interfaces;
-using TravelBooking.Application.ViewingHotels.Services.Interfaces;
 using TravelBooking.Application.ViewingHotels.Mappers;
 using TravelBooking.Application.Carts.Mappers;
-using TravelBooking.Application.Images.Servicies;
 using TravelBooking.Application.Cities.Servicies.Implementations;
 using TravelBooking.Application.Cities.Interfaces.Servicies;
 using TravelBooking.Application.Mappers.Interfaces;
@@ -23,6 +21,10 @@ using TravelBooking.Application.Hotels.User.ViewingHotels.Mappers.Implementation
 using TravelBooking.Application.Reviews.Services.Implementations;
 using TravelBooking.Application.Reviews.Services.Interfaces;
 using System.Text;
+using TravelBooking.Application.Images.Mappers.Interfaces;
+using TravelBooking.Application.Images.Mappers.Implementations;
+using TravelBooking.Application.Images.Servicies.Implementations;
+using TravelBooking.Api.MiddleWares;
 
 namespace TravelBooking.API;
 
@@ -56,44 +58,11 @@ public static class DependencyInjection
 
         services.AddAuthorization();
 
-        // Mappers (Singleton)
-        services.AddSingleton<IHotelMapper,HotelMapper>();
-        services.AddSingleton<IRoomCategoryMapper, RoomCategoryMapper>();
-        services.AddSingleton<IRoomMapper, RoomMapper>();
-        services.AddSingleton<IGalleryImageMapper, GalleryImageMapper>();
-        services.AddSingleton<IReviewMapper, ReviewMapper>();
-
-        // Project services
-        services.AddScoped<ImageAppService>();
-        services.AddScoped<ICartService, CartService>();
-        services.AddScoped<IBookingService, BookingService>();
-        
-        services.AddScoped<TravelBooking.Application.Rooms.User.Servicies.Interfaces.IRoomService,
-         TravelBooking.Application.Rooms.User.Servicies.Implementations.RoomService>();
-
-        services.AddScoped<TravelBooking.Application.Rooms.Admin.Services.Interfaces.IRoomService,
-        TravelBooking.Application.Rooms.Admin.Services.Implementations.RoomService>();
-        services.AddScoped<IReviewService, ReviewService>();
-        services.AddScoped<ICartMapper, CartMapper>();
-
-        services.AddScoped<IHotelService,
-            TravelBooking.Application.ViewingHotels.Services.Implementations.HotelService>();
-
-        services.AddScoped<
-            TravelBooking.Application.Searching.Servicies.Interfaces.IHotelService,
-            TravelBooking.Application.Searching.Servicies.Implementations.HotelService>();
-
-        services.AddScoped<
-            ICityService,
-            CityService>();
-
-        services.AddScoped<
-            TravelBooking.Application.Hotels.Servicies.IHotelService,
-            TravelBooking.Application.Hotels.Servicies.HotelService>();
 
 
         // Serilog + Elasticsearch
-        var elasticUri = config["Elasticsearch:Uri"];
+        var elasticUri = config["Elasticsearch:Uri"]
+            ?? throw new InvalidOperationException("Elasticsearch:Uri is missing in configuration");
         Log.Logger = new LoggerConfiguration()
             .WriteTo.Console()
             .WriteTo.Elasticsearch(new ElasticsearchSinkOptions(new Uri(elasticUri))

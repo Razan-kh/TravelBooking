@@ -1,4 +1,4 @@
-using TravelBooking.Application.DTOs;
+using TravelBooking.Application.Reviews.DTOs;
 using TravelBooking.Domain.Reviews.Repositories;
 using TravelBooking.Application.Hotels.User.ViewingHotels.Mappers.Interfaces;
 using TravelBooking.Application.Reviews.Services.Interfaces;

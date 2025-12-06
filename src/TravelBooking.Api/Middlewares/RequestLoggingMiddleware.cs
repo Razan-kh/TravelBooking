@@ -1,3 +1,5 @@
+namespace TravelBooking.Api.MiddleWares;
+
 public class RequestLoggingMiddleware
 {
     private readonly RequestDelegate _next;

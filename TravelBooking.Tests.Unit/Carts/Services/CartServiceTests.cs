@@ -5,7 +5,7 @@ using TravelBooking.Application.Carts.Services.Interfaces;
 using TravelBooking.Tests.Carts.TestHelpers;
 using TravelBooking.Application.Carts.Mappers;
 using TravelBooking.Domain.Carts.Entities;
-using TravelBooking.Domain.Carts.Repositories;
+using TravelBooking.Domain.Carts.Interfaces;
 using TravelBooking.Application.Shared.Interfaces;
 using Microsoft.Extensions.Logging;
 

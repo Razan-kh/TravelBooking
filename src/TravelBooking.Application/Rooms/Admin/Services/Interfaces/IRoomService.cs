@@ -1,5 +1,5 @@
+using TravelBooking.Application.Images.Dtos;
 using TravelBooking.Application.Rooms.Dtos;
-using TravelBooking.Domain.Images.Dtos;
 
 namespace TravelBooking.Application.Rooms.Admin.Services.Interfaces;
 

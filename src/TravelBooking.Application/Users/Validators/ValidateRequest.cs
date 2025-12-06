@@ -1,6 +1,5 @@
 using FluentValidation;
 using TravelBooking.Application.Users.Commands;
-using TravelBooking.Application.Users.Validators;
 
 namespace TravelBooking.Application.Users.Validators;
 

@@ -1,5 +1,4 @@
 using TravelBooking.Application.Cities.Dtos;
-using TravelBooking.Domain.Cities;
 using TravelBooking.Domain.Cities.Entities;
 
 namespace TravelBooking.Application.Cities.Mappers.Interfaces;

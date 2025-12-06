@@ -2,15 +2,15 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using TravelBooking.Infrastructure.Persistence;
 using TravelBooking.Infrastructure.Persistence.Repositories;
-using TravelBooking.Domain.Users.Repositories;
+using TravelBooking.Domain.Users.Interfaces;
 using TravelBooking.Infrastructure.Services;
 using TravelBooking.Application.Interfaces.Security;
 using Sieve.Services;
 using TravelBooking.Application.Shared.Interfaces;
-using TravelBooking.Domain.Bookings.Repositories;
+using TravelBooking.Domain.Bookings.Interfaces;
 using TravelBooking.Domain.Reviews.Repositories;
 using TravelBooking.Domain.Hotels.Interfaces.Repositories;
-using TravelBooking.Domain.Carts.Repositories;
+using TravelBooking.Domain.Carts.Interfaces;
 using TravelBooking.Application.FeaturedDeals.Mappers;
 using TravelBooking.Application.RecentlyVisited.Mappers;
 using TravelBooking.Application.TrendingCities.Mappers;
@@ -22,7 +22,9 @@ using TravelBooking.Application.Cheackout.Servicies.Interfaces;
 using TravelBooking.Infrastructure.Services.Email;
 using Microsoft.Extensions.Hosting;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore; 
+using Microsoft.EntityFrameworkCore;
+using TravelBooking.Domain.Cities.Interfaces;
+
 namespace TravelBooking.Infrastructure;
 
 public static class DependencyInjection
@@ -30,7 +32,6 @@ public static class DependencyInjection
     public static IServiceCollection AddInfrastructure(
         this IServiceCollection services, IConfiguration config, Microsoft.AspNetCore.Hosting.IWebHostEnvironment environment)
     {
-        // IOptions pattern for SMTP
         services.Configure<SmtpSettings>(options =>
         {
             options.Host = Environment.GetEnvironmentVariable("SMTP_HOST") ?? "localhost";
@@ -46,20 +47,18 @@ public static class DependencyInjection
             services.AddDbContext<AppDbContext>(options =>
                 options.UseSqlServer(config.GetConnectionString("DefaultConnection")));
         }
-       else
+        else
         {
             services.AddDbContext<AppDbContext>(options =>
             options.UseInMemoryDatabase("TestDatabase"));
         }
 
-            // External service implementations
-            services.AddScoped<IEmailService, SmtpEmailService>();
+        // External service implementations
+        services.AddScoped<IEmailService, SmtpEmailService>();
         services.AddScoped<IPdfService, QuestPdfService>();
         services.AddScoped<IPaymentService, MockPaymentService>();
 
-
-        services.AddScoped<IAppDbContext>(provider =>
-                  (IAppDbContext)provider.GetRequiredService<AppDbContext>());
+        services.AddScoped<IAppDbContext>(provider => (IAppDbContext)provider.GetRequiredService<AppDbContext>());
 
         services.AddScoped<IUserRepository, UserRepository>();
         services.AddScoped<IRoomRepository, RoomRepository>();
@@ -73,12 +72,11 @@ public static class DependencyInjection
         services.AddScoped<ISieveProcessor, SieveProcessor>();
         services.AddScoped<IUnitOfWork, UnitOfWork>();
 
-
         services.AddSingleton<IFeaturedHotelMapper, FeaturedHotelMapper>();
         services.AddSingleton<IRecentlyVisitedHotelMapper, RecentlyVisitedHotelMapper>();
         services.AddSingleton<ITrendingCityMapper, TrendingCityMapper>();
 
-        // 1. Bind Cloudinary settings
+        // Bind Cloudinary settings
         services.Configure<CloudinarySettings>(options =>
         {
             options.CloudName = Environment.GetEnvironmentVariable("CLOUDINARY_CLOUDNAME") ?? string.Empty;
@@ -86,74 +84,13 @@ public static class DependencyInjection
             options.ApiSecret = Environment.GetEnvironmentVariable("CLOUDINARY_APISECRET") ?? string.Empty;
         });
 
-        // 2. Register Cloudinary concrete service
+        // Register Cloudinary concrete service
         services.AddScoped<ICloudStorageService, CloudinaryService>();
         services.AddScoped<IGalleryImageRepository, GalleryImageRepository>(); // ← ADD THIS LINE
 
         services.AddScoped<IHotelRepository, HotelRepository>();
         services.AddScoped<ICityRepository, CityRepository>();
+        
         return services;
     }
 }
-
-/*
-namespace TravelBooking.Infrastructure;
-
-public static class DependencyInjection
-{
-    public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration config)
-    {
-       // services.AddDbContext<AppDbContext>(options =>
-           // options.UseSqlServer(config.GetConnectionString("DefaultConnection")));
-
-
-services.AddScoped<IAppDbContext>(provider =>
-            (IAppDbContext)provider.GetRequiredService<AppDbContext>());
-
-        services.AddScoped<IUserRepository, UserRepository>();
-        services.AddScoped<IRoomRepository, RoomRepository>();
-        services.AddScoped<IBookingRepository, BookingRepository>();
-        services.AddScoped<IReviewRepository, ReviewRepository>();
-        services.AddScoped<IHotelRepository, HotelRepository>();
-        services.AddScoped<ICartRepository, CartRepository>();
-
-        services.AddScoped<IPasswordHasher, AspNetPasswordHasher>();
-        services.AddScoped<IJwtService, JwtService>();
-        services.AddScoped<ISieveProcessor, SieveProcessor>();
-        services.AddScoped<IUnitOfWork, UnitOfWork>();
-
-
-        services.AddSingleton<IFeaturedHotelMapper, FeaturedHotelMapper>();
-        services.AddSingleton<IRecentlyVisitedHotelMapper, RecentlyVisitedHotelMapper>();
-        services.AddSingleton<ITrendingCityMapper, TrendingCityMapper>();
-
-
-        // 1. Bind Cloudinary settings
-        services.Configure<CloudinarySettings>(config.GetSection("Cloudinary"));
-
-        // 2. Register Cloudinary concrete service
-        services.AddScoped<ICloudStorageService, CloudinaryService>();
-        services.AddScoped<IGalleryImageRepository, GalleryImageRepository>(); // ← ADD THIS LINE
-
-        // Register other services
-        return services;
-    }
-    public static IServiceCollection AddInfrastructureServices(this IServiceCollection services, IConfiguration configuration)
-    {
-        
-     //   services.AddDbContext<AppDbContext>(options =>
-    //    {
-      //      options.UseSqlServer(
-       //         configuration.GetConnectionString("DefaultConnection"),
-       //         sql => sql.MigrationsAssembly(typeof(AppDbContext).Assembly.FullName));
-      //  });
-        
-        
-        services.AddScoped<IRoomRepository, RoomRepository>();
-        services.AddScoped<IHotelRepository, HotelRepository>();
-        services.AddScoped<ICityRepository, CityRepository>();
-
-        return services;
-    }
-}
-*/

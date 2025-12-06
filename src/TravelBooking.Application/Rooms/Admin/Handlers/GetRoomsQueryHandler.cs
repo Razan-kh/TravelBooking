@@ -1,5 +1,4 @@
 using MediatR;
-using TravelBooking.Application.Mappers.Interfaces;
 using TravelBooking.Application.Rooms.Admin.Services.Interfaces;
 using TravelBooking.Application.Rooms.Dtos;
 using TravelBooking.Application.Rooms.Queries;

@@ -4,7 +4,7 @@ using TravelBooking.Domain.Cities.Entities;
 
 namespace TravelBooking.Application.TrendingCities.Mappers;
 
-[Mapper]
+[Mapper(RequiredMappingStrategy = RequiredMappingStrategy.None)]
 public partial class TrendingCityMapper : ITrendingCityMapper
 {
     public partial TrendingCityDto ToTrendingCityDto((City city, int visitCount) city);

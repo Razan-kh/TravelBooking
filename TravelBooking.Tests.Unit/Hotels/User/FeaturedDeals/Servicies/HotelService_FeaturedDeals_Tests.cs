@@ -4,12 +4,12 @@ using FluentAssertions;
 using Moq;
 using TravelBooking.Application.FeaturedDeals.Mappers;
 using TravelBooking.Application.RecentlyVisited.Mappers;
-using TravelBooking.Application.ViewingHotels.Services.Implementations;
 using TravelBooking.Domain.Hotels;
 using TravelBooking.Domain.Hotels.Entities;
 using TravelBooking.Domain.Hotels.Interfaces.Repositories;
 using TravelBooking.Domain.Cities.Entities;
 using TravelBooking.Application.Hotels.User.ViewingHotels.Mappers.Interfaces;
+using TravelBooking.Application.Hotels.User.Services.Implementations;
 
 namespace TravelBooking.Tests.FeaturedDeals;
 

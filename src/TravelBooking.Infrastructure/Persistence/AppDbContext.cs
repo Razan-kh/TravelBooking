@@ -38,8 +38,6 @@ public class AppDbContext : DbContext, IAppDbContext
     {
         base.OnModelCreating(modelBuilder);
 
- 
-
         // Cart ↔ CartItem relationship
         modelBuilder.Entity<Cart>()
             .HasMany(c => c.Items)
@@ -58,22 +56,22 @@ public class AppDbContext : DbContext, IAppDbContext
             .HasForeignKey(r => r.HotelId)
             .OnDelete(DeleteBehavior.Cascade);
 
-    modelBuilder.Entity<Booking>()
-        .HasMany(b => b.Rooms)
-        .WithMany(r => r.Bookings)
-        .UsingEntity<Dictionary<string, object>>(
-            "BookingRoom",
-            j => j
-                .HasOne<Room>()
-                .WithMany()
-                .HasForeignKey("RoomId")
-                .OnDelete(DeleteBehavior.NoAction), // Changed from Cascade to NoAction
-            j => j
-                .HasOne<Booking>()
-                .WithMany()
-                .HasForeignKey("BookingId")
-                .OnDelete(DeleteBehavior.NoAction), // Changed from Cascade to NoAction
-            j => j.HasKey("BookingId", "RoomId")
-        );
+        modelBuilder.Entity<Booking>()
+            .HasMany(b => b.Rooms)
+            .WithMany(r => r.Bookings)
+            .UsingEntity<Dictionary<string, object>>(
+                "BookingRoom",
+                j => j
+                    .HasOne<Room>()
+                    .WithMany()
+                    .HasForeignKey("RoomId")
+                    .OnDelete(DeleteBehavior.NoAction),
+                j => j
+                    .HasOne<Booking>()
+                    .WithMany()
+                    .HasForeignKey("BookingId")
+                    .OnDelete(DeleteBehavior.NoAction),
+                j => j.HasKey("BookingId", "RoomId")
+            );
     }
 }

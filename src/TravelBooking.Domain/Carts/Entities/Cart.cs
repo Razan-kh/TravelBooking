@@ -1,6 +1,3 @@
-using System;
-using System.Collections.Generic;
-
 namespace TravelBooking.Domain.Carts.Entities;
 
 public class Cart

@@ -1,4 +1,3 @@
-using System;
 using System.Text;
 using System.Text.Json;
 
@@ -6,7 +5,6 @@ namespace TravelBooking.Application.Utils;
 
 public static class CursorHelper
 {
-    // Simple opaque Base64 JSON cursor encoder/decoder.
     public static string Encode<T>(T payload)
     {
         var json = JsonSerializer.Serialize(payload);

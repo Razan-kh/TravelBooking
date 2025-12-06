@@ -1,6 +1,6 @@
 
 using Microsoft.EntityFrameworkCore;
-using TravelBooking.Domain.Carts.Repositories;
+using TravelBooking.Domain.Carts.Interfaces;
 using TravelBooking.Domain.Carts.Entities;
 
 namespace TravelBooking.Infrastructure.Persistence.Repositories;
@@ -36,7 +36,7 @@ public class CartRepository : ICartRepository
             item.Cart.Items.Remove(item);
         }
         _context.CartItems.Remove(item);
-        
+
     }
 
     public async Task ClearUserCartAsync(Guid userId, CancellationToken ct)
@@ -63,7 +63,7 @@ public class CartRepository : ICartRepository
             // Update items list
             existing.Items = cart.Items;
         }
-            }
+    }
 
     public async Task AddOrUpdateAsync(Cart cart)
     {

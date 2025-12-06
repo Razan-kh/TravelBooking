@@ -1,8 +1,8 @@
 using MediatR;
 using TravelBooking.Application.RecentlyVisited.Dtos;
 using TravelBooking.Application.RecentlyVisited.Queries;
-using TravelBooking.Application.ViewingHotels.Services.Interfaces;
 using TravelBooking.Application.Shared.Results;
+using TravelBooking.Application.Hotels.User.Services.Interfaces;
 
 namespace TravelBooking.Application.RecentlyVisited.Handlers;
 

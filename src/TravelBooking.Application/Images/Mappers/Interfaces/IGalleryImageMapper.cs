@@ -1,8 +1,7 @@
-using TravelBooking.Application.DTOs;
+using TravelBooking.Application.Images.DTOs;
 using TravelBooking.Domain.Images.Entities;
-using TravelBooking.Domain.Reviews.Entities;
 
-namespace TravelBooking.Application.ViewingHotels.Mappers;
+namespace TravelBooking.Application.Images.Mappers.Interfaces;
 
 public interface IGalleryImageMapper
 {

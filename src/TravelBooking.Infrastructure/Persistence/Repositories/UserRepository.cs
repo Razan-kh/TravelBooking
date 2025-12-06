@@ -1,7 +1,7 @@
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using TravelBooking.Domain.Users.Entities;
-using TravelBooking.Domain.Users.Repositories;
+using TravelBooking.Domain.Users.Interfaces;
 using TravelBooking.Infrastructure.Persistence;
 
 namespace TravelBooking.Infrastructure.Persistence.Repositories;

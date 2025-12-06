@@ -1,5 +1,5 @@
 using TravelBooking.Domain.Bookings.Entities;
-using TravelBooking.Domain.Bookings.Repositories;
+using TravelBooking.Domain.Bookings.Interfaces;
 using TravelBooking.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 
@@ -18,7 +18,7 @@ public class BookingRepository : IBookingRepository
     {
         await _context.Bookings.AddAsync(booking, ct);
     }
-    
+
     public async Task<Booking?> GetByIdAsync(Guid id, CancellationToken ct = default)
     {
         return await _context.Bookings

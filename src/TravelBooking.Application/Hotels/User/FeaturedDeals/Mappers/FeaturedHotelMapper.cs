@@ -1,11 +1,10 @@
 using Riok.Mapperly.Abstractions;
 using TravelBooking.Application.FeaturedDeals.Dtos;
 using TravelBooking.Domain.Hotels;
-using TravelBooking.Domain.Hotels.Entities;
 
 namespace TravelBooking.Application.FeaturedDeals.Mappers;
 
-[Mapper]
+[Mapper(RequiredMappingStrategy = RequiredMappingStrategy.None)]
 public partial class FeaturedHotelMapper : IFeaturedHotelMapper
 {
     [MapProperty(nameof(HotelWithMinPrice.Hotel.Id), nameof(FeaturedHotelDto.Id))]

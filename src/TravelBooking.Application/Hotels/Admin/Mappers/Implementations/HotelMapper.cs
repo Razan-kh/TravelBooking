@@ -1,12 +1,11 @@
 using Riok.Mapperly.Abstractions;
 using TravelBooking.Application.Hotels.Dtos;
 using TravelBooking.Application.Hotels.Mappers.Interfaces;
-using TravelBooking.Application.Mappers.Interfaces;
 using TravelBooking.Domain.Hotels.Entities;
 
 namespace TravelBooking.Application.Hotels.Mappers.Implementations;
 
-[Mapper]
+[Mapper(RequiredMappingStrategy = RequiredMappingStrategy.None)]
 public partial class HotelMapper : IHotelMapper
 {
     [MapProperty("City.Name", "City")]

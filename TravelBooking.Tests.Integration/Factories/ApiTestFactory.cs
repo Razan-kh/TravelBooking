@@ -16,12 +16,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using TravelBooking.Application.Cheackout.Servicies.Interfaces;
 using TravelBooking.Application.Carts.Services.Interfaces;
-using TravelBooking.Application.Shared.Results;
-using TravelBooking.Domain.Carts.Entities;
-using TravelBooking.Domain.Bookings.Entities;
-using TravelBooking.Domain.Payments.Enums;
-using Microsoft.Data.Sqlite;
-using Microsoft.EntityFrameworkCore;
 
 namespace TravelBooking.Tests.Integration.Factories;
 
@@ -40,46 +34,6 @@ public class ApiTestFactory : WebApplicationFactory<Program>
     {
         _serviceConfigurations.Add(configureServices);
     }
-    /*
-    protected override void ConfigureWebHost(IWebHostBuilder builder)
-{
-    builder.UseEnvironment("Test");
-
-    builder.ConfigureServices(services =>
-    {
-        // Remove prior DbContext
-        var descriptor = services.SingleOrDefault(d =>
-            d.ServiceType == typeof(DbContextOptions<AppDbContext>)
-        );
-        if (descriptor != null)
-            services.Remove(descriptor);
-
-        // Create ONE shared connection
-        var connection = new SqliteConnection("DataSource=:memory:");
-        connection.Open();
-
-        services.AddSingleton(connection);
-
-        // Register SQLite
-        services.AddDbContext<AppDbContext>(options =>
-        {
-            options.UseSqlite(connection);
-            options.EnableSensitiveDataLogging();
-            options.EnableDetailedErrors();
-        });
-
-        // Apply DB creation on actual provider
-        using var scope = services.BuildServiceProvider().CreateScope();
-        var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-        db.Database.EnsureCreated();
-
-        // Your mock removals here...
-        RemoveAndMockPasswordHasher(services);
-        RemoveAndMockJwtService(services);
-        ConfigureTestAuthentication(services);
-    });
-}
-*/
 
     protected override void ConfigureWebHost(IWebHostBuilder builder)
     {
@@ -87,20 +41,19 @@ public class ApiTestFactory : WebApplicationFactory<Program>
         builder.ConfigureLogging(logging =>
         {
             logging.ClearProviders();
-            // Add console logging that works in tests
+
+            // Console logging 
             logging.AddConsole();
             logging.AddDebug();
             logging.SetMinimumLevel(LogLevel.Trace);
         });
+
         builder.ConfigureServices(services =>
         {
-            // Remove ALL existing DbContext registrations more aggressively
+            // Remove existing DbContext registrations 
             RemoveService<DbContextOptions<AppDbContext>>(services);
             RemoveService<DbContextOptions>(services);
             RemoveService<AppDbContext>(services);
-
-            // Remove existing services
-
 
             // Add InMemory database with proper configuration
 
@@ -110,7 +63,6 @@ public class ApiTestFactory : WebApplicationFactory<Program>
                 options.EnableSensitiveDataLogging();
                 options.EnableDetailedErrors();
             });
-
 
             foreach (var configure in _serviceConfigurations)
             {
@@ -123,7 +75,6 @@ public class ApiTestFactory : WebApplicationFactory<Program>
 
             // Configure authentication
             ConfigureTestAuthentication(services);
-            //    ConfigureDefaultMocks();
 
             // Build the service provider to ensure database is created
             var sp = services.BuildServiceProvider();
@@ -210,11 +161,5 @@ public class ApiTestFactory : WebApplicationFactory<Program>
                 NameClaimType = ClaimTypes.NameIdentifier
             };
         });
-    }
-        public void Initialize()
-    {
-        // This might be called automatically when you create the factory
-        // or you might need to call something like:
-        var _ = Services; // This triggers service provider creation
     }
 }

@@ -1,7 +1,6 @@
 using TravelBooking.Domain.Carts.Entities;
-using TravelBooking.Domain.Rooms.Entities;
 
-namespace TravelBooking.Domain.Carts.Repositories;
+namespace TravelBooking.Domain.Carts.Interfaces;
 
 public interface ICartRepository
 {

@@ -2,7 +2,6 @@ using MediatR;
 using TravelBooking.Application.Rooms.Admin.Services.Interfaces;
 using TravelBooking.Application.Rooms.Commands;
 using TravelBooking.Application.Shared.Results;
-using TravelBooking.Domain.Rooms.Entities;
 
 namespace TravelBooking.Application.Rooms.Handlers;
 

@@ -1,6 +1,6 @@
 using MediatR;
 using Sieve.Models;
-using System;
+using TravelBooking.Application.Hotels.Admin.DTOs;
 using TravelBooking.Domain.Rooms.Enums;
 
 namespace TravelBooking.Application.Queries;
@@ -17,7 +17,7 @@ public class SearchHotelsQuery : IRequest<PagedResult<HotelCardDto>>
     public string[]? Amenities { get; set; }
     public RoomType? RoomType { get; set; }
     public int Adults { get; set; } = 2;
-    public int Children { get; set; } = 0;
+    public int Children { get; set; }
     public DateOnly? CheckIn { get; set; }
     public DateOnly? CheckOut { get; set; }
 

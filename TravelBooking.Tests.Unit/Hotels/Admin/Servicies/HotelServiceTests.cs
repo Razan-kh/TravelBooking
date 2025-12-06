@@ -1,9 +1,9 @@
 using AutoFixture;
 using FluentAssertions;
 using Moq;
+using TravelBooking.Application.Hotels.Admin.Servicies.Implementations;
 using TravelBooking.Application.Hotels.Dtos;
 using TravelBooking.Application.Hotels.Mappers.Interfaces;
-using TravelBooking.Application.Hotels.Servicies;
 using TravelBooking.Domain.Hotels.Entities;
 using TravelBooking.Domain.Hotels.Interfaces.Repositories;
 using TravelBooking.Tests.Shared;

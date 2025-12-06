@@ -1,6 +1,6 @@
 using TravelBooking.Domain.Bookings.Entities;
 
-namespace TravelBooking.Domain.Bookings.Repositories;
+namespace TravelBooking.Domain.Bookings.Interfaces;
 
 public interface IBookingRepository
 {

@@ -3,7 +3,6 @@ using System.Security.Claims;
 using System.Text;
 using Microsoft.IdentityModel.Tokens;
 
-
 namespace TravelBooking.Tests.Integration.Helpers;
 
 public static class TokenGenerator

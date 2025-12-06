@@ -5,7 +5,7 @@ using TravelBooking.Domain.Rooms.Entities;
 
 namespace TravelBooking.Application.Mappers;
 
-[Mapper]
+[Mapper(RequiredMappingStrategy = RequiredMappingStrategy.None)]
 public partial class RoomMapper : IRoomMapper
 {
     [MapProperty("RoomCategory.AdultsCapacity", "AdultsCapacity")]

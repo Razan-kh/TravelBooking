@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Http;
 
-namespace TravelBooking.Domain.Images.Dtos;
+namespace TravelBooking.Application.Images.Dtos;
 
 public record ImageUploadDto(
     IFormFile File,

@@ -1,6 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
 using MediatR;
-using TravelBooking.Application.Bookings.Commands;
 using TravelBooking.Application.Cheackout.Commands;
 using Microsoft.AspNetCore.Authorization;
 
@@ -26,9 +25,6 @@ public class CheckoutController : ControllerBase
     {
         var result = await _mediator.Send(command, ct);
 
-        if (!result.IsSuccess)
-            return StatusCode(result.HttpStatusCode ?? 400, result);
-
-        return Ok(result);
+        return !result.IsSuccess ? StatusCode(result.HttpStatusCode ?? 400, result) : (IActionResult)Ok(result);
     }
 }

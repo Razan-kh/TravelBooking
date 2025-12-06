@@ -1,9 +1,10 @@
 using MediatR;
+using TravelBooking.Application.Hotels.Admin.Servicies.Interfaces;
 using TravelBooking.Application.Hotels.Commands;
 using TravelBooking.Application.Hotels.Dtos;
-using TravelBooking.Application.Hotels.Servicies;
 using TravelBooking.Application.Shared.Results;
-using TravelBooking.Domain.Hotels.Entities;
+
+namespace TravelBooking.Application.Hotels.Admin.Handlers;
 
 public class CreateHotelCommandHandler : IRequestHandler<CreateHotelCommand, Result<HotelDto>>
 {

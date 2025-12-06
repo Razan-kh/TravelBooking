@@ -22,7 +22,7 @@ public class CitiesIntegrationTests : IClassFixture<ApiTestFactory>
     private readonly IFixture _fixture;
     private readonly string _role = "Admin";
     private readonly Guid _adminId = Guid.NewGuid();
-    
+
     public CitiesIntegrationTests(ApiTestFactory factory)
     {
         _factory = factory;
@@ -38,11 +38,11 @@ public class CitiesIntegrationTests : IClassFixture<ApiTestFactory>
         .Without(x => x.Hotels));
 
         _fixture.Customize<Domain.Hotels.Entities.Hotel>(composer => composer
-    .Without(h => h.City)
-    .Without(h => h.Bookings)
-    .Without(h => h.Owner)
-    .Without(h => h.RoomCategories)
-    .Without(h => h.Reviews));
+                .Without(h => h.City)
+                .Without(h => h.Bookings)
+                .Without(h => h.Owner)
+                .Without(h => h.RoomCategories)
+                .Without(h => h.Reviews));
     }
 
     #region GET /cities
@@ -79,34 +79,34 @@ public class CitiesIntegrationTests : IClassFixture<ApiTestFactory>
 
     #region POST /cities
 
-  [Fact]
-public async Task CreateCity_ShouldReturnCreated()
-{
-    // Arrange
-    _client.AddAuthHeader(_role, _adminId);
+    [Fact]
+    public async Task CreateCity_ShouldReturnCreated()
+    {
+        // Arrange
+        _client.AddAuthHeader(_role, _adminId);
 
-    var createDto = _fixture.Build<CreateCityDto>()
-                            .With(x => x.Name, "Berlin")
-                            .With(x => x.Country, "Germany")
-                            .With(x => x.PostalCode, "12345")
-                            .With(x => x.ThumbnailUrl, "https://example.com/image.jpg")
-                            .Create();
+        var createDto = _fixture.Build<CreateCityDto>()
+                                .With(x => x.Name, "Berlin")
+                                .With(x => x.Country, "Germany")
+                                .With(x => x.PostalCode, "12345")
+                                .With(x => x.ThumbnailUrl, "https://example.com/image.jpg")
+                                .Create();
 
-    var json = new StringContent(
-        JsonSerializer.Serialize(createDto),
-        Encoding.UTF8,
-        "application/json"
-    );
+        var json = new StringContent(
+            JsonSerializer.Serialize(createDto),
+            Encoding.UTF8,
+            "application/json"
+        );
 
-    // Act
-    var response = await _client.PostAsync("/api/city/cities", json);
+        // Act
+        var response = await _client.PostAsync("/api/city/cities", json);
 
-    // Assert
-    response.StatusCode.Should().Be(HttpStatusCode.Created);
+        // Assert
+        response.StatusCode.Should().Be(HttpStatusCode.Created);
 
-    var content = await response.Content.ReadAsStringAsync();
-    content.Should().Contain(createDto.Name);
-}
+        var content = await response.Content.ReadAsStringAsync();
+        content.Should().Contain(createDto.Name);
+    }
 
     #endregion
 

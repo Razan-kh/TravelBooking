@@ -4,7 +4,7 @@ using TravelBooking.Domain.Hotels.Entities;
 
 namespace TravelBooking.Application.RecentlyVisited.Mappers;
 
-[Mapper]
+[Mapper(RequiredMappingStrategy = RequiredMappingStrategy.None)]
 public partial class RecentlyVisitedHotelMapper : IRecentlyVisitedHotelMapper
 {
     [MapProperty(nameof(Hotel.Id), nameof(RecentlyVisitedHotelDto.Id))]
@@ -12,5 +12,6 @@ public partial class RecentlyVisitedHotelMapper : IRecentlyVisitedHotelMapper
     [MapProperty(nameof(Hotel.ThumbnailUrl), nameof(RecentlyVisitedHotelDto.ThumbnailUrl))]
     [MapProperty(nameof(Hotel.City.Name), nameof(RecentlyVisitedHotelDto.City))]
     [MapProperty(nameof(Hotel.StarRating), nameof(RecentlyVisitedHotelDto.StarRating))]
+    
     public partial RecentlyVisitedHotelDto ToRecentlyVisitedHotelDto(Hotel hotel);
 }
