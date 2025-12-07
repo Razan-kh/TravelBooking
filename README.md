@@ -64,7 +64,29 @@ Each domain is clearly separated, making the codebase extensible and maintainabl
 
 ## ⚙️ Getting Started
 
-### Clone the repository
+### 1. Clone the repository
 ```bash
 git clone https://github.com/your-repo/TravelBookingPlatform.git
 cd TravelBookingPlatform
+```
+### 2. Apply database migrations
+```bash
+dotnet ef database update --project src/TravelBooking.Infrastructure --startup-project src/TravelBooking.Api
+```
+### 3. Run the API
+```bash
+dotnet run --project src/TravelBooking.Api
+```
+The API will be available at:  
+[http://localhost:5063](http://localhost:5063)
+
+The Swagger UI will be available at:  
+[http://localhost:5063/swagger/index.html](http://localhost:5063/swagger/index.html)
+
+Elasticsearch will be available at:  
+[http://localhost:9200](http://localhost:9200)
+
+## 🙏 Acknowledgments
+
+Built under the guidance of **[Foothill Technology Solutions]**.
+
