@@ -19,7 +19,7 @@ Designed for clean, maintainable, and testable code, with strong separation of c
 ### User & Authentication
 - JWT-based authentication
 - Role-based authorization
-- 
+  
 ### Hotel & Booking System
 - Advanced search and filtering
 - Room availability checks
