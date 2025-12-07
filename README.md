@@ -71,7 +71,7 @@ cd TravelBookingPlatform
 ```
 ### 2. Apply database migrations
 ```bash
-dotnet ef database update --project src/TravelBooking.Infrastructure --startup-project src/TravelBooking.Api
+dotnet ef database update 
 ```
 ### 3. Run the API
 ```bash
