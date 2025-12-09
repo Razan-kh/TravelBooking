@@ -37,7 +37,7 @@ public class GetRoomCommandHandler
 
         // Assert
         result.IsSuccess.Should().BeTrue();
-        result.Value.Should().Be(expectedRoomDto.Id);
+        result.Value.Should().Be(expectedRoomDto);
         _serviceMock.Verify(s => s.CreateRoomAsync(dto, It.IsAny<CancellationToken>()), Times.Once);
     }
 }
