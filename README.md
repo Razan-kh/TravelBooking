@@ -1,6 +1,6 @@
 # Travel & Accommodation Booking Platform – REST API
 
-A scalable and secure hotel booking platform built with ASP.NET Core, following Clean Architecture and Domain-Driven Design (DDD) principles.
+A scalable and secure hotel booking platform built with ASP.NET Core, following Clean Architecture principles.
 This API provides a complete backend solution for authentication, hotel discovery, booking management, secure checkout, admin operations.
 
 ## 🌐 Overview
@@ -41,14 +41,17 @@ Designed for clean, maintainable, and testable code, with strong separation of c
 
 ## 🏛 Architecture
 
-The system is structured into four independent layers:
+- **Clean Architecture** with clear separation of concerns across four independent layers
+- **CQRS (Command Query Responsibility Segregation)** for separating read and write operations
+- **Repository & Service Pattern** for data access abstraction
+- **Result Pattern** (using FluentResults or similar) for consistent error handling
+  
+### **Layer Structure:**
 
 - **Domain** – Entities, value objects, and business rules.
 - **Application** – Use cases, validators, DTOs, and domain services.
 - **Infrastructure** – EF Core, database persistence, and external integrations (Email, Cloudinary, Logging).
 - **WebAPI** – Controllers, endpoints, authentication, and request pipeline.
-
-Each domain is clearly separated, making the codebase extensible and maintainable.
 
 ## 🧰 Tech Stack
 
