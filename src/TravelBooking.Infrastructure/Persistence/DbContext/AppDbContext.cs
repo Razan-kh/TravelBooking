@@ -37,41 +37,8 @@ public class AppDbContext : DbContext, IAppDbContext
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
-
-        // Cart ↔ CartItem relationship
-        modelBuilder.Entity<Cart>()
-            .HasMany(c => c.Items)
-            .WithOne(i => i.Cart)
-            .HasForeignKey(i => i.CartId)
-            .OnDelete(DeleteBehavior.Cascade); 
-
-        modelBuilder.Entity<Room>()
-            .HasOne(r => r.RoomCategory)
-            .WithMany(c => c.Rooms)
-            .HasForeignKey(r => r.RoomCategoryId);
-
-        modelBuilder.Entity<Hotel>()
-            .HasMany(h => h.RoomCategories)
-            .WithOne(r => r.Hotel)
-            .HasForeignKey(r => r.HotelId)
-            .OnDelete(DeleteBehavior.Cascade);
-
-        modelBuilder.Entity<Booking>()
-            .HasMany(b => b.Rooms)
-            .WithMany(r => r.Bookings)
-            .UsingEntity<Dictionary<string, object>>(
-                "BookingRoom",
-                j => j
-                    .HasOne<Room>()
-                    .WithMany()
-                    .HasForeignKey("RoomId")
-                    .OnDelete(DeleteBehavior.NoAction),
-                j => j
-                    .HasOne<Booking>()
-                    .WithMany()
-                    .HasForeignKey("BookingId")
-                    .OnDelete(DeleteBehavior.NoAction),
-                j => j.HasKey("BookingId", "RoomId")
-            );
+        
+        // Apply all configurations from the current assembly
+        modelBuilder.ApplyConfigurationsFromAssembly(typeof(AppDbContext).Assembly);
     }
 }

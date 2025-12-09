@@ -5,6 +5,7 @@ using FluentAssertions;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using Newtonsoft.Json;
 using TravelBooking.Application.Carts.Commands;
 using TravelBooking.Application.Carts.DTOs;
 using TravelBooking.Domain.Carts.Entities;
@@ -69,7 +70,7 @@ public class CartControllerTests : IClassFixture<ApiTestFactory>, IDisposable
         _client.AddAuthHeader(_role, testUserId);
 
         // Act
-        var response = await _client.PostAsJsonAsync("/api/cart", command);
+        var response = await _client.PostAsJsonAsync("/api/cart/items", command);
 
         // Assert
         response.StatusCode.Should().Be(HttpStatusCode.OK);
@@ -120,7 +121,7 @@ public class CartControllerTests : IClassFixture<ApiTestFactory>, IDisposable
         _client.AddAuthHeader(_role, testUserId);
 
         // Act
-        var response = await _client.PostAsJsonAsync("/api/cart", command);
+        var response = await _client.PostAsJsonAsync("/api/cart/items", command);
 
         // Assert
         response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
@@ -182,8 +183,8 @@ public class CartControllerTests : IClassFixture<ApiTestFactory>, IDisposable
             Value = new List<CartItemDto>()
         };
 
-        var result = Newtonsoft.Json.JsonConvert.DeserializeAnonymousType(json, template); result.Should().NotBeNull();
-        result!.Value.Should().HaveCount(1);
+        var result = JsonConvert.DeserializeObject<List<CartItemDto>>(json);
+        result.Should().HaveCount(1);
     }
 
     [Fact]
@@ -220,10 +221,10 @@ public class CartControllerTests : IClassFixture<ApiTestFactory>, IDisposable
         _client.AddAuthHeader(_role, testUserId);
 
         // Act
-        var response = await _client.DeleteAsync($"/api/cart/{cartItemId}");
+        var response = await _client.DeleteAsync($"/api/cart/items/{cartItemId}");
 
         // Assert
-        response.StatusCode.Should().Be(HttpStatusCode.OK);
+        response.StatusCode.Should().Be(HttpStatusCode.NoContent);
 
         // Assert
         var deletedItem = await _dbContext.CartItems
@@ -242,7 +243,7 @@ public class CartControllerTests : IClassFixture<ApiTestFactory>, IDisposable
         _client.AddAuthHeader(_role, testUserId);
 
         // Act
-        var response = await _client.DeleteAsync($"/api/cart/{nonExistingId}");
+        var response = await _client.DeleteAsync($"/api/cart/items/{nonExistingId}");
 
         // Assert
         response.StatusCode.Should().Be(HttpStatusCode.NotFound);

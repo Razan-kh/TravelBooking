@@ -3,6 +3,8 @@ using Microsoft.AspNetCore.Mvc;
 using TravelBooking.Application.Carts.Commands;
 using TravelBooking.Application.Carts.Queries;
 using Microsoft.AspNetCore.Authorization;
+using TravelBooking.Api.Extensions;
+using TravelBooking.Application.Carts.DTOs;
 
 namespace TravelBooking.Api.Carts.Controllers;
 
@@ -20,25 +22,30 @@ public class CartController : ControllerBase
         _logger = logger;
     }
 
-    [HttpPost]
+    [HttpPost("items")]
     public async Task<IActionResult> AddRoomToCart([FromBody] AddRoomToCartCommand command)
     {
         var result = await _mediator.Send(command);
-        return StatusCode(result.HttpStatusCode ?? 200, result);
+        return result.ToActionResult();
     }
 
     [HttpGet]
-    public async Task<IActionResult> GetCart(CancellationToken ct)
-    {        
+    public async Task<ActionResult<List<CartItemDto>>> GetCart(CancellationToken ct)
+    {
         var result = await _mediator.Send(new GetCartQuery(), ct);
-            
-        return StatusCode(result.HttpStatusCode ?? 200, result);
+        if (result.IsSuccess)
+            return Ok(result.Value);
+
+        return result.ToActionResult();
     }
 
-    [HttpDelete("{cartItemId:guid}")]
+    [HttpDelete("items/{cartItemId:guid}")]
     public async Task<IActionResult> RemoveItem(Guid cartItemId, CancellationToken ct)
     {
         var result = await _mediator.Send(new RemoveCartItemCommand(cartItemId), ct);
-        return StatusCode(result.HttpStatusCode ?? 200, result);
+        if (result.IsSuccess)
+            return new NoContentResult();
+
+        return result.ToActionResult();
     }
 }

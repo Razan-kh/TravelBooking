@@ -8,7 +8,6 @@ using FluentAssertions;
 using Microsoft.Extensions.DependencyInjection;
 using Xunit;
 using TravelBooking.Tests.Integration.Controllers.Authentication.Utils;
-using TravelBooking.Domain.Users.Enums;
 
 namespace TravelBooking.Tests.Integration.Controllers.Authentication;
 

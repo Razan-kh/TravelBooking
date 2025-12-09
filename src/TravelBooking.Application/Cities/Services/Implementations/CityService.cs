@@ -36,10 +36,10 @@ public class CityService : ICityService
 
     public async Task<CityDto> CreateCityAsync(CreateCityDto dto, CancellationToken ct)
     {
-        var city = _mapper.Map(dto); // Map DTO → Entity
+        var city = _mapper.Map(dto);
         city.Id = Guid.NewGuid();
         await _cityRepo.AddAsync(city, ct);
-        return _mapper.Map(city);    // Map Entity → DTO
+        return _mapper.Map(city);   
     }
 
     public async Task UpdateCityAsync(UpdateCityDto dto, CancellationToken ct)

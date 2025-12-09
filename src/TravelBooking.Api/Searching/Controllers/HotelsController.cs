@@ -27,7 +27,7 @@ public class HotelsController : ControllerBase
         [FromQuery] int? maxStar,
         [FromQuery] decimal? minPrice,
         [FromQuery] decimal? maxPrice,
-        [FromQuery] string? amenities, // comma separated
+        [FromQuery] string? amenities, 
         [FromQuery] RoomType? roomType,
         [FromQuery] int adults = 2,
         [FromQuery] int children = 0,

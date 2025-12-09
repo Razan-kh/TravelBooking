@@ -145,24 +145,4 @@ public class HotelControllerTests : IClassFixture<ApiTestFactory>, IDisposable
         // Assert
         response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
     }
-
-    [Theory]
-    [InlineData(1)]
-    [InlineData(2)]
-    public async Task GetTrendingDestinations_DifferentCountValues_ReturnsDestinations(int count)
-    {
-        // Arrange
-        _client.AddAuthHeader(_role, _userId);
-        using var scope = _factory.Services.CreateScope();
-        var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-
-        // Act
-        var response = await _client.GetAsync($"/api/city/trending-destinations?count={count}");
-
-        // Assert
-        response.StatusCode.Should().Be(HttpStatusCode.OK);
-
-        var destinations = await response.Content.ReadFromJsonAsync<List<object>>();
-        destinations.Should().NotBeNull();
-    }
 }

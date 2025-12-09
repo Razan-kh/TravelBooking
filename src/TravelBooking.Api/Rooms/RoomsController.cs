@@ -4,6 +4,8 @@ using TravelBooking.Application.Rooms.Queries;
 using TravelBooking.Application.Rooms.Commands;
 using Microsoft.AspNetCore.Authorization;
 using TravelBooking.Application.Images.Dtos;
+using TravelBooking.Api.Extensions;
+using TravelBooking.Application.Rooms.Dtos;
 
 namespace TravelBooking.Api.Rooms.Controllers;
 
@@ -20,24 +22,28 @@ public class RoomsController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<IActionResult> GetRooms([FromQuery] string? filter, [FromQuery] int page = 1, [FromQuery] int pageSize = 20)
+    public async Task<ActionResult<PagedResult<RoomDto>>> GetRooms([FromQuery] string? filter, [FromQuery] int page = 1, [FromQuery] int pageSize = 20)
     {
         var result = await _mediator.Send(new GetRoomsQuery(filter, page, pageSize));
-        return result.IsSuccess ? Ok(result.Value) : BadRequest(result.Error);
+        return result.ToActionResult();
     }
 
     [HttpGet("{id}")]
-    public async Task<IActionResult> GetRoom(Guid id)
+    public async Task<ActionResult<RoomDto>> GetRoom(Guid id)
     {
         var result = await _mediator.Send(new GetRoomByIdQuery(id));
-        return result.IsSuccess ? Ok(result.Value) : NotFound(result.Error);
+        return result.ToActionResult();
     }
 
     [HttpPost]
-    public async Task<IActionResult> CreateRoom([FromBody] CreateRoomCommand command)
+    public async Task<ActionResult<RoomDto>> CreateRoom([FromBody] CreateRoomCommand command)
     {
         var result = await _mediator.Send(command);
-        return result.IsSuccess ? Ok(result.Value) : BadRequest(result.Error);
+        return result.ToActionResult(room => CreatedAtAction(
+            nameof(GetRoom),
+            new { id = room.Id },
+            room
+        ));
     }
 
     [HttpPut("{id}")]
@@ -45,20 +51,20 @@ public class RoomsController : ControllerBase
     {
         if (id != command.Id) return BadRequest("ID mismatch");
         var result = await _mediator.Send(command);
-        return result.IsSuccess ? NoContent() : BadRequest(result.Error);
+        return result.ToActionResult();
     }
 
     [HttpDelete("{id}")]
     public async Task<IActionResult> DeleteRoom(Guid id)
     {
         var result = await _mediator.Send(new DeleteRoomCommand(id));
-        return result.IsSuccess ? NoContent() : NotFound(result.Error);
+        return result.IsSuccess ? NoContent() : result.ToActionResult();
     }
 
     [HttpPost]
     [RequestSizeLimit(10 * 1024 * 1024)] // 10MB
     [Route("api/rooms/{roomId:guid}/images")]
-    public async Task<IActionResult> UploadRoomImage(
+    public async Task<ActionResult<ImageResponseDto>> UploadRoomImage(
         Guid roomId, 
         [FromForm] ImageUploadDto imageUploadDto)
     {
@@ -67,9 +73,9 @@ public class RoomsController : ControllerBase
 
         var command = new UploadRoomImageCommand(roomId, imageUploadDto);
         var result = await _mediator.Send(command);
-        
-        return result.IsSuccess 
-            ? Ok(result.Value) 
-            : BadRequest(result.Error);
+
+        return result.IsSuccess
+            ? Ok(result.Value)
+            : result.ToActionResult();
     }
 }

@@ -4,6 +4,7 @@ using TravelBooking.Application.Hotels.Commands;
 using TravelBooking.Application.Hotels.Dtos;
 using TravelBooking.Application.Hotels.Queries;
 using Microsoft.AspNetCore.Authorization;
+using TravelBooking.Api.Extensions;
 
 namespace TravelBooking.Api.Hotels.Admin.Controllers;
 
@@ -23,23 +24,23 @@ public class HotelController : ControllerBase
     public async Task<IActionResult> CreateHotel([FromBody] CreateHotelCommand command)
     {
         var result = await _mediator.Send(command);
-        return result.IsSuccess
-            ? CreatedAtAction(nameof(GetHotelById), new { id = result.Value.Id }, result.Value) 
-            : BadRequest(result.Error);
+        
+        return result.ToActionResult(() => 
+        CreatedAtAction(nameof(GetHotelById), new { id = result.Value.Id }, result.Value));
     }
 
     [HttpGet]
-    public async Task<IActionResult> GetHotels([FromQuery] string? filter, [FromQuery] int page = 1, [FromQuery] int pageSize = 20)
+    public async Task<ActionResult<List<HotelDto>>> GetHotels([FromQuery] string? filter, [FromQuery] int page = 1, [FromQuery] int pageSize = 20)
     {
         var result = await _mediator.Send(new GetHotelsQuery(filter, page, pageSize));
-        return Ok(result.Value);
+        return result.ToActionResult();
     }
 
     [HttpGet("{id:guid}")]
-    public async Task<IActionResult> GetHotelById(Guid id)
+    public async Task<ActionResult<HotelDto>> GetHotelById(Guid id)
     {
         var result = await _mediator.Send(new GetHotelByIdQuery(id));
-        return result.IsSuccess ? Ok(result.Value) : NotFound(result.Error);
+        return result.ToActionResult();
     }
 
     [HttpPut("{id:guid}")]
@@ -49,13 +50,13 @@ public class HotelController : ControllerBase
             return BadRequest("ID mismatch");
 
         var result = await _mediator.Send(new UpdateHotelCommand(dto));
-        return result.IsSuccess ? NoContent() : BadRequest(result.Error);
+        return result.IsSuccess ? NoContent() : result.ToActionResult();
     }
 
     [HttpDelete("{id:guid}")]
     public async Task<IActionResult> DeleteHotel(Guid id)
     {
         var result = await _mediator.Send(new DeleteHotelCommand(id));
-        return result.IsSuccess ? NoContent() : BadRequest(result.Error);
+        return result.IsSuccess ? NoContent() : result.ToActionResult();
     }
 }

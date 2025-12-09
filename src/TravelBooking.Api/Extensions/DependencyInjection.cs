@@ -4,26 +4,7 @@ using Serilog;
 using Serilog.Sinks.Elasticsearch;
 using TravelBooking.Infrastructure.Settings;
 using System.Security.Claims;
-using TravelBooking.Application.Carts.Services.Interfaces;
-using TravelBooking.Application.Carts.Services.Implementations;
-using TravelBooking.Application.Cheackout.Servicies.Implementations;
-using TravelBooking.Application.Cheackout.Servicies.Interfaces;
-using TravelBooking.Application.ViewingHotels.Mappers;
-using TravelBooking.Application.Carts.Mappers;
-using TravelBooking.Application.Cities.Servicies.Implementations;
-using TravelBooking.Application.Cities.Interfaces.Servicies;
-using TravelBooking.Application.Mappers.Interfaces;
-using TravelBooking.Application.Mappers;
-using TravelBooking.Application.Rooms.User.Mappers.Interfaces;
-using TravelBooking.Application.Rooms.User.Mappers.Implementations;
-using TravelBooking.Application.Hotels.User.ViewingHotels.Mappers.Interfaces;
-using TravelBooking.Application.Hotels.User.ViewingHotels.Mappers.Implementations;
-using TravelBooking.Application.Reviews.Services.Implementations;
-using TravelBooking.Application.Reviews.Services.Interfaces;
 using System.Text;
-using TravelBooking.Application.Images.Mappers.Interfaces;
-using TravelBooking.Application.Images.Mappers.Implementations;
-using TravelBooking.Application.Images.Servicies.Implementations;
 using TravelBooking.Api.MiddleWares;
 
 namespace TravelBooking.API;
@@ -37,7 +18,7 @@ public static class DependencyInjection
         services.AddEndpointsApiExplorer();
         services.AddSwaggerGen();
 
-        // JWT Settings (IOptions-style)
+        // JWT Settings 
         services.Configure<JwtSettings>(config.GetSection("JwtSettings"));
 
         services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
@@ -58,8 +39,6 @@ public static class DependencyInjection
 
         services.AddAuthorization();
 
-
-
         // Serilog + Elasticsearch
         var elasticUri = config["Elasticsearch:Uri"]
             ?? throw new InvalidOperationException("Elasticsearch:Uri is missing in configuration");
@@ -68,7 +47,7 @@ public static class DependencyInjection
             .WriteTo.Elasticsearch(new ElasticsearchSinkOptions(new Uri(elasticUri))
             {
                 AutoRegisterTemplate = true,
-                IndexFormat = "rooms-api-logs-{0:yyyy.MM.dd}"
+                IndexFormat = "api-logs-{0:yyyy.MM.dd}"
             })
             .CreateLogger();
 

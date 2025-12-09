@@ -20,13 +20,15 @@ public class GetRoomCommandHandler
     }
 
     [Fact]
-    public async Task CreateRoomCommandHandler_Handle_ShouldReturnGuidAndCallService()
+    public async Task CreateRoomCommandHandler_Handle_ShouldReturnRoomAndCallService()
     {
         // Arrange
         var dto = _fixture.Create<CreateRoomDto>();
-        var expectedId = Guid.NewGuid();
+        var expectedRoomDto = _fixture.Build<RoomDto>()
+            .With(x => x.Id, Guid.NewGuid())
+            .Create();
         _serviceMock.Setup(s => s.CreateRoomAsync(dto, It.IsAny<CancellationToken>()))
-            .ReturnsAsync(expectedId);
+            .ReturnsAsync(expectedRoomDto);
 
         var handler = new TravelBooking.Application.Rooms.Handlers.CreateRoomCommandHandler(_serviceMock.Object);
 
@@ -35,7 +37,7 @@ public class GetRoomCommandHandler
 
         // Assert
         result.IsSuccess.Should().BeTrue();
-        ((Result<Guid>)result).Value.Should().Be(expectedId);
+        result.Value.Should().Be(expectedRoomDto.Id);
         _serviceMock.Verify(s => s.CreateRoomAsync(dto, It.IsAny<CancellationToken>()), Times.Once);
     }
 }

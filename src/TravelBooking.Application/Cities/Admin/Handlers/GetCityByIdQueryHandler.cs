@@ -22,7 +22,7 @@ public class GetCityByIdQueryHandler : IRequestHandler<GetCityByIdQuery, Result<
     {
         var city = await _cityService.GetCityByIdAsync(request.Id, cancellationToken);
         if (city == null)
-            return Result.Failure<CityDto>("City not found.");
+            return Result.Failure<CityDto>("City not found.", "NOT_FOUND", 404);
         return Result.Success(city);
     }
 }

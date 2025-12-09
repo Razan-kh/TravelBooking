@@ -60,7 +60,7 @@ public class CityControllerTests : IClassFixture<ApiTestFactory>, IDisposable
         var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
 
         // Act
-        var response = await _client.GetAsync($"/api/city/trending-destinations?count={count}");
+        var response = await _client.GetAsync($"/api/cities/trending?count={count}");
 
         // Assert
         response.StatusCode.Should().Be(HttpStatusCode.OK);
@@ -78,7 +78,7 @@ public class CityControllerTests : IClassFixture<ApiTestFactory>, IDisposable
         var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
 
         // Act
-        var response = await _client.GetAsync("/api/city/trending-destinations");
+        var response = await _client.GetAsync("/api/cities/trending");
 
         // Assert
         response.StatusCode.Should().Be(HttpStatusCode.OK);
@@ -94,7 +94,7 @@ public class CityControllerTests : IClassFixture<ApiTestFactory>, IDisposable
         var unauthenticatedClient = _factory.CreateClient(); // No authentication
 
         // Act
-        var response = await unauthenticatedClient.GetAsync("/api/city/trending-destinations");
+        var response = await unauthenticatedClient.GetAsync("/api/cities/trending");
 
         // Assert
         response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);

@@ -4,4 +4,4 @@ using TravelBooking.Application.Shared.Results;
 
 namespace TravelBooking.Application.Rooms.Commands;
 
-public record CreateRoomCommand(CreateRoomDto Dto) : IRequest<Result<Guid>>;
+public record CreateRoomCommand(CreateRoomDto Dto) : IRequest<Result<RoomDto>>;

@@ -49,14 +49,14 @@ public class RoomService : IRoomService
         return room == null ? null : _mapper.Map(room);
     }
 
-    public async Task<Guid> CreateRoomAsync(CreateRoomDto dto, CancellationToken ct)
+    public async Task<RoomDto> CreateRoomAsync(CreateRoomDto dto, CancellationToken ct)
     {
         var room = _mapper.Map(dto);
         room.Id = Guid.NewGuid();
 
         await _roomRepo.AddAsync(room, ct);
 
-        return room.Id;
+        return _mapper.Map(room);
     }
 
     public async Task UpdateRoomAsync(UpdateRoomDto dto, CancellationToken ct)

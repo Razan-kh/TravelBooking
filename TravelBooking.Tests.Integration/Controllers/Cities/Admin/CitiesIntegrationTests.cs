@@ -54,7 +54,7 @@ public class CitiesIntegrationTests : IClassFixture<ApiTestFactory>
         _client.AddAuthHeader(_role, _adminId);
 
         // Act
-        var response = await _client.GetAsync("/api/city/cities");
+        var response = await _client.GetAsync("/api/cities");
 
         // Assert
         response.StatusCode.Should().Be(HttpStatusCode.OK);
@@ -69,7 +69,7 @@ public class CitiesIntegrationTests : IClassFixture<ApiTestFactory>
         _client.DefaultRequestHeaders.Authorization = null;
 
         // Act
-        var response = await _client.GetAsync("/api/city/cities");
+        var response = await _client.GetAsync("/api/cities");
 
         // Assert
         response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
@@ -99,7 +99,7 @@ public class CitiesIntegrationTests : IClassFixture<ApiTestFactory>
         );
 
         // Act
-        var response = await _client.PostAsync("/api/city/cities", json);
+        var response = await _client.PostAsync("/api/cities", json);
 
         // Assert
         response.StatusCode.Should().Be(HttpStatusCode.Created);
@@ -126,7 +126,7 @@ public class CitiesIntegrationTests : IClassFixture<ApiTestFactory>
         await db.SaveChangesAsync();
 
         // Act
-        var response = await _client.GetAsync($"/api/city/cities/{city.Id}");
+        var response = await _client.GetAsync($"/api/cities/{city.Id}");
 
         // Assert
         response.StatusCode.Should().Be(HttpStatusCode.OK);
@@ -142,10 +142,10 @@ public class CitiesIntegrationTests : IClassFixture<ApiTestFactory>
         var nonExistingId = Guid.NewGuid();
 
         // Act
-        var response = await _client.GetAsync($"/api/city/cities/{nonExistingId}");
+        var response = await _client.GetAsync($"/api/cities/{nonExistingId}");
 
         // Assert
-        response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+        response.StatusCode.Should().Be(HttpStatusCode.NotFound);
         var content = await response.Content.ReadAsStringAsync();
         content.Should().Contain("City not found");
     }
@@ -182,7 +182,7 @@ public class CitiesIntegrationTests : IClassFixture<ApiTestFactory>
 
         // send request
         var json = JsonContent.Create(updateDto);
-        var response = await _client.PutAsync($"/api/city/cities/{city.Id}", json);
+        var response = await _client.PutAsync($"/api/cities/{city.Id}", json);
 
         // Assert response
         response.StatusCode.Should().Be(HttpStatusCode.NoContent);
@@ -210,7 +210,7 @@ public class CitiesIntegrationTests : IClassFixture<ApiTestFactory>
         var json = new StringContent(JsonSerializer.Serialize(updateDto), Encoding.UTF8, "application/json");
 
         // Act
-        var response = await _client.PutAsync($"/api/city/cities/{Guid.NewGuid()}", json);
+        var response = await _client.PutAsync($"/api/cities/{Guid.NewGuid()}", json);
 
         // Assert
         response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
@@ -238,7 +238,7 @@ public class CitiesIntegrationTests : IClassFixture<ApiTestFactory>
             db.Cities.Add(city);
             await db.SaveChangesAsync();
 
-            var response = await _client.DeleteAsync($"/api/city/cities/{cityId}");
+            var response = await _client.DeleteAsync($"/api/cities/{cityId}");
 
             response.StatusCode.Should().Be(HttpStatusCode.NoContent);
         }
@@ -262,7 +262,7 @@ public class CitiesIntegrationTests : IClassFixture<ApiTestFactory>
         var nonExistingId = Guid.NewGuid();
 
         // Act
-        var response = await _client.DeleteAsync($"/api/city/cities/{nonExistingId}");
+        var response = await _client.DeleteAsync($"/api/cities/{nonExistingId}");
 
         // Assert
         response.StatusCode.Should().Be(HttpStatusCode.NoContent);

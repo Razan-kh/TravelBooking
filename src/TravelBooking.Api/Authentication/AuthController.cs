@@ -4,7 +4,7 @@ using TravelBooking.Application.Users.Commands;
 using TravelBooking.Application.Users.DTOs;
 using TravelBooking.Api.Extensions;
 
-namespace TravelBooking.Api.Controllers;
+namespace TravelBooking.Api.Authentication.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
