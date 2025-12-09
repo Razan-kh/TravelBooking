@@ -121,7 +121,17 @@ public class RoomServiceTests
         // Arrange
         var dto = _fixture.Create<CreateRoomDto>();
         var mappedRoom = new Room { RoomNumber = dto.RoomNumber, RoomCategoryId = dto.RoomCategoryId };
+
         _mapperMock.Setup(m => m.Map(dto)).Returns(mappedRoom);
+        
+        _mapperMock.Setup(m => m.Map(It.IsAny<Room>()))
+        .Returns((Room r) => new RoomDto
+        {
+            Id = r.Id,
+            RoomNumber = r.RoomNumber,
+            RoomCategoryId = r.RoomCategoryId
+        });
+
         _repoMock.Setup(r => r.AddAsync(It.IsAny<Room>(), It.IsAny<CancellationToken>()))
             .Returns(Task.CompletedTask)
             .Verifiable();
@@ -156,7 +166,7 @@ public class RoomServiceTests
     {
         // Arrange
         var dto = _fixture.Create<UpdateRoomDto>();
-        var existing = new Room { Id = dto.Id, RoomNumber = "old", RoomCategoryId = Guid.NewGuid()};
+        var existing = new Room { Id = dto.Id, RoomNumber = "old", RoomCategoryId = Guid.NewGuid() };
         _repoMock.Setup(r => r.GetByIdAsync(dto.Id, It.IsAny<CancellationToken>())).ReturnsAsync(existing);
         _mapperMock.Setup(m => m.UpdateRoomFromDto(dto, existing)).Verifiable();
         _repoMock.Setup(r => r.UpdateAsync(existing, It.IsAny<CancellationToken>())).Returns(Task.CompletedTask).Verifiable();
