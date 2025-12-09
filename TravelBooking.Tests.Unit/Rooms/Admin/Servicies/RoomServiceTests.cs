@@ -127,11 +127,12 @@ public class RoomServiceTests
             .Verifiable();
 
         // Act
-        var resultId = await _service.CreateRoomAsync(dto, CancellationToken.None);
+        var room = await _service.CreateRoomAsync(dto, CancellationToken.None);
 
         // Assert
-        resultId.Should().NotBe(Guid.Empty);
-        _repoMock.Verify(r => r.AddAsync(It.Is<Room>(x => x.Id == resultId), It.IsAny<CancellationToken>()), Times.Once);
+        room.Should().NotBeNull();
+        room.Id.Should().NotBe(Guid.Empty);
+        _repoMock.Verify(r => r.AddAsync(It.Is<Room>(x => x.Id == room.Id), It.IsAny<CancellationToken>()), Times.Once);
     }
 
     [Fact]
@@ -155,7 +156,7 @@ public class RoomServiceTests
     {
         // Arrange
         var dto = _fixture.Create<UpdateRoomDto>();
-        var existing = new Room { Id = dto.Id, RoomNumber = "old", RoomCategoryId = Guid.NewGuid(), RowVersion = dto.RowVersion };
+        var existing = new Room { Id = dto.Id, RoomNumber = "old", RoomCategoryId = Guid.NewGuid()};
         _repoMock.Setup(r => r.GetByIdAsync(dto.Id, It.IsAny<CancellationToken>())).ReturnsAsync(existing);
         _mapperMock.Setup(m => m.UpdateRoomFromDto(dto, existing)).Verifiable();
         _repoMock.Setup(r => r.UpdateAsync(existing, It.IsAny<CancellationToken>())).Returns(Task.CompletedTask).Verifiable();
