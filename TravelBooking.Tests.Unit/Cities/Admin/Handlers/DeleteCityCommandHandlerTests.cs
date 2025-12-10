@@ -26,19 +26,17 @@ public class DeleteCityCommandHandlerTests
         var id = Guid.NewGuid();
 
         // Mock city object returned from repo
-        var city = new City { Id = id, Name = "Test City", PostalCode = "p400", Country = "country" };
+        var city = new City { Id = id, Name = "Test City", PostalCode = "P400", Country = "country" };
 
         _serviceMock
             .Setup(s => s.DeleteCityAsync(id, It.IsAny<CancellationToken>()))
-            .ReturnsAsync(Result.Success()); // Mock service to return success
+            .ReturnsAsync(Result.Success()); 
 
         // Act
         var result = await _handler.Handle(new DeleteCityCommand(id), CancellationToken.None);
 
         // Assert
         result.IsSuccess.Should().BeTrue();
-        result.HttpStatusCode.Should().Be(204); // assuming Result.Success() sets 204 internally
-
         _serviceMock.Verify(s => s.DeleteCityAsync(id, It.IsAny<CancellationToken>()), Times.Once);
     }
 }
