@@ -60,13 +60,23 @@ public class CityServiceTests
     }
 
     [Fact]
-    public async Task UpdateCityAsync_ShouldThrow_WhenCityNotFound()
+    public async Task UpdateCityAsync_ShouldReturnNotFound_WhenCityDoesNotExist()
     {
+        // Arrange
         var dto = _fixture.Create<UpdateCityDto>();
-        _repoMock.Setup(r => r.GetByIdAsync(dto.Id, It.IsAny<CancellationToken>()))
-                 .ReturnsAsync((City?)null);
 
-        await Assert.ThrowsAsync<KeyNotFoundException>(() => _service.UpdateCityAsync(dto, CancellationToken.None));
+        // Mock repo to return null (city not found)
+        _repoMock
+            .Setup(r => r.GetByIdAsync(dto.Id, It.IsAny<CancellationToken>()))
+            .ReturnsAsync((City?)null);
+
+        // Act
+        var result = await _service.UpdateCityAsync(dto, CancellationToken.None);
+
+        // Assert
+        result.IsSuccess.Should().BeFalse();
+        result.HttpStatusCode.Should().Be(404);
+        result.Error.Should().Be("City not found.");
     }
 
     [Fact]
