@@ -405,4 +405,6 @@ obj/
 riderModule.iml
 /_ReSharper.Caches/
 /.idea/
+
+*.env
 # End of https://www.toptal.com/developers/gitignore/api/csharp
