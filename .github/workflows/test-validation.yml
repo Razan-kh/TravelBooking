@@ -1,0 +1,50 @@
+name: TravelBooking Tests
+
+on:
+  push:
+    branches: [ testing, main ]
+  pull_request:
+    branches: [ main ]
+    paths:
+      - '**/*.cs'
+      - '**/*.csproj'
+      - '**/*.sln'
+env:
+  DOTNET_VERSION: '8.0.412'
+  ASPNETCORE_ENVIRONMENT: Testing 
+
+jobs:
+  build-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 8.0.x
+          
+      - name: Show current working directory
+        run: |
+          echo "Current directory:"
+          pwd
+          echo "Files and folders in current directory:"
+          ls -la
+
+      # Restore solution from root
+      - name: Restore dependencies
+        run: dotnet restore TravelBooking.sln
+
+      # Build solution
+      - name: Build solution
+        run: dotnet build TravelBooking.sln --no-restore --configuration Release
+
+      # Run Unit Tests
+      - name: Run Unit Tests
+        run: dotnet test TravelBooking.Tests.Unit/TravelBooking.Tests.Unit.csproj --no-build --configuration Release
+
+      # Run Integration Tests
+      - name: Run Integration Tests
+        run: dotnet test TravelBooking.Tests.Integration/TravelBooking.Tests.Integration.csproj --no-build --configuration Release
