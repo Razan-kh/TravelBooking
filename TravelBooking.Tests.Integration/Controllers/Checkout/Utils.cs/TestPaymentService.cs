@@ -3,7 +3,7 @@ using TravelBooking.Application.Cheackout.Servicies.Interfaces;
 using TravelBooking.Application.Shared.Results;
 using TravelBooking.Domain.Payments.Enums;
 
-namespace BookingSystem.IntegrationTests.Checkout;
+namespace TravelBooking.Tests.Integration.Checkout.Utils;
 
 /// <summary>
 /// Test payment service for integration testing

@@ -40,6 +40,8 @@ using TravelBooking.Application.Images.Mappers.Interfaces;
 using TravelBooking.Application.Images.Mappers.Implementations;
 using TravelBooking.Application.ViewingHotels.Mappers;
 using TravelBooking.Application.FeaturedDeals.Mappers;
+using TravelBooking.Application.Searching.Servicies.Interfaces;
+using TravelBooking.Application.Searching.Servicies.Implementations;
 
 namespace TravelBooking.Application;
 
@@ -66,7 +68,7 @@ public static class DependencyInjection
         services.AddScoped<ICartService, CartService>();
         services.AddScoped<IBookingService, BookingService>();
         services.AddScoped<IDiscountService, DiscountService>();
-        services.AddScoped<SearchingInterfaces.IHotelService, SearchingImpl.HotelService>();
+        services.AddScoped<IHotelSearchService, HotelSearchService>();
         services.AddScoped<AdminHotelsInterfaces.IHotelService, AdminHotelsImpl.HotelService>();
         services.AddScoped<UserHotelsInterfaces.IHotelService, UserHotelsImpl.HotelService>();
         services.AddScoped<IRoomAvailabilityService, RoomAvailabilityService>();

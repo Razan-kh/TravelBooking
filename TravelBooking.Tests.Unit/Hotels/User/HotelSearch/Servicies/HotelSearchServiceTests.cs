@@ -21,7 +21,7 @@ public class HotelServiceTests
 
     private readonly Mock<IHotelRepository> _repo;
     private readonly Mock<ISieveProcessor> _sieve;
-    private readonly HotelService _sut;
+    private readonly HotelSearchService _sut;
 
     public HotelServiceTests()
     {
@@ -50,7 +50,7 @@ public class HotelServiceTests
                       bool applySorting,
                       bool applyPagination) => q);
 
-        _sut = new HotelService(_repo.Object, _sieve.Object);
+        _sut = new HotelSearchService(_repo.Object, _sieve.Object);
     }
 
     // Helpers

@@ -9,12 +9,12 @@ using TravelBooking.Domain.Searching.Entities;
 
 namespace TravelBooking.Application.Searching.Servicies.Implementations;
 
-public class HotelService : IHotelService
+public class HotelSearchService : IHotelSearchService
 {
     private readonly IHotelRepository _repo;
     private readonly ISieveProcessor _sieve;
 
-    public HotelService(IHotelRepository repo, ISieveProcessor sieve)
+    public HotelSearchService(IHotelRepository repo, ISieveProcessor sieve)
     {
         _repo = repo;
         _sieve = sieve;
@@ -47,7 +47,7 @@ public class HotelService : IHotelService
             var kw = request.Keyword.Trim();
             query = query.Where(h =>
                 h.Name.ToLower().Contains(kw.ToLower()) ||
-                h.City!.Name.ToLower().Contains(kw.ToLower())); 
+                h.City!.Name.ToLower().Contains(kw.ToLower()));
         }
 
         if (request.CityId.HasValue)

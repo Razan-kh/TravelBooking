@@ -5,7 +5,7 @@ using Xunit;
 using TravelBooking.Tests.Integration.Models;
 using TravelBooking.Tests.Integration.TestsBases;
 
-namespace TravelBooking.Tests.Integration.Repositories;
+namespace TravelBooking.Tests.Integration.Repositories.Reviews;
 
 public class ReviewRepositoryTests : RepositoryTestBase
 {

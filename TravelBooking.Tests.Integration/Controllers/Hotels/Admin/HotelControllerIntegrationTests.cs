@@ -11,7 +11,7 @@ using Xunit;
 using TravelBooking.Tests.Integration.Factories;
 using global::TravelBooking.Tests.Integration.Admin.Helpers;
 
-namespace TravelBooking.Tests.Integration.Admin.Controllers;
+namespace TravelBooking.Tests.Integration.Controllers.Hotels.Admin;
 
 public class HotelControllerIntegrationTests : IClassFixture<ApiTestFactory>, IDisposable
 {

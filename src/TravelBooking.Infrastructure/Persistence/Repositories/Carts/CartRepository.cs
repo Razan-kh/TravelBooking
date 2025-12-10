@@ -42,7 +42,7 @@ public class CartRepository : ICartRepository
     public async Task ClearUserCartAsync(Guid userId, CancellationToken ct)
     {
         var cart = await GetUserCartAsync(userId, ct);
-        if (cart == null) return;
+        if (cart is null) return;
 
         _context.CartItems.RemoveRange(cart.Items);
     }
@@ -71,7 +71,7 @@ public class CartRepository : ICartRepository
             .Include(c => c.Items)
             .FirstOrDefaultAsync(c => c.Id == cart.Id);
 
-        if (existing == null)
+        if (existing is null)
         {
             // NEW CART → Add it
             await _context.Carts.AddAsync(cart);
@@ -92,7 +92,7 @@ public class CartRepository : ICartRepository
             .Include(c => c.Items)
             .FirstOrDefaultAsync(c => c.UserId == userId, ct);
 
-        if (cart == null)
+        if (cart is null)
         {
             return;
         }

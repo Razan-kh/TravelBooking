@@ -42,7 +42,6 @@ public class CityController : ControllerBase
     {
         if (id != dto.Id) return BadRequest("Id mismatch");
         var res = await _mediator.Send(new UpdateCityCommand(dto));
-        
         return res.IsSuccess ? NoContent() : res.ToActionResult();
     }
 

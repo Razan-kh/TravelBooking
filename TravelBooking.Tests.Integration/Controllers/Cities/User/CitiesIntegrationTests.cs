@@ -10,7 +10,7 @@ using Xunit;
 using TravelBooking.Tests.Integration.Factories;
 using TravelBooking.Tests.Integration.Seeders;
 
-namespace TravelBooking.Tests.Integration.Controllers;
+namespace TravelBooking.Tests.Integration.Controllers.Cities.User;
 
 public class CityControllerTests : IClassFixture<ApiTestFactory>, IDisposable
 {

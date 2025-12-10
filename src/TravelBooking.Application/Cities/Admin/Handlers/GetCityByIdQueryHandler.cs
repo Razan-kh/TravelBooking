@@ -21,7 +21,7 @@ public class GetCityByIdQueryHandler : IRequestHandler<GetCityByIdQuery, Result<
     public async Task<Result<CityDto>> Handle(GetCityByIdQuery request, CancellationToken cancellationToken)
     {
         var city = await _cityService.GetCityByIdAsync(request.Id, cancellationToken);
-        if (city == null)
+        if (city is null)
             return Result.Failure<CityDto>("City not found.", "NOT_FOUND", 404);
         return Result.Success(city);
     }

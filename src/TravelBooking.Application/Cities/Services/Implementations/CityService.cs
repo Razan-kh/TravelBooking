@@ -31,7 +31,7 @@ public class CityService : ICityService
     public async Task<CityDto?> GetCityByIdAsync(Guid id, CancellationToken ct)
     {
         var city = await _cityRepo.GetByIdAsync(id, ct);
-        return city == null ? null : _mapper.Map(city);
+        return city is null ? null : _mapper.Map(city);
     }
 
     public async Task<CityDto> CreateCityAsync(CreateCityDto dto, CancellationToken ct)
@@ -39,24 +39,26 @@ public class CityService : ICityService
         var city = _mapper.Map(dto);
         city.Id = Guid.NewGuid();
         await _cityRepo.AddAsync(city, ct);
-        return _mapper.Map(city);   
+        return _mapper.Map(city);
     }
 
-    public async Task UpdateCityAsync(UpdateCityDto dto, CancellationToken ct)
+    public async Task<Result> UpdateCityAsync(UpdateCityDto dto, CancellationToken ct)
     {
         var city = await _cityRepo.GetByIdAsync(dto.Id, ct);
-        if (city == null)
-            throw new KeyNotFoundException($"City with ID {dto.Id} not found.");
+        if (city is null)
+            return Result.Failure("City not found.", "NOT_FOUND", 404);
 
         _mapper.UpdateCityFromDto(dto, city);
         await _cityRepo.UpdateAsync(city, ct);
+        return Result.Success();
     }
 
-    public async Task DeleteCityAsync(Guid id, CancellationToken ct)
+    public async Task<Result> DeleteCityAsync(Guid id, CancellationToken ct)
     {
         var city = await _cityRepo.GetByIdAsync(id, ct);
-        if (city == null) return;
+        if (city is null) return Result.Failure("City not found.", "NOT_FOUND", 404);
         await _cityRepo.DeleteAsync(city, ct);
+        return Result.Success();
     }
 
     public async Task<Result<List<TrendingCityDto>>> GetTrendingCitiesAsync(int count)

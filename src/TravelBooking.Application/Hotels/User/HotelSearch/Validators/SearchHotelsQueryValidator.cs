@@ -12,7 +12,7 @@ public class SearchHotelsQueryValidator : AbstractValidator<SearchHotelsQuery>
 
         RuleFor(x => x.CheckOut)
             .Must((query, checkOut) =>
-                checkOut == null || query.CheckIn == null || checkOut > query.CheckIn)
+                checkOut is null || query.CheckIn is null || checkOut > query.CheckIn)
             .WithMessage("CheckOut must be after CheckIn.");
     }
 }

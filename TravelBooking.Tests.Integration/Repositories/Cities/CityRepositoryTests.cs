@@ -6,7 +6,7 @@ using TravelBooking.Infrastructure.Persistence;
 using Xunit;
 using TravelBooking.Infrastructure.Persistence.Repositories;
 
-namespace TravelBooking.IntegrationTests.Repositories;
+namespace TravelBooking.Tests.Integration.Repositories.Cities;
 
 public class CityRepositoryTests : IDisposable
 {

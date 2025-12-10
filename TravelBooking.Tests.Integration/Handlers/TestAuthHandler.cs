@@ -10,7 +10,6 @@ namespace TravelBooking.Tests.Integration.Handlers;
 public class TestAuthHandler : AuthenticationHandler<AuthenticationSchemeOptions>
 {
     private readonly TestUserContext _userContext;
-  //  public const string Scheme = "TestScheme";
     public const string Scheme = "TestAuth";
 
     public TestAuthHandler(

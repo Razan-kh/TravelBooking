@@ -9,7 +9,7 @@ using TravelBooking.Tests.Integration.Helpers;
 using Xunit;
 using TravelBooking.Tests.Integration.Factories;
 
-namespace TravelBooking.Tests.Integration.Controllers;
+namespace TravelBooking.Tests.Integration.Controllers.Hotels.User;
 
 public class HotelControllerTests : IClassFixture<ApiTestFactory>, IDisposable
 {

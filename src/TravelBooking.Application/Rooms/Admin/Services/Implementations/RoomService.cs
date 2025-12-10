@@ -28,7 +28,7 @@ public class RoomService : IRoomService
         _galleryRepo = galleryRepo;
         _imageAppService = imageAppService;
         _logger = logger;
-        
+
     }
 
     public async Task<List<RoomDto>> GetRoomsAsync(string? filter, int page, int pageSize, CancellationToken ct)
@@ -46,7 +46,7 @@ public class RoomService : IRoomService
     public async Task<RoomDto?> GetRoomByIdAsync(Guid id, CancellationToken ct)
     {
         var room = await _roomRepo.GetByIdAsync(id, ct);
-        return room == null ? null : _mapper.Map(room);
+        return room is null ? null : _mapper.Map(room);
     }
 
     public async Task<RoomDto> CreateRoomAsync(CreateRoomDto dto, CancellationToken ct)
@@ -62,7 +62,7 @@ public class RoomService : IRoomService
     public async Task UpdateRoomAsync(UpdateRoomDto dto, CancellationToken ct)
     {
         var existing = await _roomRepo.GetByIdAsync(dto.Id, ct);
-        if (existing == null)
+        if (existing is null)
             throw new KeyNotFoundException($"Room with ID {dto.Id} not found.");
 
         // Mapperly updates entity in place
@@ -74,19 +74,19 @@ public class RoomService : IRoomService
     public async Task DeleteRoomAsync(Guid id, CancellationToken ct)
     {
         var existing = await _roomRepo.GetByIdAsync(id, ct);
-        if (existing == null) return;
+        if (existing is null) return;
 
         await _roomRepo.DeleteAsync(existing, ct);
     }
 
     public async Task<ImageResponseDto> UploadRoomImageAsync(
-    Guid roomId, 
-    ImageUploadDto imageUploadDto, 
+    Guid roomId,
+    ImageUploadDto imageUploadDto,
     CancellationToken ct = default)
     {
         // Validate room exists
         var room = await _roomRepo.GetByIdAsync(roomId, ct);
-        if (room == null)
+        if (room is null)
             throw new KeyNotFoundException($"Room with ID {roomId} not found.");
 
         // Validate file
@@ -95,10 +95,10 @@ public class RoomService : IRoomService
         // Upload to cloud storage
         var folder = $"rooms/{roomId}";
         using var stream = imageUploadDto.File.OpenReadStream();
-        
+
         var uploadResult = await _imageAppService.UploadAsync(
-            stream, 
-            imageUploadDto.File.FileName, 
+            stream,
+            imageUploadDto.File.FileName,
             folder
         );
 
@@ -113,8 +113,8 @@ public class RoomService : IRoomService
 
         await _galleryRepo.AddAsync(image, ct);
         await _roomRepo.UpdateAsync(room, ct);
-        
-        _logger.LogInformation("Image uploaded successfully for room {RoomId}, image ID: {ImageId}", 
+
+        _logger.LogInformation("Image uploaded successfully for room {RoomId}, image ID: {ImageId}",
             roomId, image.Id);
 
         return MapToImageResponseDto.Map(image);

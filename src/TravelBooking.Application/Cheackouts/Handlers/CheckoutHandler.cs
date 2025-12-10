@@ -44,7 +44,7 @@ public class CheckoutHandler : IRequestHandler<CheckoutCommand, Result>
     {
         var cart = await _cartService.GetUserCartAsync(request.UserId, ct);
 
-        if (cart == null || !cart.Items.Any())
+        if (cart is null || !cart.Items.Any())
             return Result.Failure("Cart is empty.", "EMPTY_CART", 400);
 
         var paymentResult = await _paymentService.ProcessPaymentAsync(

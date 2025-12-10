@@ -8,9 +8,9 @@ namespace TravelBooking.Application.Searching.Handlers;
 public class SearchHotelsHandler 
     : IRequestHandler<SearchHotelsQuery, PagedResult<HotelCardDto>>
 {
-    private readonly IHotelService _service;
+    private readonly IHotelSearchService _service;
 
-    public SearchHotelsHandler(IHotelService service)
+    public SearchHotelsHandler(IHotelSearchService service)
     {
         _service = service;
     }

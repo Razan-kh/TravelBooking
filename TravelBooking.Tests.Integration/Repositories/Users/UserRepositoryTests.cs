@@ -7,7 +7,7 @@ using TravelBooking.Tests.Integration.Extensions;
 using Xunit;
 using TravelBooking.Tests.Integration.Factories;
 
-namespace TravelBooking.Tests.Integration.Repositories;
+namespace TravelBooking.Tests.Integration.Repositories.Users;
 
 public class UserRepositoryTests : IClassFixture<ApiTestFactory>
 {

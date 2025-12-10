@@ -13,7 +13,7 @@ using TravelBooking.Tests.Integration.Helpers;
 using System.Net.Http.Json;
 using TravelBooking.Tests.Integration.Factories;
 
-namespace TravelBooking.IntegrationTests.Cities;
+namespace TravelBooking.Tests.Integration.Controllers.Cities.Admin;
 
 public class CitiesIntegrationTests : IClassFixture<ApiTestFactory>
 {
@@ -265,7 +265,7 @@ public class CitiesIntegrationTests : IClassFixture<ApiTestFactory>
         var response = await _client.DeleteAsync($"/api/cities/{nonExistingId}");
 
         // Assert
-        response.StatusCode.Should().Be(HttpStatusCode.NoContent);
+        response.StatusCode.Should().Be(HttpStatusCode.NotFound);
     }
 
     #endregion

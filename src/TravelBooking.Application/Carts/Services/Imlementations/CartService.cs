@@ -47,7 +47,7 @@ public class CartService : ICartService
 
         var cart = await _cartRepository.GetUserCartAsync(userId, ct);
 
-        if (cart == null)
+        if (cart is null)
         {
             cart = new Cart { UserId = userId };
             await _cartRepository.AddOrUpdateAsync(cart);
@@ -73,7 +73,7 @@ public class CartService : ICartService
             i.CheckIn == checkIn &&
             i.CheckOut == checkOut);
 
-        if (existing != null)
+        if (existing is not null)
         {
             existing.Quantity += quantity;
             return;
@@ -94,7 +94,7 @@ public class CartService : ICartService
     {
         var cart = await _cartRepository.GetUserCartAsync(userId, ct);
 
-        if (cart == null)
+        if (cart is null)
         {
             return Result.Failure<List<CartItemDto>>("Cart not found.");
         }
@@ -106,7 +106,7 @@ public class CartService : ICartService
     public async Task<Result> RemoveItemAsync(Guid cartItemId, CancellationToken ct)
     {
         var item = await _cartRepository.GetCartItemByIdAsync(cartItemId, ct);
-        if (item == null)
+        if (item is null)
             return Result.Failure("Cart item not found.", "NOT_FOUND", 404);
 
         _cartRepository.RemoveItem(item);

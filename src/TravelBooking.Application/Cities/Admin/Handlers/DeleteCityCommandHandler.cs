@@ -16,7 +16,6 @@ public class DeleteCityCommandHandler : IRequestHandler<DeleteCityCommand, Resul
 
     public async Task<Result> Handle(DeleteCityCommand request, CancellationToken cancellationToken)
     {
-        await _cityService.DeleteCityAsync(request.Id, cancellationToken);
-        return Result.Success();
+        return await _cityService.DeleteCityAsync(request.Id, cancellationToken);
     }
 }

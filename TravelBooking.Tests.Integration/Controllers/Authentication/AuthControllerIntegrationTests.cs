@@ -148,10 +148,8 @@ public class AuthControllerIntegrationTests : IClassFixture<ApiTestFactory>
         // Act
         var response = await _client.PostAsJsonAsync("/api/auth/login", request);
 
-        // Assert - This depends on your email case sensitivity configuration
-        // If emails are case-insensitive, this should succeed
-        // If case-sensitive, this should fail
-        response.StatusCode.Should().BeOneOf(HttpStatusCode.OK, HttpStatusCode.Unauthorized);
+        // Assert - This depends on the email case sensitivity configuration
+        response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
     }
 
     [Fact]
@@ -237,9 +235,9 @@ public class AuthControllerIntegrationTests : IClassFixture<ApiTestFactory>
 
         // Assert - Check security headers
         response.Headers.Should().NotBeNull();
+
         // Add checks for specific security headers your API implements
-        // response.Headers.CacheControl.Should().NotBeNull();
-        // response.Headers.Pragma.Should().NotBeNull();
+         response.Headers.Pragma.Should().NotBeNull();
     }
 
     #endregion

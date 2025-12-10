@@ -6,7 +6,7 @@ using TravelBooking.Infrastructure.Persistence;
 using TravelBooking.Infrastructure.Persistence.Repositories;
 using TravelBooking.Domain.Carts.Entities;
 
-namespace TravelBooking.Tests.Integration.Repositories;
+namespace TravelBooking.Tests.Integration.Repositories.Carts;
 
 public class CartRepositoryTests : IAsyncLifetime
 {

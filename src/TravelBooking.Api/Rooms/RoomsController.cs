@@ -65,17 +65,15 @@ public class RoomsController : ControllerBase
     [RequestSizeLimit(10 * 1024 * 1024)] // 10MB
     [Route("api/rooms/{roomId:guid}/images")]
     public async Task<ActionResult<ImageResponseDto>> UploadRoomImage(
-        Guid roomId, 
+        Guid roomId,
         [FromForm] ImageUploadDto imageUploadDto)
     {
-        if (imageUploadDto.File == null || imageUploadDto.File.Length == 0)
+        if (imageUploadDto.File is null || imageUploadDto.File.Length == 0)
             return BadRequest("File is required");
 
         var command = new UploadRoomImageCommand(roomId, imageUploadDto);
         var result = await _mediator.Send(command);
 
-        return result.IsSuccess
-            ? Ok(result.Value)
-            : result.ToActionResult();
+        return result.ToActionResult();
     }
 }

@@ -18,7 +18,7 @@ public class GetRoomByIdQueryHandler : IRequestHandler<GetRoomByIdQuery, Result<
     public async Task<Result<RoomDto>> Handle(GetRoomByIdQuery request, CancellationToken ct)
     {
         var result = await _roomService.GetRoomByIdAsync(request.Id, ct);
-        return result == null
+        return result is null
             ? Result.Failure<RoomDto>("Room not found")
             : Result.Success(result);
     }

@@ -7,6 +7,8 @@ using TravelBooking.Infrastructure.Persistence;
 using Xunit;
 using TravelBooking.Tests.Integration.Factories;
 
+namespace TravelBooking.Tests.Integration.Repositories.Hotels;
+
 public class HotelRepositoryTests : IClassFixture<ApiTestFactory>, IDisposable
 {
     private readonly ApiTestFactory _factory;

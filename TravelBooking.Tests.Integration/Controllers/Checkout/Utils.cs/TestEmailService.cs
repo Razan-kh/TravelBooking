@@ -1,8 +1,7 @@
 using TravelBooking.Application.Cheackout.Servicies.Interfaces;
 using TravelBooking.Domain.Bookings.Entities;
 
-namespace BookingSystem.IntegrationTests.Checkout.Utils;
-
+namespace TravelBooking.Tests.Integration.Checkout.Utils;
 
 /// <summary>
 /// Test email service that captures emails instead of sending them

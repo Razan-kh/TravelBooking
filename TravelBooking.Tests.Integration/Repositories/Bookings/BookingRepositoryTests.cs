@@ -11,7 +11,7 @@ using TravelBooking.Tests.Integration.Seeders;
 using TravelBooking.Tests.Integration.Builders;
 using TravelBooking.Tests.Integration.Models;
 
-namespace TravelBooking.Tests.Integration.Repositories;
+namespace TravelBooking.Tests.Integration.Repositories.Bookings;
 
 public class BookingRepositoryTests : IAsyncLifetime
 {

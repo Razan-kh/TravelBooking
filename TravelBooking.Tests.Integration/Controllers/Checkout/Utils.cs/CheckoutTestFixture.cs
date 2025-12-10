@@ -5,7 +5,7 @@ using TravelBooking.Tests.Integration.Factories;
 using Xunit;
 using TravelBooking.Application.Shared.Interfaces;
 
-namespace BookingSystem.IntegrationTests.Checkout.Utils;
+namespace TravelBooking.Tests.Integration.Checkout.Utils;
 
 public class CheckoutTestFixture : IAsyncLifetime
 {

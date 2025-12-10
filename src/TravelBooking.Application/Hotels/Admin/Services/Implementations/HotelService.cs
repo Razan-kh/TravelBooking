@@ -25,7 +25,7 @@ public class HotelService : IHotelService
     public async Task<HotelDto?> GetHotelByIdAsync(Guid id, CancellationToken ct)
     {
         var hotel = await _hotelRepo.GetByIdAsync(id, ct);
-        return hotel == null ? null : _mapper.Map(hotel);
+        return hotel is null ? null : _mapper.Map(hotel);
     }
 
     public async Task<HotelDto> CreateHotelAsync(CreateHotelDto dto, CancellationToken ct)
@@ -39,7 +39,7 @@ public class HotelService : IHotelService
     public async Task UpdateHotelAsync(UpdateHotelDto dto, CancellationToken ct)
     {
         var hotel = await _hotelRepo.GetByIdAsync(dto.Id, ct);
-        if (hotel == null)
+        if (hotel is null)
             throw new KeyNotFoundException($"Hotel with ID {dto.Id} not found.");
 
         _mapper.UpdateHotelFromDto(dto, hotel);
@@ -49,7 +49,7 @@ public class HotelService : IHotelService
     public async Task DeleteHotelAsync(Guid id, CancellationToken ct)
     {
         var hotel = await _hotelRepo.GetByIdAsync(id, ct);
-        if (hotel == null) return;
+        if (hotel is null) return;
         await _hotelRepo.DeleteAsync(hotel, ct);
     }
 }

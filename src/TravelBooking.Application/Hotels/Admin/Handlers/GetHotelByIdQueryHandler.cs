@@ -19,7 +19,7 @@ public class GetHotelByIdQueryHandler : IRequestHandler<GetHotelByIdQuery, Resul
     public async Task<Result<HotelDto>> Handle(GetHotelByIdQuery request, CancellationToken ct)
     {
         var hotelDto = await _hotelService.GetHotelByIdAsync(request.Id, ct);
-        if (hotelDto == null)
+        if (hotelDto is null)
             return Result.Failure<HotelDto>("Hotel not found.", errorCode: "NOT_FOUND", httpStatusCode: 404);
 
         return Result.Success(hotelDto);

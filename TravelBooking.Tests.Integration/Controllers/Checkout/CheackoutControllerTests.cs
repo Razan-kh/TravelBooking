@@ -17,12 +17,12 @@ using TravelBooking.Infrastructure.Persistence;
 using TravelBooking.Tests.Integration.Helpers;
 using Xunit;
 using System.Data;
-using BookingSystem.IntegrationTests.Checkout.Utils;
 using TravelBooking.Application.Shared.Interfaces;
 using TravelBooking.Domain.Users.Entities;
 using TravelBooking.Domain.Cities.Entities;
+using TravelBooking.Tests.Integration.Checkout.Utils;
 
-namespace BookingSystem.IntegrationTests.Checkout;
+namespace TravelBooking.Tests.Integration.Controllers.Checkout;
 
 [CollectionDefinition("CheckoutIntegration")]
 public class CheckoutIntegrationCollection : IClassFixture<CheckoutTestFixture>
@@ -102,7 +102,7 @@ public class CheckoutControllerIntegrationTests : IAsyncLifetime
         // Arrange - use the test's DbContext, not a new one
         var cart = await CreateCartWithItemsAsync(_dbContext);
 
-        var checkoutCommand = new CheckoutCommand(_testUserId, PaymentMethod.Card);
+        var checkoutCommand = new CheckoutCommand(PaymentMethod.Card);
 
         // Act
         var response = await _client.PostAsJsonAsync("/api/checkout", checkoutCommand);
@@ -140,7 +140,7 @@ public class CheckoutControllerIntegrationTests : IAsyncLifetime
     {
         // Arrange
         var cart = await CreateMultiHotelCartAsync(_dbContext);
-        var checkoutCommand = new CheckoutCommand(_testUserId, PaymentMethod.Cash);
+        var checkoutCommand = new CheckoutCommand(PaymentMethod.Cash);
 
         // Act
         var response = await _client.PostAsJsonAsync("/api/checkout", checkoutCommand);
@@ -336,7 +336,7 @@ public class CheckoutControllerIntegrationTests : IAsyncLifetime
     {
         // Arrange
         var cart = await CheackoutSeeding.CreateCartWithDiscountAsync(_dbContext, _testUserId);
-        var checkoutCommand = new CheckoutCommand(_testUserId, PaymentMethod.Card);
+        var checkoutCommand = new CheckoutCommand(PaymentMethod.Card);
 
         // Calculate expected total with discount
         var cartItem = cart.Items.First();
@@ -368,7 +368,7 @@ public class CheckoutControllerIntegrationTests : IAsyncLifetime
     {
         // Arrange
         var cart = await CreateCartWithItemsAsync(_dbContext);
-        var checkoutCommand = new CheckoutCommand(_testUserId, PaymentMethod.Cash);
+        var checkoutCommand = new CheckoutCommand(PaymentMethod.Cash);
 
         // Act
         var response = await _client.PostAsJsonAsync("/api/checkout", checkoutCommand);
@@ -391,7 +391,7 @@ public class CheckoutControllerIntegrationTests : IAsyncLifetime
     public async Task Checkout_WithEmptyCart_ReturnsBadRequest()
     {
         // Arrange 
-        var checkoutCommand = new CheckoutCommand(_testUserId, PaymentMethod.Card);
+        var checkoutCommand = new CheckoutCommand(PaymentMethod.Card);
 
         // Act
         var response = await _client.PostAsJsonAsync("/api/checkout", checkoutCommand);
@@ -420,7 +420,7 @@ public class CheckoutControllerIntegrationTests : IAsyncLifetime
     {
         // Arrange
         var cart = await CreateCartWithItemsAsync(_dbContext);
-        var checkoutCommand = new CheckoutCommand(_testUserId, PaymentMethod.Card);
+        var checkoutCommand = new CheckoutCommand(PaymentMethod.Card);
 
         // Configure payment service to fail
         _paymentService.SetFailure("Insufficient funds");
@@ -457,7 +457,7 @@ public class CheckoutControllerIntegrationTests : IAsyncLifetime
     {
         // Arrange
         var unauthenticatedClient = _fixture.Factory.CreateClient(); // No auth header
-        var checkoutCommand = new CheckoutCommand(_testUserId, PaymentMethod.Card);
+        var checkoutCommand = new CheckoutCommand(PaymentMethod.Card);
 
         // Act
         var response = await unauthenticatedClient.PostAsJsonAsync("/api/checkout", checkoutCommand);
@@ -505,7 +505,7 @@ public class CheckoutControllerIntegrationTests : IAsyncLifetime
         await _dbContext.Carts.AddAsync(cart);
         await _dbContext.SaveChangesAsync();
 
-        var checkoutCommand = new CheckoutCommand(_testUserId, PaymentMethod.Card);
+        var checkoutCommand = new CheckoutCommand(PaymentMethod.Card);
 
         // Act
         var response = await _client.PostAsJsonAsync("/api/checkout", checkoutCommand);
@@ -522,7 +522,7 @@ public class CheckoutControllerIntegrationTests : IAsyncLifetime
     {
         // Arrange
         var cart = await CheackoutSeeding.CreateCartWithUnavailableRoomAsync(_dbContext, _testUserId);
-        var checkoutCommand = new CheckoutCommand(_testUserId, PaymentMethod.Card);
+        var checkoutCommand = new CheckoutCommand(PaymentMethod.Card);
 
         // Act
         var response = await _client.PostAsJsonAsync("/api/checkout", checkoutCommand);
@@ -549,7 +549,7 @@ public class CheckoutControllerIntegrationTests : IAsyncLifetime
     {
         // Arrange
         var cart = await CreateCartWithItemsAsync(_dbContext, itemCount: 10);
-        var checkoutCommand = new CheckoutCommand(_testUserId, PaymentMethod.Card);
+        var checkoutCommand = new CheckoutCommand(PaymentMethod.Card);
 
         // Act
         var response = await _client.PostAsJsonAsync("/api/checkout", checkoutCommand);
@@ -573,7 +573,7 @@ public class CheckoutControllerIntegrationTests : IAsyncLifetime
     {
         // Arrange
         var cart = await CreateCartWithItemsAsync(_dbContext);
-        var checkoutCommand = new CheckoutCommand(_testUserId, PaymentMethod.Card);
+        var checkoutCommand = new CheckoutCommand(PaymentMethod.Card);
 
         // Act
         var response = await _client.PostAsJsonAsync("/api/checkout", checkoutCommand);
@@ -603,7 +603,7 @@ public class CheckoutControllerIntegrationTests : IAsyncLifetime
     {
         // Arrange
         var cart = await CreateCartWithItemsAsync(_dbContext);
-        var checkoutCommand = new CheckoutCommand(_testUserId, PaymentMethod.Card);
+        var checkoutCommand = new CheckoutCommand(PaymentMethod.Card);
 
         // Replace email service with one that throws
         var failingEmailService = new Mock<IEmailService>();
@@ -627,7 +627,7 @@ public class CheckoutControllerIntegrationTests : IAsyncLifetime
     {
         // Arrange
         var cart = await CreateCartWithItemsAsync(_dbContext);
-        var checkoutCommand = new CheckoutCommand(_testUserId, PaymentMethod.Card);
+        var checkoutCommand = new CheckoutCommand(PaymentMethod.Card);
 
         // Act
         var response = await _client.PostAsJsonAsync("/api/checkout", checkoutCommand);
@@ -667,7 +667,7 @@ public class CheckoutControllerIntegrationTests : IAsyncLifetime
             itemCount: 2,
             pricePerNight: 100.00m);
 
-        var checkoutCommand = new CheckoutCommand(_testUserId, PaymentMethod.Card);
+        var checkoutCommand = new CheckoutCommand(PaymentMethod.Card);
 
         // Calculate expected total manually
         decimal expectedTotal = 0;
@@ -698,7 +698,8 @@ public class CheckoutControllerIntegrationTests : IAsyncLifetime
     {
 
         var cart = await CreateCartWithItemsAsync(_dbContext);
-        var checkoutCommand = new CheckoutCommand(_fixture.TestUserId, PaymentMethod.Card);
+      //  var checkoutCommand = new CheckoutCommand(_fixture.TestUserId, PaymentMethod.Card);
+        var checkoutCommand = new CheckoutCommand(PaymentMethod.Card);
 
         // Measure response time
         var stopwatch = System.Diagnostics.Stopwatch.StartNew();

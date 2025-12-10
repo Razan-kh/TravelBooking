@@ -14,13 +14,13 @@ public class AuthController(IMediator mediator) : ControllerBase
     [HttpPost("login")]
     public async Task<ActionResult<LoginResponseDto>> Login([FromBody] LoginRequestDto request)
     {
-            var cmd = new LoginCommand
-            {
-                Email = request.Email,
-                Password = request.Password
-            };
+        var cmd = new LoginCommand
+        {
+            Email = request.Email,
+            Password = request.Password
+        };
 
-            var result = await _mediator.Send(cmd);
-            return result.ToActionResult();
+        var result = await _mediator.Send(cmd);
+        return result.ToActionResult();
     }
 }

@@ -11,7 +11,7 @@ public static class TokenGenerator
     {
         var claims = new[]
         {
-            new Claim(ClaimTypes.Name, "admin"),
+            new Claim(ClaimTypes.Name, role.ToString()),
             new Claim(ClaimTypes.Role, role),
             new(ClaimTypes.NameIdentifier, id.ToString() ?? Guid.NewGuid().ToString())
         };

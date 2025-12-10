@@ -3,7 +3,7 @@ using TravelBooking.Application.Queries;
 
 namespace TravelBooking.Application.Searching.Servicies.Interfaces;
 
-public interface IHotelService
+public interface IHotelSearchService
 {
     Task<PagedResult<HotelCardDto>> SearchAsync(SearchHotelsQuery query, CancellationToken ct);
 }

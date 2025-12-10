@@ -6,7 +6,7 @@ using TravelBooking.Domain.Discounts.Entities;
 using TravelBooking.Domain.Hotels.Entities;
 using TravelBooking.Domain.Rooms.Entities;
 
-namespace BookingSystem.IntegrationTests.Checkout.Utils;
+namespace TravelBooking.Tests.Integration.Checkout.Utils;
 
 public class CheackoutSeeding
 {

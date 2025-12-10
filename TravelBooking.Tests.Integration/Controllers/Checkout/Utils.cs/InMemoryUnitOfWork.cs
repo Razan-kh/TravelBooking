@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using TravelBooking.Application.Shared.Interfaces;
 using TravelBooking.Infrastructure.Persistence;
 
-namespace BookingSystem.IntegrationTests.Checkout.Utils;
+namespace TravelBooking.Tests.Integration.Checkout.Utils;
 
 public class InMemoryUnitOfWork : IUnitOfWork
 {

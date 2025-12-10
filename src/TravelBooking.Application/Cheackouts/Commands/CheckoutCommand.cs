@@ -5,7 +5,7 @@ using TravelBooking.Domain.Payments.Enums;
 
 namespace TravelBooking.Application.Cheackout.Commands;
 
-public record CheckoutCommand(Guid UserId, PaymentMethod PaymentMethod) : IRequest<Result>, IUserRequest
+public record CheckoutCommand(PaymentMethod PaymentMethod) : IRequest<Result>, IUserRequest
 {
     public Guid UserId { get; set; }
 }

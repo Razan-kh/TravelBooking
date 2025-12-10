@@ -33,10 +33,7 @@ public class CartController : ControllerBase
     public async Task<ActionResult<List<CartItemDto>>> GetCart(CancellationToken ct)
     {
         var result = await _mediator.Send(new GetCartQuery(), ct);
-        if (result.IsSuccess)
-            return Ok(result.Value);
-
-        return result.ToActionResult();
+        return result.IsSuccess ? (ActionResult<List<CartItemDto>>)Ok(result.Value) : result.ToActionResult();
     }
 
     [HttpDelete("items/{cartItemId:guid}")]

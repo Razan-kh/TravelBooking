@@ -19,7 +19,7 @@ public class DiscountService : IDiscountService
                 .FirstOrDefault(d => d.StartDate <= item.CheckIn.ToDateTime(TimeOnly.MinValue)
                                   && d.EndDate >= item.CheckOut.ToDateTime(TimeOnly.MinValue));
 
-            if (discount != null)
+            if (discount is not null)
                 price -= price * (discount.DiscountPercentage / 100m);
 
             total += price;

@@ -6,7 +6,7 @@ public class ValidateImageFile
 {
     public static void Validate(IFormFile file)
     {
-        if (file == null || file.Length == 0)
+        if (file is null || file.Length == 0)
             throw new ArgumentException("File is required");
 
         if (file.Length > 10 * 1024 * 1024) // 10MB limit

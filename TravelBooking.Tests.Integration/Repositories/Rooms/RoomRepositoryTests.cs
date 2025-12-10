@@ -10,7 +10,7 @@ using TravelBooking.Tests.Integration.Factories;
 using TravelBooking.Domain.Images.Entities;
 using TravelBooking.Tests.Integration.Extensions;
 
-namespace TravelBooking.Tests.Integration.Repositories;
+namespace TravelBooking.Tests.Integration.Repositories.Rooms;
 
 public class RoomRepositoryTests
 {

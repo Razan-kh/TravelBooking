@@ -17,7 +17,7 @@ using TravelBooking.Tests.Integration.Factories;
 using TravelBooking.Tests.Integration.Helpers;
 using Xunit;
 
-namespace TravelBooking.Tests.Integration.Controllers;
+namespace TravelBooking.Tests.Integration.Controllers.Carts;
 
 public class CartControllerTests : IClassFixture<ApiTestFactory>, IDisposable
 {
@@ -109,7 +109,7 @@ public class CartControllerTests : IClassFixture<ApiTestFactory>, IDisposable
     
     await _dbContext.Hotels.AddAsync(hotel);
     await _dbContext.RoomCategories.AddAsync(roomCategory);
-        await _dbContext.SaveChangesAsync();
+    await _dbContext.SaveChangesAsync();
     
         var command = new AddRoomToCartCommand(
             Guid.NewGuid(),
