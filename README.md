@@ -44,8 +44,9 @@ Designed for clean, maintainable, and testable code, with strong separation of c
 - **Clean Architecture** with clear separation of concerns across four independent layers
 - **CQRS (Command Query Responsibility Segregation)** for separating read and write operations
 - **Repository & Service Pattern** for data access abstraction
-- **Result Pattern** (using FluentResults or similar) for consistent error handling
-  
+- **Result Pattern** for consistent error handling
+- **MediatR** – Mediator pattern implementation for decoupled communication between layers
+
 ### **Layer Structure:**
 
 - **Domain** – Entities, value objects, and business rules.
