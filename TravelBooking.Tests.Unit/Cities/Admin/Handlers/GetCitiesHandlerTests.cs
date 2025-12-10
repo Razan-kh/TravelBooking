@@ -13,6 +13,7 @@ using TravelBooking.Application.Cities.Interfaces.Servicies;
 using TravelBooking.Application.Cities.Servicies;
 using TravelBooking.Application.Mappers;
 using Xunit;
+using TravelBooking.Application.Cities.Aadmin.Handlers;
 
 namespace TravelBooking.Tests.Cities.Admin.Handlers;
 
