@@ -3,7 +3,7 @@ using TravelBooking.Domain.Carts.Entities;
 
 namespace TravelBooking.Application.Cheackout.Servicies.Implementations;
 
-public class DiscountService : IDiscountService
+public class PricingService : IPricingService
 {
     public decimal CalculateTotal(IEnumerable<CartItem> items)
     {

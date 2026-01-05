@@ -16,7 +16,6 @@ public class DeleteHotelCommandHandler : IRequestHandler<DeleteHotelCommand, Res
 
     public async Task<Result> Handle(DeleteHotelCommand request, CancellationToken ct)
     {
-        await _hotelService.DeleteHotelAsync(request.Id, ct);
-        return Result.Success();
+        return await _hotelService.DeleteHotelAsync(request.Id, ct);
     }
 }

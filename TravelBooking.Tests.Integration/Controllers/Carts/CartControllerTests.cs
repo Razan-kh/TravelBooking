@@ -75,11 +75,10 @@ public class CartControllerTests : IClassFixture<ApiTestFactory>, IDisposable
         // Assert
         response.StatusCode.Should().Be(HttpStatusCode.OK);
 
-        // Verify cart item is persisted - include Items and use proper query
         var cart = await _dbContext.Carts
             .Include(c => c.Items)
-            .AsNoTracking() // Important: include related data
-            .FirstOrDefaultAsync(c => c.UserId == testUserId); // Use FirstOrDefaultAsync instead of FindAsync
+            .AsNoTracking() 
+            .FirstOrDefaultAsync(c => c.UserId == testUserId);
 
         cart.Should().NotBeNull();
         cart!.Items.Should().ContainSingle(i =>
@@ -92,25 +91,24 @@ public class CartControllerTests : IClassFixture<ApiTestFactory>, IDisposable
     {
         // Arrange
         var testUserId = Guid.NewGuid();
-    var hotel = new Hotel
-    {
-        Id = Guid.NewGuid(),
-        Name = "Test Hotel"
-    };
+        var hotel = new Hotel
+        {
+            Id = Guid.NewGuid(),
+            Name = "Test Hotel"
+        };
     
-    // Create a REAL room category that exists in the database
-    var roomCategory = new RoomCategory
-    {
-        Id = Guid.NewGuid(),
-        HotelId = hotel.Id,
-        Name = "Test Room Category",
-        PricePerNight = 100.00m
-    };
+        var roomCategory = new RoomCategory
+        {
+            Id = Guid.NewGuid(),
+            HotelId = hotel.Id,
+            Name = "Test Room Category",
+            PricePerNight = 100.00m
+        };
     
-    await _dbContext.Hotels.AddAsync(hotel);
-    await _dbContext.RoomCategories.AddAsync(roomCategory);
-    await _dbContext.SaveChangesAsync();
-    
+        await _dbContext.Hotels.AddAsync(hotel);
+        await _dbContext.RoomCategories.AddAsync(roomCategory);
+        await _dbContext.SaveChangesAsync();
+        
         var command = new AddRoomToCartCommand(
             Guid.NewGuid(),
             DateOnly.FromDateTime(DateTime.UtcNow.AddDays(3)), // CheckIn later
@@ -155,9 +153,9 @@ public class CartControllerTests : IClassFixture<ApiTestFactory>, IDisposable
         {
             UserId = testUserId,
             Items =
-    [
-        cartItems
-    ]
+            [
+                cartItems
+            ]
         };
         cartItems.Cart = cart;
         cartItems.CartId = cart.Id;
@@ -173,7 +171,6 @@ public class CartControllerTests : IClassFixture<ApiTestFactory>, IDisposable
         response.StatusCode.Should().Be(HttpStatusCode.OK);
         var json = await response.Content.ReadAsStringAsync();
 
-        // Use an anonymous type to read the JSON
         var template = new
         {
             isSuccess = false,

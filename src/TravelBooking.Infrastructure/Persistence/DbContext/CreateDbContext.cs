@@ -9,7 +9,6 @@ public class DesignTimeDbContextFactory : IDesignTimeDbContextFactory<AppDbConte
 {
     public AppDbContext CreateDbContext(string[] args)
     {
-        // Locate the API project directory (adjust path if different)
         var apiProjectPath = Path.Combine(
             Directory.GetCurrentDirectory(),
             "..",
