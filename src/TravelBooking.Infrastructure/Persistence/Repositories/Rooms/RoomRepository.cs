@@ -14,7 +14,7 @@ public class RoomRepository : IRoomRepository
         _context = context;
     }
 
-    public async Task<List<Room>> GetRoomsAsync(string? filter, CancellationToken ct)
+    public async Task<List<Room>> GetRoomsAsync(string? filter, int page, int pageSize, CancellationToken ct)
     {
         var query = _context.Rooms.AsQueryable();
 
@@ -25,10 +25,13 @@ public class RoomRepository : IRoomRepository
                 r.RoomCategory.Name.Contains(filter));
         }
 
-        return await query
-            .Include(r => r.RoomCategory)  
+        query = query
+            .Include(r => r.RoomCategory)
             .Include(r => r.Gallery)
-            .ToListAsync(ct);
+            .Skip((page - 1) * pageSize)  // pagination
+            .Take(pageSize);
+
+        return await query.ToListAsync(ct);
     }
 
     public async Task<Room?> GetByIdAsync(Guid id, CancellationToken ct)
@@ -38,6 +41,9 @@ public class RoomRepository : IRoomRepository
             .Include(r => r.Gallery)
             .FirstOrDefaultAsync(r => r.Id == id, ct);
     }
+
+    public Task<RoomCategory?> GetRoomCategoryByIdAsync(Guid id, CancellationToken ct)
+    => _context.RoomCategories.FirstOrDefaultAsync(rc => rc.Id == id, ct);
 
     public async Task AddAsync(Room room, CancellationToken ct)
     {

@@ -12,7 +12,7 @@ namespace TravelBooking.Tests.Integration.Repositories.Users;
 public class UserRepositoryTests : IClassFixture<ApiTestFactory>
 {
     private readonly ApiTestFactory _factory;
-    private readonly IFixture _fixture;
+    private readonly Fixture _fixture;
 
     public UserRepositoryTests(ApiTestFactory factory)
     {

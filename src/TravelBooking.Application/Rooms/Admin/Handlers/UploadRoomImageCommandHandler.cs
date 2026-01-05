@@ -30,12 +30,7 @@ public class UploadRoomImageCommandHandler : IRequestHandler<UploadRoomImageComm
                 ct
             );
 
-            return Result<ImageResponseDto>.Success(imageResponse);
-        }
-        catch (KeyNotFoundException ex)
-        {
-            _logger.LogWarning(ex, "Room not found: {RoomId}", request.RoomId);
-            return Result<ImageResponseDto>.Failure("Room not found");
+            return imageResponse;
         }
         catch (ArgumentException ex)
         {

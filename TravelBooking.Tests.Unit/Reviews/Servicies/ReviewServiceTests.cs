@@ -8,7 +8,7 @@ using TravelBooking.Application.Reviews.Services.Implementations;
 using TravelBooking.Application.Hotels.User.ViewingHotels.Mappers.Interfaces;
 using TravelBooking.Application.Reviews.DTOs;
 
-namespace TravelBooking.Tests.Services;
+namespace TravelBooking.Tests.Unit.Reviews.Servicies;
 
 public class ReviewServiceTests
 {

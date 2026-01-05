@@ -3,6 +3,8 @@ using Moq;
 using TravelBooking.Application.Hotels.Admin.Handlers;
 using TravelBooking.Application.Hotels.Admin.Servicies.Interfaces;
 using TravelBooking.Application.Hotels.Commands;
+using TravelBooking.Application.Hotels.Dtos;
+using TravelBooking.Application.Shared.Results;
 
 namespace TravelBooking.Tests.Hotels.Handlers;
 
@@ -22,7 +24,7 @@ public class DeleteHotelCommandHandlerTests
     {
         var id = Guid.NewGuid();
         _serviceMock.Setup(s => s.DeleteHotelAsync(id, It.IsAny<CancellationToken>()))
-                    .Returns(Task.CompletedTask);
+                    .ReturnsAsync(Result.Success());
 
         var result = await _handler.Handle(new DeleteHotelCommand(id), CancellationToken.None);
 

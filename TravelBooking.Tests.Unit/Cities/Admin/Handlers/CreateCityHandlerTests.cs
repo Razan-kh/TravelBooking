@@ -11,13 +11,13 @@ namespace TravelBooking.Tests.Cities.Admin.Handlers;
 
 public class CreateCityHandlerTests
 {
-    private readonly IFixture _fixture;
+    private readonly Fixture _fixture;
     private readonly Mock<ICityService> _serviceMock;
     private readonly CreateCityHandler _handler;
 
     public CreateCityHandlerTests()
     {
-        _fixture = new Fixture().Customize(new AutoMoqCustomization());
+        _fixture = (Fixture?)new Fixture().Customize(new AutoMoqCustomization());
         _serviceMock = _fixture.Freeze<Mock<ICityService>>();
         _handler = new CreateCityHandler(_serviceMock.Object);
     }

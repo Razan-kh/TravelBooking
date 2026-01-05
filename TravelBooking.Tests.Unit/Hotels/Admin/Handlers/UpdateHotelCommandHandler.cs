@@ -5,6 +5,7 @@ using TravelBooking.Application.Hotels.Admin.Handlers;
 using TravelBooking.Application.Hotels.Admin.Servicies.Interfaces;
 using TravelBooking.Application.Hotels.Commands;
 using TravelBooking.Application.Hotels.Dtos;
+using TravelBooking.Application.Shared.Results;
 
 namespace TravelBooking.Tests.Hotels.Handlers;
 
@@ -25,8 +26,10 @@ public class UpdateHotelCommandHandlerTests
     public async Task Handle_ShouldReturnSuccess_WhenUpdateSucceeds()
     {
         var dto = _fixture.Create<UpdateHotelDto>();
-        _serviceMock.Setup(s => s.UpdateHotelAsync(dto, It.IsAny<CancellationToken>()))
-                    .Returns(Task.CompletedTask);
+        _serviceMock
+        .Setup(s => s.UpdateHotelAsync(dto, It.IsAny<CancellationToken>()))
+        .ReturnsAsync(Result.Success());
+
 
         var result = await _handler.Handle(new UpdateHotelCommand(dto), CancellationToken.None);
 
@@ -36,13 +39,22 @@ public class UpdateHotelCommandHandlerTests
     [Fact]
     public async Task Handle_ShouldReturnFailure_WhenHotelNotFound()
     {
+        // Arrange 
         var dto = _fixture.Create<UpdateHotelDto>();
         _serviceMock.Setup(s => s.UpdateHotelAsync(dto, It.IsAny<CancellationToken>()))
-                    .ThrowsAsync(new KeyNotFoundException("Hotel not found"));
+        .ReturnsAsync(Result.NotFound($"Hotel with ID {dto.Id} not found."));
 
+        // Act
         var result = await _handler.Handle(new UpdateHotelCommand(dto), CancellationToken.None);
 
+        // Assert
         result.IsSuccess.Should().BeFalse();
-        result.Error.Should().Contain("Hotel not found");
+        result.HttpStatusCode.Should().Be(404);
+        result.ErrorCode.Should().Be("NOT_FOUND");
+
+        _serviceMock.Verify(
+        s => s.UpdateHotelAsync(dto, It.IsAny<CancellationToken>()),
+        Times.Once
+    );
     }
 }

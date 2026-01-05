@@ -50,10 +50,9 @@ public class RoomServiceTests
         .ToList();
 
 
-        _repoMock.Setup(r => r.GetRoomsAsync(It.IsAny<string?>(), It.IsAny<CancellationToken>()))
+        _repoMock.Setup(r => r.GetRoomsAsync(It.IsAny<string?>(), 2, 10, It.IsAny<CancellationToken>()))
             .ReturnsAsync(allRooms);
 
-        // mapper maps each Room to a RoomDto
         _mapperMock.Setup(m => m.Map(It.IsAny<Room>()))
             .Returns<Room>(r => new RoomDto
             {
@@ -64,14 +63,14 @@ public class RoomServiceTests
                 CategoryName = "Category"
             });
 
-        // Act - request page 2, pageSize 10
+        // Act 
         var result = await _service.GetRoomsAsync(null, page: 2, pageSize: 10, CancellationToken.None);
 
         // Assert
-        result.Should().HaveCount(10);
+        result.Should().HaveCount(50);
         result.Select(r => r.CategoryName).Should().AllBeEquivalentTo("Category");
-        _repoMock.Verify(r => r.GetRoomsAsync(null, It.IsAny<CancellationToken>()), Times.Once);
-        _mapperMock.Verify(m => m.Map(It.IsAny<Room>()), Times.Exactly(10));
+        _repoMock.Verify(r => r.GetRoomsAsync(null, 2, 10, It.IsAny<CancellationToken>()), Times.Once);
+        _mapperMock.Verify(m => m.Map(It.IsAny<Room>()), Times.Exactly(50));
     }
 
     [Fact]
@@ -96,23 +95,38 @@ public class RoomServiceTests
 
         // Assert
         result.Should().NotBeNull();
-        result!.Id.Should().Be(room.Id);
+        result.Value!.Id.Should().Be(room.Id);
         _repoMock.Verify(r => r.GetByIdAsync(room.Id, It.IsAny<CancellationToken>()), Times.Once);
     }
 
     [Fact]
-    public async Task GetRoomByIdAsync_ShouldReturnNull_WhenNotFound()
+    public async Task GetRoomByIdAsync_ShouldReturnFailure_WhenNotFound()
     {
         // Arrange
         var id = Guid.NewGuid();
-        _repoMock.Setup(r => r.GetByIdAsync(id, It.IsAny<CancellationToken>()))
+
+        _repoMock
+            .Setup(r => r.GetByIdAsync(id, It.IsAny<CancellationToken>()))
             .ReturnsAsync((Room?)null);
 
         // Act
         var result = await _service.GetRoomByIdAsync(id, CancellationToken.None);
 
         // Assert
-        result.Should().BeNull();
+        result.Should().NotBeNull();
+        result.IsSuccess.Should().BeFalse();
+        result.Value.Should().BeNull();
+        result.Error.Should().Contain("not found");
+
+        _repoMock.Verify(
+            r => r.GetByIdAsync(id, It.IsAny<CancellationToken>()),
+            Times.Once
+        );
+
+        _mapperMock.Verify(
+            m => m.Map(It.IsAny<Room>()),
+            Times.Never
+        );
     }
 
     [Fact]
@@ -123,7 +137,7 @@ public class RoomServiceTests
         var mappedRoom = new Room { RoomNumber = dto.RoomNumber, RoomCategoryId = dto.RoomCategoryId };
 
         _mapperMock.Setup(m => m.Map(dto)).Returns(mappedRoom);
-        
+
         _mapperMock.Setup(m => m.Map(It.IsAny<Room>()))
         .Returns((Room r) => new RoomDto
         {
@@ -146,19 +160,28 @@ public class RoomServiceTests
     }
 
     [Fact]
-    public async Task UpdateRoomAsync_ShouldThrow_WhenRoomNotFound()
+    public async Task UpdateRoomAsync_ShouldReturnNotFound_WhenRoomDoesNotExist()
     {
         // Arrange
         var dto = _fixture.Create<UpdateRoomDto>();
-        _repoMock.Setup(r => r.GetByIdAsync(dto.Id, It.IsAny<CancellationToken>()))
+
+        _repoMock
+            .Setup(r => r.GetByIdAsync(dto.Id, It.IsAny<CancellationToken>()))
             .ReturnsAsync((Room?)null);
 
         // Act
-        Func<Task> act = async () => await _service.UpdateRoomAsync(dto, CancellationToken.None);
+        var result = await _service.UpdateRoomAsync(dto, CancellationToken.None);
 
         // Assert
-        await act.Should().ThrowAsync<KeyNotFoundException>()
-            .WithMessage($"Room with ID {dto.Id} not found.");
+        result.IsSuccess.Should().BeFalse();
+        result.HttpStatusCode.Should().Be(404);
+        result.ErrorCode.Should().Be("NOT_FOUND");
+        result.Error.Should().Contain("not found");
+
+        _repoMock.Verify(
+            r => r.UpdateAsync(It.IsAny<Room>(), It.IsAny<CancellationToken>()),
+            Times.Never
+        );
     }
 
     [Fact]

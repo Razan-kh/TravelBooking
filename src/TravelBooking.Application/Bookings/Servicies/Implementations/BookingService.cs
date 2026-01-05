@@ -8,24 +8,25 @@ using TravelBooking.Domain.Rooms.Entities;
 using TravelBooking.Application.Carts.Services.Interfaces;
 using TravelBooking.Application.Shared.Interfaces;
 using System.Data;
+using TravelBooking.Application.Discounts.Servicies;
 
 namespace TravelBooking.Application.Cheackout.Servicies.Implementations;
 
 public class BookingService : IBookingService
 {
     private readonly IBookingRepository _bookingRepository;
-    private readonly IDiscountService _discountService;
+    private readonly IPricingService _pricingService;
     private readonly IRoomAvailabilityService _availabilityService;
     private readonly IUnitOfWork _unitOfWork;
 
     public BookingService(
         IBookingRepository bookingRepository,
-        IDiscountService discountService,
+        IPricingService pricingService,
         IRoomAvailabilityService availabilityService,
         IUnitOfWork unitOfWork)
     {
         _bookingRepository = bookingRepository;
-        _discountService = discountService;
+        _pricingService = pricingService;
         _availabilityService = availabilityService;
         _unitOfWork = unitOfWork;
     }
@@ -63,7 +64,7 @@ public class BookingService : IBookingService
                     }
                 }
 
-                decimal totalAmount = _discountService.CalculateTotal(items);
+                decimal totalAmount = _pricingService.CalculateTotal(items);
 
                 var booking = BuildBooking(hotelId, items, request, totalAmount);
 

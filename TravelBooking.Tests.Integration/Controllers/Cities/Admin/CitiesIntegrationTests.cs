@@ -19,7 +19,7 @@ public class CitiesIntegrationTests : IClassFixture<ApiTestFactory>
 {
     private readonly WebApplicationFactory<Program> _factory;
     private readonly HttpClient _client;
-    private readonly IFixture _fixture;
+    private readonly Fixture _fixture;
     private readonly string _role = "Admin";
     private readonly Guid _adminId = Guid.NewGuid();
 

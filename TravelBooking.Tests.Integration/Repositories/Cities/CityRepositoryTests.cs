@@ -12,7 +12,7 @@ public class CityRepositoryTests : IDisposable
 {
     private readonly AppDbContext _dbContext;
     private readonly CityRepository _repository;
-    private readonly IFixture _fixture;
+    private readonly Fixture _fixture;
 
     public CityRepositoryTests()
     {
@@ -25,16 +25,17 @@ public class CityRepositoryTests : IDisposable
         _fixture = new Fixture();
 
         _fixture.Customize<Domain.Hotels.Entities.Hotel>(composer => composer
-    .Without(h => h.City)  // Don't populate the City navigation property
-    .Without(h => h.Bookings) 
-    .Without(h => h.Owner) 
-    .Without(h => h.RoomCategories) 
-    .Without(h => h.Reviews));
+        .Without(h => h.City) 
+        .Without(h => h.Bookings)
+        .Without(h => h.Owner)
+        .Without(h => h.RoomCategories)
+        .Without(h => h.Reviews));
     }
 
     public void Dispose()
     {
         _dbContext?.Dispose();
+        GC.SuppressFinalize(this);
     }
 
     #region AddAsync
@@ -193,17 +194,17 @@ public class CityRepositoryTests : IDisposable
 
         var hotel1 = _fixture.Build<Domain.Hotels.Entities.Hotel>().With(h => h.CityId, city.Id)
                     .Without(h => h.City)  // Don't populate the City navigation property
-    .Without(h => h.Bookings) 
-    .Without(h => h.Owner) 
-    .Without(h => h.RoomCategories) 
+    .Without(h => h.Bookings)
+    .Without(h => h.Owner)
+    .Without(h => h.RoomCategories)
     .Without(h => h.Reviews)
         .Create();
 
         var hotel2 = _fixture.Build<Domain.Hotels.Entities.Hotel>().With(h => h.CityId, city.Id)
             .Without(h => h.City)  // Don't populate the City navigation property
-    .Without(h => h.Bookings) 
-    .Without(h => h.Owner) 
-    .Without(h => h.RoomCategories) 
+    .Without(h => h.Bookings)
+    .Without(h => h.Owner)
+    .Without(h => h.RoomCategories)
     .Without(h => h.Reviews)
         .Create();
 
