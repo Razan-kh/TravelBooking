@@ -2,9 +2,9 @@ name: TravelBooking Tests
 
 on:
   push:
-    branches: [ testing, main ]
+    branches: [ testing, main, dev ]
   pull_request:
-    branches: [ main ]
+    branches: [ main, dev ]
     paths:
       - '**/*.cs'
       - '**/*.csproj'
