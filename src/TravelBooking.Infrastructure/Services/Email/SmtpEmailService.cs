@@ -52,6 +52,6 @@ TravelBooking Team
         var attachment = new Attachment(pdfStream, $"Invoice_{booking.Id}.pdf", "application/pdf");
         message.Attachments.Add(attachment);
 
-        await client.SendMailAsync(message);
+        await client.SendMailAsync(message, ct);
     }
 }

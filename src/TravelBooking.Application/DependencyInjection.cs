@@ -22,8 +22,6 @@ using TravelBooking.Application.Reviews.Services.Implementations;
 using TravelBooking.Application.Reviews.Services.Interfaces;
 using TravelBooking.Application.Images.Servicies.Implementations;
 using TravelBooking.Application.Images.Servicies.Interfaces;
-using SearchingInterfaces = TravelBooking.Application.Searching.Servicies.Interfaces;
-using SearchingImpl = TravelBooking.Application.Searching.Servicies.Implementations;
 using AdminHotelsInterfaces = TravelBooking.Application.Hotels.Admin.Servicies.Interfaces;
 using AdminHotelsImpl = TravelBooking.Application.Hotels.Admin.Servicies.Implementations;
 using UserHotelsInterfaces = TravelBooking.Application.Hotels.User.Services.Interfaces;
@@ -42,6 +40,9 @@ using TravelBooking.Application.ViewingHotels.Mappers;
 using TravelBooking.Application.FeaturedDeals.Mappers;
 using TravelBooking.Application.Searching.Servicies.Interfaces;
 using TravelBooking.Application.Searching.Servicies.Implementations;
+using TravelBooking.Application.Discounts.Servicies;
+using TravelBooking.Application.Discounts.Mappers.Interfaces;
+using TravelBooking.Application.Discounts.Mappers.Implementations;
 
 namespace TravelBooking.Application;
 
@@ -78,6 +79,7 @@ public static class DependencyInjection
         services.AddScoped<IAuthService, AuthService>();
         services.AddScoped<ImageAppService>();
         services.AddScoped<IBookingService, BookingService>();
+        services.AddScoped<IPricingService, PricingService>();
 
         // Register mappers
         services.AddScoped<ICityMapper, CityMapper>();
@@ -85,6 +87,7 @@ public static class DependencyInjection
         services.AddScoped<IRoomMapper, RoomMapper>();
         services.AddScoped<ISieveProcessor, SieveProcessor>();
         services.AddScoped<ICartMapper, CartMapper>();
+        services.AddScoped<IDiscountMapper, DiscountMapper>();
 
         // Mappers (Singleton)
         services.AddSingleton<Hotels.User.ViewingHotels.Mappers.Interfaces.IHotelMapper, Hotels.User.ViewingHotels.Mappers.Implementations.HotelMapper>();

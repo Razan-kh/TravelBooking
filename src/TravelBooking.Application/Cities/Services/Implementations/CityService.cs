@@ -46,7 +46,7 @@ public class CityService : ICityService
     {
         var city = await _cityRepo.GetByIdAsync(dto.Id, ct);
         if (city is null)
-            return Result.Failure("City not found.", "NOT_FOUND", 404);
+            return Result.NotFound("City not found.");
 
         _mapper.UpdateCityFromDto(dto, city);
         await _cityRepo.UpdateAsync(city, ct);

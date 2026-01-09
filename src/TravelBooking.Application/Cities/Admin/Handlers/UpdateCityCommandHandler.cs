@@ -16,14 +16,6 @@ public class UpdateCityCommandHandler : IRequestHandler<UpdateCityCommand, Resul
 
     public async Task<Result> Handle(UpdateCityCommand request, CancellationToken cancellationToken)
     {
-        try
-        {
-            await _cityService.UpdateCityAsync(request.Dto, cancellationToken);
-            return Result.Success();
-        }
-        catch (KeyNotFoundException ex)
-        {
-            return Result.Failure(ex.Message, "NOT_FOUND", 404);
-        }
+          return await _cityService.UpdateCityAsync(request.Dto, cancellationToken);
     }
 }

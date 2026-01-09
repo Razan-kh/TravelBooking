@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using MediatR;
 using TravelBooking.Application.Cheackout.Commands;
 using Microsoft.AspNetCore.Authorization;
+using TravelBooking.Api.Extensions;
 
 namespace TravelBooking.Api.Cheackout.Controllers;
 
@@ -17,14 +18,11 @@ public class CheckoutController : ControllerBase
         _mediator = mediator;
     }
 
-    /// <summary>
-    /// Confirm booking, process payment, send email and invoice.
-    /// </summary>
     [HttpPost]
     public async Task<IActionResult> Checkout([FromBody] CheckoutCommand command, CancellationToken ct)
     {
         var result = await _mediator.Send(command, ct);
 
-        return !result.IsSuccess ? StatusCode(result.HttpStatusCode ?? 400, result) : (IActionResult)Ok(result);
+        return result.ToActionResult();
     }
 }
