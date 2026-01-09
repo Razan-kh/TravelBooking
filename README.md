@@ -66,6 +66,9 @@ Designed for clean, maintainable, and testable code, with strong separation of c
 - Cloudinary (image management)
 - xUnit, Moq, AutoFixture, FluentAssertions (testing)
 
+## ERD
+<img width="2506" height="1265" alt="ERD" src="https://github.com/user-attachments/assets/148920f7-afa7-4a04-8bb5-aa526d01e6a0" />
+
 ## ⚙️ Getting Started
 
 ### 1. Clone the repository
