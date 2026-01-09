@@ -52,7 +52,7 @@ public class GetCitiesHandlerTests
         _serviceMock.Setup(s => s.GetCitiesAsync(null, 1, 20, It.IsAny<CancellationToken>()))
                     .ReturnsAsync(emptyList);
 
-        var result = await _handler.Handle(new GetCitiesQuery(null, 1, 20), CancellationToken.None);
+        var result = await _handler.Handle(new GetCitiesQuery (null, 1, 20), CancellationToken.None);
 
         result.IsSuccess.Should().BeTrue();
         result.Value.Data.Should().BeEmpty();

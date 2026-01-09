@@ -16,6 +16,14 @@ public class UpdateHotelCommandHandler : IRequestHandler<UpdateHotelCommand, Res
 
     public async Task<Result> Handle(UpdateHotelCommand request, CancellationToken ct)
     {
-            return await _hotelService.UpdateHotelAsync(request.Dto, ct);
+        try
+        {
+            await _hotelService.UpdateHotelAsync(request.Dto, ct);
+            return Result.Success();
+        }
+        catch (KeyNotFoundException ex)
+        {
+            return Result.Failure(ex.Message, "NOT_FOUND", 404);
+        }
     }
 }

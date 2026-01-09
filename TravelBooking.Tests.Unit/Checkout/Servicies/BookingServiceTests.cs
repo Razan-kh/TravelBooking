@@ -18,7 +18,7 @@ public class BookingServiceTests
 {
     private readonly IFixture _fixture;
     private readonly Mock<IBookingRepository> _bookingRepoMock;
-    private readonly Mock<IPricingService> _pricingService;
+    private readonly Mock<IDiscountService> _discountService;
     private readonly Mock<IRoomAvailabilityService> _roomAvailabilityService;
     private readonly Mock<IUnitOfWork> _unitOfWork;
     private readonly BookingService _sut;
@@ -32,11 +32,11 @@ public class BookingServiceTests
         _fixture.Behaviors.Add(new OmitOnRecursionBehavior());
 
         _bookingRepoMock = _fixture.Freeze<Mock<IBookingRepository>>();
-        _pricingService = _fixture.Freeze<Mock<IPricingService>>();
+        _discountService = _fixture.Freeze<Mock<IDiscountService>>();
         _roomAvailabilityService = _fixture.Freeze<Mock<IRoomAvailabilityService>>();
         _unitOfWork = _fixture.Freeze<Mock<IUnitOfWork>>();
 
-        _sut = new BookingService(_bookingRepoMock.Object, _pricingService.Object, _roomAvailabilityService.Object, _unitOfWork.Object);
+        _sut = new BookingService(_bookingRepoMock.Object, _discountService.Object, _roomAvailabilityService.Object, _unitOfWork.Object);
     }
 
     [Fact]

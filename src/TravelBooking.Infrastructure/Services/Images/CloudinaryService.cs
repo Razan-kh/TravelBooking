@@ -12,7 +12,7 @@ public class CloudinaryService : ICloudStorageService
     public CloudinaryService(IOptions<CloudinarySettings> config)
     {
         var settings = config.Value;
-        var account = new Account(settings.CloudName, settings.ApiKey, settings.ApiSecret);
+        Account account = new Account(settings.CloudName, settings.ApiKey, settings.ApiSecret);
         _cloudinary = new Cloudinary(account);
     }
 

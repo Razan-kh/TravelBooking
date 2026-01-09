@@ -7,7 +7,7 @@ namespace TravelBooking.Tests.Integration.Helpers;
 
 public static class FixtureConfiguration
 {
-    public static void ConfigureHomeControllerFixture(this Fixture fixture)
+    public static void ConfigureHomeControllerFixture(this IFixture fixture)
     {
         fixture.Behaviors.Remove(new ThrowingRecursionBehavior());
         fixture.Behaviors.Add(new OmitOnRecursionBehavior());

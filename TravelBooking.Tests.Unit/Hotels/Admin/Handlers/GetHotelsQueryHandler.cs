@@ -12,7 +12,7 @@ public class GetHotelsQueryHandlerTests
 {
     private readonly Mock<IHotelService> _serviceMock;
     private readonly GetHotelsQueryHandler _handler;
-    private readonly Fixture _fixture;
+    private readonly IFixture _fixture;
 
     public GetHotelsQueryHandlerTests()
     {

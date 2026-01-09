@@ -9,7 +9,7 @@ namespace TravelBooking.Tests.Integration.Builders;
 
 public class ReviewTestDataBuilder
 {
-    private readonly Fixture _fixture;
+    private readonly IFixture _fixture;
 
     public ReviewTestDataBuilder()
     {

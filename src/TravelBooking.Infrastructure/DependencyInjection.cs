@@ -22,8 +22,8 @@ using TravelBooking.Application.Cheackout.Servicies.Interfaces;
 using TravelBooking.Infrastructure.Services.Email;
 using Microsoft.Extensions.Hosting;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using TravelBooking.Domain.Cities.Interfaces;
-using TravelBooking.Domain.Discounts.Interfaces;
 
 namespace TravelBooking.Infrastructure;
 
@@ -66,7 +66,6 @@ public static class DependencyInjection
         services.AddScoped<IReviewRepository, ReviewRepository>();
         services.AddScoped<IHotelRepository, HotelRepository>();
         services.AddScoped<ICartRepository, CartRepository>();
-        services.AddScoped<IDiscountRepository, DiscountRepository>();
 
         services.AddScoped<IPasswordHasher, AspNetPasswordHasher>();
         services.AddScoped<IJwtService, JwtService>();

@@ -1,5 +1,6 @@
 using TravelBooking.Domain.Bookings.Entities;
 using TravelBooking.Domain.Bookings.Interfaces;
+using TravelBooking.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 
 namespace TravelBooking.Infrastructure.Persistence.Repositories;

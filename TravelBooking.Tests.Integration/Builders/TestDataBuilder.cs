@@ -13,7 +13,7 @@ namespace TravelBooking.Tests.Integration.Builders;
 
 public class TestDataBuilder
 {
-    private readonly Fixture _fixture;
+    private readonly IFixture _fixture;
 
     public TestDataBuilder()
     {

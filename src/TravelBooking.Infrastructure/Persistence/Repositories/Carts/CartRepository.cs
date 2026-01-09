@@ -20,7 +20,7 @@ public class CartRepository : ICartRepository
             .Include(c => c.Items)
             .ThenInclude(i => i.RoomCategory)
             .ThenInclude(rc => rc.Discounts)
-            .FirstOrDefaultAsync(c => c.UserId == userId, ct);
+            .FirstOrDefaultAsync(c => c.UserId == userId);
     }
 
     public async Task<CartItem?> GetCartItemByIdAsync(Guid cartItemId, CancellationToken ct)

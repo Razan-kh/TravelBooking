@@ -14,7 +14,7 @@ namespace TravelBooking.Tests.Integration.Controllers.Authentication;
 public class AuthControllerIntegrationTests : IClassFixture<ApiTestFactory>
 {
     private readonly ApiTestFactory _factory;
-    private readonly Fixture _fixture;
+    private readonly IFixture _fixture;
     private readonly HttpClient _client;
 
     public AuthControllerIntegrationTests(ApiTestFactory factory)
@@ -23,7 +23,7 @@ public class AuthControllerIntegrationTests : IClassFixture<ApiTestFactory>
         _fixture = new Fixture();
         _client = _factory.CreateClient();
 
-        // Configure AutoFixture
+        // Configure AutoFixture if needed
         _fixture.Behaviors.OfType<ThrowingRecursionBehavior>().ToList()
             .ForEach(b => _fixture.Behaviors.Remove(b));
         _fixture.Behaviors.Add(new OmitOnRecursionBehavior());
@@ -148,6 +148,7 @@ public class AuthControllerIntegrationTests : IClassFixture<ApiTestFactory>
         // Act
         var response = await _client.PostAsJsonAsync("/api/auth/login", request);
 
+        // Assert - This depends on the email case sensitivity configuration
         response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
     }
 

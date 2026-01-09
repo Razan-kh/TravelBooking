@@ -2,8 +2,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using TravelBooking.Domain.Hotels.Entities;
 
-namespace TravelBooking.Infrastructure.Persistance.EntitiesConfigurations;
-
 public class HotelConfiguration : IEntityTypeConfiguration<Hotel>
 {
     public void Configure(EntityTypeBuilder<Hotel> builder)

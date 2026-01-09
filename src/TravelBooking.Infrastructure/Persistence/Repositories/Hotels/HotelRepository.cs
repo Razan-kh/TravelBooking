@@ -3,6 +3,7 @@ using TravelBooking.Domain.Cities.Entities;
 using TravelBooking.Domain.Hotels;
 using TravelBooking.Domain.Hotels.Entities;
 using TravelBooking.Domain.Hotels.Interfaces.Repositories;
+using TravelBooking.Infrastructure.Persistence;
 
 namespace TravelBooking.Infrastructure.Persistence.Repositories;
 
@@ -98,7 +99,7 @@ public class HotelRepository : IHotelRepository
 
         return hotels.Select(h =>
         {
-            var minPrice = h.RoomCategories.Count() != 0
+            var minPrice = h.RoomCategories.Any()
                 ? h.RoomCategories.Min(rc => rc.PricePerNight)
                 : 0m;
 
@@ -108,7 +109,7 @@ public class HotelRepository : IHotelRepository
                     .Select(d => rc.PricePerNight * (1 - d.DiscountPercentage / 100)))
                 .ToList();
 
-            var minDiscounted = discountedPrices.Count() != 0 ? discountedPrices.Min() : (decimal?)null;
+            var minDiscounted = discountedPrices.Any() ? discountedPrices.Min() : (decimal?)null;
 
             return new HotelWithMinPrice
             {

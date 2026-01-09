@@ -41,7 +41,7 @@ public class CityService_TrendingCities_Tests
     }
 
     [Fact]
-    public async Task GetTrendingCitiesAsync_ShouldReturnMappedResults_WhenSuccess()
+    public async Task GetTrendingCitiesAsync_ShouldReturnMappedResults_WhenSuccess  ()
     {
         _fixture.Customize<City>(c => c
             .With(x => x.Id, Guid.NewGuid())
@@ -74,7 +74,7 @@ public class CityService_TrendingCities_Tests
         _repoMock
             .Setup(r => r.GetTrendingCitiesAsync(3))
             .ReturnsAsync(new List<(City city, int visitCount)>
-            { });
+            {});
 
         var result = await _sut.GetTrendingCitiesAsync(3);
 
