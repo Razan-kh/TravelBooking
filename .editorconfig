@@ -47,7 +47,6 @@ dotnet_diagnostic.IDE0055.severity = warning
 # Place 'System.*' usings first
 dotnet_sort_system_directives_first = true
 # Keep groups separated by a blank line (VS sorts and groups)
-dotnet_separate_import_directive_groups = true
 ############################
 # Qualification & 'this.'
 ############################
@@ -247,8 +246,4 @@ end_of_line = lf
 dotnet_analyzer_diagnostic.category-Style.severity = silent
 
 [*.g.cs]
-<<<<<<< HEAD
 dotnet_analyzer_diagnostic.category-Style.severity = silent
-=======
-dotnet_analyzer_diagnostic.category-Style.severity = silent
->>>>>>> ParsingInput

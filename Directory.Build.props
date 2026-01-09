@@ -1,0 +1,6 @@
+<Project>
+  <PropertyGroup>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <RootNamespace>YourProjectName</RootNamespace>
+  </PropertyGroup>
+</Project>
