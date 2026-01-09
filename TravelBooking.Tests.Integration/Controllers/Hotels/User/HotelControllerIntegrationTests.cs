@@ -14,7 +14,7 @@ namespace TravelBooking.Tests.Integration.Controllers.Hotels.User;
 public class HotelControllerTests : IClassFixture<ApiTestFactory>, IDisposable
 {
     private readonly WebApplicationFactory<Program> _factory;
-    private readonly Fixture _fixture;
+    private readonly IFixture _fixture;
     private readonly Guid _testUserId;
     private HttpClient _client;
     private readonly string _role = "User";

@@ -3,8 +3,6 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using TravelBooking.Domain.Bookings.Entities;
 using TravelBooking.Domain.Rooms.Entities;
 
-namespace TravelBooking.Infrastructure.Persistance.EntitiesConfigurations;
-
 public class BookingConfiguration : IEntityTypeConfiguration<Booking>
 {
     public void Configure(EntityTypeBuilder<Booking> builder)

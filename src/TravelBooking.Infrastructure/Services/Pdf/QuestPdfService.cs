@@ -59,7 +59,7 @@ public class QuestPdfService : IPdfService
                         col.Item().LineHorizontal(1).LineColor(Colors.Grey.Lighten1);
 
                         // Rooms list
-                        if (booking.Rooms != null && booking.Rooms.Count() != 0)
+                        if (booking.Rooms != null && booking.Rooms.Any())
                         {
                             col.Item().Text("Booked Rooms:").SemiBold();
                             foreach (var room in booking.Rooms)

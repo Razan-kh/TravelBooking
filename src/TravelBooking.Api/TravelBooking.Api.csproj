@@ -40,8 +40,8 @@
     <ProjectReference Include="..\TravelBooking.Infrastructure\TravelBooking.Infrastructure.csproj" />
   </ItemGroup>
 
-<PropertyGroup>
-    <NoWarn>$(NoWarn);CS1591;CA1848</NoWarn>
-</PropertyGroup>
+  <PropertyGroup>
+      <NoWarn>CS1591</NoWarn>
+  </PropertyGroup>
 
 </Project>

@@ -15,7 +15,7 @@ namespace TravelBooking.Tests.Integration.Controllers.Cities.User;
 public class CityControllerTests : IClassFixture<ApiTestFactory>, IDisposable
 {
     private readonly WebApplicationFactory<Program> _factory;
-    private readonly Fixture _fixture;
+    private readonly IFixture _fixture;
     private readonly Guid _testUserId;
     private HttpClient _client;
     private readonly string _role = "User";

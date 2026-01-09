@@ -8,7 +8,6 @@ using TravelBooking.Domain.Images.interfaces;
 using TravelBooking.Application.Rooms.Admin.Services.Interfaces;
 using TravelBooking.Application.Images.Servicies.Interfaces;
 using TravelBooking.Application.Images.Dtos;
-using TravelBooking.Application.Shared.Results;
 
 namespace TravelBooking.Application.Rooms.Admin.Services.Implementations;
 
@@ -34,18 +33,20 @@ public class RoomService : IRoomService
 
     public async Task<List<RoomDto>> GetRoomsAsync(string? filter, int page, int pageSize, CancellationToken ct)
     {
-        var rooms = await _roomRepo.GetRoomsAsync(filter, page, pageSize, ct);
-        return rooms.Select(_mapper.Map).ToList();
+        var allRooms = await _roomRepo.GetRoomsAsync(filter, ct);
+
+        var pagedRooms = allRooms
+            .Skip((page - 1) * pageSize)
+            .Take(pageSize)
+            .ToList();
+
+        return pagedRooms.Select(_mapper.Map).ToList();
     }
 
-    public async Task<Result<RoomDto>> GetRoomByIdAsync(Guid id, CancellationToken ct)
+    public async Task<RoomDto?> GetRoomByIdAsync(Guid id, CancellationToken ct)
     {
         var room = await _roomRepo.GetByIdAsync(id, ct);
-        if (room is null)
-            return Result<RoomDto>.Failure($"Room with ID {id} not found."); // 404 case
-
-        var dto = _mapper.Map(room);
-        return Result<RoomDto>.Success(dto);
+        return room is null ? null : _mapper.Map(room);
     }
 
     public async Task<RoomDto> CreateRoomAsync(CreateRoomDto dto, CancellationToken ct)
@@ -58,16 +59,16 @@ public class RoomService : IRoomService
         return _mapper.Map(room);
     }
 
-    public async Task<Result> UpdateRoomAsync(UpdateRoomDto dto, CancellationToken ct)
+    public async Task UpdateRoomAsync(UpdateRoomDto dto, CancellationToken ct)
     {
         var existing = await _roomRepo.GetByIdAsync(dto.Id, ct);
         if (existing is null)
-            return Result.NotFound($"Room with ID {dto.Id} not found."); 
+            throw new KeyNotFoundException($"Room with ID {dto.Id} not found.");
 
+        // Mapperly updates entity in place
         _mapper.UpdateRoomFromDto(dto, existing);
 
         await _roomRepo.UpdateAsync(existing, ct);
-        return Result.Success();
     }
 
     public async Task DeleteRoomAsync(Guid id, CancellationToken ct)
@@ -78,7 +79,7 @@ public class RoomService : IRoomService
         await _roomRepo.DeleteAsync(existing, ct);
     }
 
-    public async Task<Result<ImageResponseDto?>>UploadRoomImageAsync(
+    public async Task<ImageResponseDto> UploadRoomImageAsync(
     Guid roomId,
     ImageUploadDto imageUploadDto,
     CancellationToken ct = default)
@@ -86,7 +87,7 @@ public class RoomService : IRoomService
         // Validate room exists
         var room = await _roomRepo.GetByIdAsync(roomId, ct);
         if (room is null)
-            return Result.Failure<ImageResponseDto>($"Room with ID {roomId} not found.", "NOT_FOUND", 404);
+            throw new KeyNotFoundException($"Room with ID {roomId} not found.");
 
         // Validate file
         ValidateImageFile.Validate(imageUploadDto.File);
@@ -115,7 +116,7 @@ public class RoomService : IRoomService
 
         _logger.LogInformation("Image uploaded successfully for room {RoomId}, image ID: {ImageId}",
             roomId, image.Id);
-        var ImageDto = MapToImageResponseDto.Map(image);
-        return Result.Success(ImageDto);
+
+        return MapToImageResponseDto.Map(image);
     }
 }

@@ -15,7 +15,7 @@ namespace TravelBooking.Tests.Integration.Repositories.Rooms;
 public class RoomRepositoryTests
 {
     private readonly ApiTestFactory _factory;
-    private readonly Fixture _fixture;
+    private readonly IFixture _fixture;
 
     public RoomRepositoryTests()
     {
@@ -59,7 +59,7 @@ public class RoomRepositoryTests
         await db.SaveChangesAsync();
 
         // Act
-        var result = await repo.GetRoomsAsync("Match", 1, 1, CancellationToken.None);
+        var result = await repo.GetRoomsAsync("Match", CancellationToken.None);
 
         // Assert
         result.Should().ContainSingle(r => r.RoomNumber == "Match-100");

@@ -35,4 +35,9 @@ public class RoomCategory : BaseEntity
     public virtual ICollection<Room> Rooms { get; set; } = new List<Room>();
     public ICollection<Amenity> Amenities { get; set; } = new List<Amenity>();
     public virtual ICollection<Discount> Discounts { get; set; } = new List<Discount>();
+
+    public static implicit operator RoomCategory(Task<IEnumerable<Room>> v)
+    {
+        throw new NotImplementedException();
+    }
 }

@@ -20,6 +20,7 @@ public class GetCitiesHandler : IRequestHandler<GetCitiesQuery, Result<PagedResu
         var page = req.Page <= 0 ? 1 : req.Page;
         var pageSize = req.PageSize <= 0 ? 20 : req.PageSize;
 
+        // --- Call domain service (returns List<City>) ---
         var cityDtos = await _service.GetCitiesAsync(req.Filter, page, pageSize, ct);
 
         var pagedResult = new PagedResult<CityDto>

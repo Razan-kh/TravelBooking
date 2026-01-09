@@ -1,7 +1,6 @@
 using TravelBooking.Application.Hotels.Admin.Servicies.Interfaces;
 using TravelBooking.Application.Hotels.Dtos;
 using TravelBooking.Application.Hotels.Mappers.Interfaces;
-using TravelBooking.Application.Shared.Results;
 using TravelBooking.Domain.Hotels.Interfaces.Repositories;
 
 namespace TravelBooking.Application.Hotels.Admin.Servicies.Implementations;
@@ -37,23 +36,20 @@ public class HotelService : IHotelService
         return _mapper.Map(hotel);
     }
 
-    public async Task<Result> UpdateHotelAsync(UpdateHotelDto dto, CancellationToken ct)
+    public async Task UpdateHotelAsync(UpdateHotelDto dto, CancellationToken ct)
     {
         var hotel = await _hotelRepo.GetByIdAsync(dto.Id, ct);
         if (hotel is null)
-            return Result.NotFound($"Hotel with ID {dto.Id} not found.");
+            throw new KeyNotFoundException($"Hotel with ID {dto.Id} not found.");
 
         _mapper.UpdateHotelFromDto(dto, hotel);
         await _hotelRepo.UpdateAsync(hotel, ct);
-        return Result.Success();
     }
 
-    public async Task<Result> DeleteHotelAsync(Guid id, CancellationToken ct)
+    public async Task DeleteHotelAsync(Guid id, CancellationToken ct)
     {
         var hotel = await _hotelRepo.GetByIdAsync(id, ct);
-        if (hotel is null) return Result.Failure($"Hotel with ID {id} not found.", "NOT_FOUND", 404);
-
+        if (hotel is null) return;
         await _hotelRepo.DeleteAsync(hotel, ct);
-        return Result.Success();
     }
 }

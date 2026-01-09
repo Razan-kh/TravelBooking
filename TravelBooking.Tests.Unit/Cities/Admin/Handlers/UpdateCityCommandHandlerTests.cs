@@ -6,8 +6,6 @@ using TravelBooking.Application.Cities.Commands;
 using TravelBooking.Application.Cities.Dtos;
 using TravelBooking.Application.Cities.Handlers;
 using TravelBooking.Application.Cities.Interfaces.Servicies;
-using TravelBooking.Domain.Cities.Entities;
-using TravelBooking.Application.Shared.Results;
 
 namespace TravelBooking.Tests.Cities.Admin.Handlers;
 
@@ -27,16 +25,9 @@ public class UpdateCityCommandHandlerTests
     [Fact]
     public async Task Handle_ShouldReturnSuccess_WhenCityUpdated()
     {
-        // Arrange
         var dto = _fixture.Create<UpdateCityDto>();
-        _serviceMock
-        .Setup(s => s.UpdateCityAsync(It.IsAny<UpdateCityDto>(), It.IsAny<CancellationToken>()))
-        .ReturnsAsync(Result.Success());
-        
-        // Act
         var result = await _handler.Handle(new UpdateCityCommand(dto), CancellationToken.None);
 
-        // Assert
         result.IsSuccess.Should().BeTrue();
         _serviceMock.Verify(s => s.UpdateCityAsync(dto, It.IsAny<CancellationToken>()), Times.Once);
     }
@@ -44,18 +35,13 @@ public class UpdateCityCommandHandlerTests
     [Fact]
     public async Task Handle_ShouldReturnFailure_WhenCityNotFound()
     {
-        // Arrange
         var dto = _fixture.Create<UpdateCityDto>();
-        _serviceMock
-            .Setup(s => s.UpdateCityAsync(It.IsAny<UpdateCityDto>(), It.IsAny<CancellationToken>()))
-            .ReturnsAsync(Result.NotFound("City not found."));
+        _serviceMock.Setup(s => s.UpdateCityAsync(dto, It.IsAny<CancellationToken>()))
+                    .ThrowsAsync(new KeyNotFoundException($"City with ID {dto.Id} not found."));
 
-        // Act
         var result = await _handler.Handle(new UpdateCityCommand(dto), CancellationToken.None);
 
-        // Assert
         result.IsSuccess.Should().BeFalse();
-        result.HttpStatusCode.Should().Be(404);
         result.ErrorCode.Should().Be("NOT_FOUND");
     }
 }

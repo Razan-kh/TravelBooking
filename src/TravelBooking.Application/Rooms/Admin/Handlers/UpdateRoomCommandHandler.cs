@@ -16,6 +16,14 @@ public class UpdateRoomCommandHandler : IRequestHandler<UpdateRoomCommand, Resul
 
     public async Task<Result> Handle(UpdateRoomCommand request, CancellationToken ct)
     {
-        return await _roomService.UpdateRoomAsync(request.Dto, ct);
+        try
+        {
+            await _roomService.UpdateRoomAsync(request.Dto, ct);
+            return Result.Success();
+        }
+        catch (KeyNotFoundException ex)
+        {
+            return Result.Failure(ex.Message);
+        }
     }
 }

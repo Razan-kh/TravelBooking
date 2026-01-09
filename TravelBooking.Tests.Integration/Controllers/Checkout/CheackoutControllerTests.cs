@@ -106,9 +106,12 @@ public class CheckoutControllerIntegrationTests : IAsyncLifetime
 
         // Act
         var response = await _client.PostAsJsonAsync("/api/checkout", checkoutCommand);
+        var result = await response.Content.ReadFromJsonAsync<Result>();
 
         // Assert
         response.StatusCode.Should().Be(HttpStatusCode.OK);
+        result.Should().NotBeNull();
+        result!.IsSuccess.Should().BeTrue();
 
         // Verify booking was created
         var booking = await _dbContext.Bookings
@@ -398,6 +401,8 @@ public class CheckoutControllerIntegrationTests : IAsyncLifetime
         response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
         result.Should().NotBeNull();
         result!.IsSuccess.Should().BeFalse();
+        result!.Error.Should().Contain("empty", "Cart is empty");
+        result!.ErrorCode.Should().Be("EMPTY_CART");
 
         // Verify no booking was created
         var booking = await _dbContext.Bookings
@@ -428,6 +433,7 @@ public class CheckoutControllerIntegrationTests : IAsyncLifetime
         response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
         result.Should().NotBeNull();
         result!.IsSuccess.Should().BeFalse();
+        result!.ErrorCode.Should().Be("PAYMENT_FAILED");
 
         // Verify no booking was created
         var booking = await _dbContext.Bookings
