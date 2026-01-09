@@ -16,13 +16,13 @@ public class GetCityByIdQueryHandlerTests
     private readonly Mock<ICityService> _serviceMock;
     private readonly Mock<ICityMapper> _mapperMock;
     private readonly GetCityByIdQueryHandler _handler;
-    private readonly IFixture _fixture;
+    private readonly Fixture _fixture;
 
     public GetCityByIdQueryHandlerTests()
     {
         _serviceMock = new Mock<ICityService>();
         _fixture = new Fixture();
-        _fixture.Customize(new EntityCustomization()); 
+        _fixture.Customize(new EntityCustomization());
         _mapperMock = new Mock<ICityMapper>();
         _handler = new GetCityByIdQueryHandler(_serviceMock.Object, _mapperMock.Object);
     }

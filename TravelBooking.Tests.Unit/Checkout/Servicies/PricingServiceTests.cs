@@ -2,17 +2,18 @@ using TravelBooking.Tests.Carts.TestHelpers;
 using AutoFixture;
 using AutoFixture.AutoMoq;
 using FluentAssertions;
-using TravelBooking.Application.Cheackout.Servicies.Implementations;
 using TravelBooking.Domain.Carts.Entities;
+using TravelBooking.Application.Cheackout.Servicies.Interfaces;
+using TravelBooking.Application.Cheackout.Servicies.Implementations;
 
 namespace TravelBooking.Tests.Unit.Cheackout.Servicies;
 
-public class DiscountServiceTests
+public class PricingServiceTests
 {
     private readonly IFixture _fixture;
-    private readonly DiscountService _sut;
+    private readonly IPricingService _sut;
 
-    public DiscountServiceTests()
+    public PricingServiceTests()
     {
         //  _fixture = new Fixture();
         _fixture = new Fixture().Customize(new AutoMoqCustomization { ConfigureMembers = true });
@@ -21,7 +22,7 @@ public class DiscountServiceTests
         _fixture.Behaviors.OfType<ThrowingRecursionBehavior>().ToList()
                 .ForEach(b => _fixture.Behaviors.Remove(b));
         _fixture.Behaviors.Add(new OmitOnRecursionBehavior());
-        _sut = new DiscountService();
+        _sut = new PricingService();
     }
 
     [Fact]

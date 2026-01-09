@@ -14,7 +14,7 @@ namespace TravelBooking.Tests.Services;
 
 public class CityServiceTests
 {
-    private readonly IFixture _fixture;
+    private readonly Fixture _fixture;
     private readonly Mock<ICityRepository> _repoMock;
     private readonly Mock<ICityMapper> _cityMapperMock;
     private readonly Mock<ITrendingCityMapper> _trendingCityMapperMock;

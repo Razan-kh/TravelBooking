@@ -18,7 +18,7 @@ public class HotelControllerIntegrationTests : IClassFixture<ApiTestFactory>, ID
     private readonly ApiTestFactory _factory;
     private readonly HttpClient _client;
     private readonly AppDbContext _db;
-    private readonly IFixture _fixture;
+    private readonly Fixture _fixture;
     private readonly HotelTestDataBuilder _dataBuilder;
     private readonly string _role = "Admin";
     private readonly Guid _adminId = Guid.NewGuid();
@@ -180,7 +180,7 @@ public class HotelControllerIntegrationTests : IClassFixture<ApiTestFactory>, ID
         var response = await _client.DeleteAsync($"/api/hotel/{Guid.NewGuid()}");
 
         // Assert
-        response.StatusCode.Should().Be(HttpStatusCode.NoContent);
+        response.StatusCode.Should().Be(HttpStatusCode.NotFound);
     }
 
     #endregion

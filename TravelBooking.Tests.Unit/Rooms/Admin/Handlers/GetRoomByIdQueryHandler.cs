@@ -24,7 +24,9 @@ public class GetRoomByIdQueryHandler
     {
         // Arrange
         var id = Guid.NewGuid();
-        _serviceMock.Setup(s => s.GetRoomByIdAsync(id, It.IsAny<CancellationToken>())).ReturnsAsync((RoomDto?)null);
+        _serviceMock
+        .Setup(s => s.GetRoomByIdAsync(id, It.IsAny<CancellationToken>()))
+        .ReturnsAsync(Result<RoomDto>.Failure($"Room with ID {id} not found."));
         var handler = new TravelBooking.Application.Rooms.Handlers.GetRoomByIdQueryHandler(_serviceMock.Object);
 
         // Act
@@ -32,7 +34,7 @@ public class GetRoomByIdQueryHandler
 
         // Assert
         result.IsSuccess.Should().BeFalse();
-        result.Error.Should().Be("Room not found");
+        result.Error.Should().Be($"Room with ID {id} not found.");
     }
 
     [Fact]
@@ -40,7 +42,9 @@ public class GetRoomByIdQueryHandler
     {
         // Arrange
         var roomDto = _fixture.Create<RoomDto>();
-        _serviceMock.Setup(s => s.GetRoomByIdAsync(roomDto.Id, It.IsAny<CancellationToken>())).ReturnsAsync(roomDto);
+        _serviceMock.Setup(s => s.GetRoomByIdAsync(roomDto.Id, It.IsAny<CancellationToken>()))
+         .ReturnsAsync(Result<RoomDto>.Success(roomDto));
+         
         var handler = new TravelBooking.Application.Rooms.Handlers.GetRoomByIdQueryHandler(_serviceMock.Object);
 
         // Act

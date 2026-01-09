@@ -60,13 +60,33 @@ public class HotelServiceTests
     }
 
     [Fact]
-    public async Task UpdateHotelAsync_ShouldThrowKeyNotFound_WhenHotelDoesNotExist()
+    public async Task DeleteHotelAsync_ShouldReturnFailure_WhenHotelDoesNotExist()
     {
-        var dto = _fixture.Create<UpdateHotelDto>();
-        _repoMock.Setup(r => r.GetByIdAsync(dto.Id, It.IsAny<CancellationToken>()))
-                 .ReturnsAsync((Hotel?)null);
+        // Arrange
+        var id = Guid.NewGuid();
 
-        await Assert.ThrowsAsync<KeyNotFoundException>(() =>
-            _service.UpdateHotelAsync(dto, CancellationToken.None));
+        _repoMock
+            .Setup(r => r.GetByIdAsync(id, It.IsAny<CancellationToken>()))
+            .ReturnsAsync((Hotel?)null);
+
+        // Act
+        var result = await _service.DeleteHotelAsync(id, CancellationToken.None);
+
+        // Assert
+        result.Should().NotBeNull();
+        result.IsSuccess.Should().BeFalse();
+        result.Error.Should().Contain("not found");
+        result.ErrorCode.Should().Be("NOT_FOUND");
+        result.HttpStatusCode.Should().Be(404);
+
+        _repoMock.Verify(
+            r => r.GetByIdAsync(id, It.IsAny<CancellationToken>()),
+            Times.Once
+        );
+
+        _repoMock.Verify(
+            r => r.DeleteAsync(It.IsAny<Hotel>(), It.IsAny<CancellationToken>()),
+            Times.Never
+        );
     }
 }

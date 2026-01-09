@@ -10,9 +10,9 @@ namespace TravelBooking.Tests.Integration.Admin.Helpers;
 public class HotelTestDataBuilder
 {
     private readonly AppDbContext _dbContext;
-    private readonly IFixture _fixture;
+    private readonly Fixture _fixture;
 
-    public HotelTestDataBuilder(AppDbContext dbContext, IFixture fixture)
+    public HotelTestDataBuilder(AppDbContext dbContext, Fixture fixture)
     {
         _dbContext = dbContext;
         _fixture = fixture;
